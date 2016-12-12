@@ -1,0 +1,35 @@
+extends ..\layout.pug
+
+block content
+	.container
+		h1.mb-Lg The Lissner Cookbook
+			if user && user.isAdmin
+				button.btn.btn-primary.f-R(data-toggle='modal', data-target='#AddRecipie') Add Recipie
+
+		if user && user.isAdmin
+			+modal('AddRecipie')
+				+RecipieForm('add')
+		.col-xs-12.col-sm-10
+			for recipe, i in recipes
+				.row.mtb-Sm
+					.col-xs-12.col-sm-5.col-md-3
+						img.w-100(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
+					.col-xs-12.col-sm-7.col-md-9
+						h2.mt-0= recipe.name
+							small= ` ${recipe.author}`
+						ul.fc-G__dk.fs-Sm.list-inline
+							if recipe.isGlutenFree
+								li.pr-0 Gluten Free |
+							if recipe.isVegitarian
+								li.pr-0 Vegitarian |
+							if recipe.isDairyFree
+								li.pr-0 Dairy Free |
+							li(data-icon='fa fa-clock-o')= ` ${recipe.time}`
+							if recipe.serves
+								li.pl-0= `| Serves ${recipe.serves}`
+						if recipe.description !== '<p><br></p>' && recipe.description !== '<br>'
+							div!= recipe.description
+
+						a(href=`/${recipe.url}`) Full Recipe
+				if i !== recipes.length -1
+					hr

@@ -1,0 +1,105 @@
+mixin RecipieForm(crud, recipe)
+	form(duck-table='Recipes', duck-function=crud, duck-key='Id', duck-key-value= recipe && recipe.Id)
+		.form-group.w-50--Sm.f-L--Sm.pr-Sm--sm(duck-field='name', duck-type='string')
+			label Name
+				input.form-control(type='text', duck-value, value= recipe && recipe.name)
+		.form-group.w-50--Sm.f-L--Sm.pl-Sm--sm(duck-field='url', duck-type='string')
+			label Url
+				input.form-control(type='text', duck-value, disabled, value= recipe && recipe.url)
+
+		.form-group(duck-field='author', duck-type='string')
+			label Author
+				input.form-control(type='text', duck-value, value= recipe && recipe.author)
+
+		.form-group(duck-field='image', duck-type='string')
+			label Picture of Dish
+				input.form-control(type='text', duck-value, value= recipe && recipe.image)
+
+		.form-group.w-50--Sm.f-L--Sm.pr-Sm--sm(duck-field='time', duck-type='string')
+			label Time
+				input.form-control(type='text', duck-value, value= recipe && recipe.time)
+		.form-group.w-50--Sm.f-L--Sm.pl-Sm--sm(duck-field='difficulty', duck-type='string')
+			label Difficulty
+				input.form-control(type='text', duck-value, value= recipe && recipe.difficulty)
+
+		.form-group(duck-field='description', duck-type='wysiwyg')
+			label Description
+			.summernote!= recipe && recipe.description
+
+		div(duck-field='type', duck-type='array')
+			label Type
+			if recipe && recipe.type
+				for type in recipe.type
+					.form-group(duck-type='string')
+						input.form-control(type='text', duck-value, value= type)
+			else
+				.form-group(duck-type='string')
+					input.form-control(type='text', duck-value)
+
+
+		div(duck-field='ingredients', duck-type='array')
+			label Ingredients
+			if recipe && recipe.ingredients
+				for ingredient in recipe.ingredients
+					div(duck-type='object')
+						.form-group(duck-field='title', duck-type='string')
+							label Title
+								input.form-control(type='text', value= ingredient.title, duck-value)
+						.form-group(duck-field='ingredients', duck-type='array')
+							label Ingredients
+							if ingredient.ingredients
+								for subIngredient in ingredient.ingredients
+									.form-group(duck-type='string')
+										input.form-control(type='text', duck-value, value= subIngredient)
+							else
+								.form-group(duck-type='string')
+									input.form-control(type='text', duck-value)
+			else
+				div(duck-type='object')
+					.form-group(duck-field='title', duck-type='string')
+						label Title
+							input.form-control(type='text', duck-value)
+					.form-group(duck-field='ingredients', duck-type='array')
+						label Ingredients
+						.form-group(duck-type='string')
+							input.form-control(type='text', duck-value)
+
+		.form-group(duck-field='directions', duck-type='array')
+			h3 Directions
+			if recipe && recipe.directions
+				for direction in recipe.directions
+					div(duck-type='object')
+						.form-group(duck-field='order', duck-type='numer')
+							label Order
+								input.form-control(type='number', value= direction.order, duck-value)
+						.form-group(duck-field='direction', duck-type='wysiwyg')
+							label Direction
+							.summernote!= direction.direction
+
+			else
+				div(duck-type='object')
+					.form-group(duck-field='order', duck-type='numer')
+						label Order
+							input.form-control(type='number', duck-value)
+					.form-group(duck-field='direction', duck-type='wysiwyg')
+						label Direction
+						.summernote
+
+		.checkbox(duck-field='isGlutenFree', duck-type='bool')
+			label
+				input(type='checkbox', checked= recipe && recipe.isGlutenFree)
+				| Gluten Free
+		.checkbox(duck-field='isVegetarian', duck-type='bool')
+			label
+				input(type='checkbox', checked= recipe && recipe.isVegetarian)
+				| Vegetarian
+		.checkbox(duck-field='isDairyFree', duck-type='bool')
+			label
+				input(type='checkbox', checked= recipe && recipe.isDairyFree)
+				| Dairy Free
+
+		.form-group(duck-field='serves', duck-type='string')
+			label Serves
+				input.form-control(type='text', duck-value, value= recipe && recipe.serves)
+
+		button(duck-button='submit') Save
