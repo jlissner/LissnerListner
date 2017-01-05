@@ -3,11 +3,42 @@
 void function initDuck($){
 	'use strict'
 
+	// generates a universally unique ID (UUID)
 	function uuid() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 			const r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
 			return v.toString(16);
 		})
+	}
+
+	// sends an email, needs the html OR the template
+	// request = {html: (optional)String, template: (optional)String, toEmail: (optional)String, subject: String}
+	// success = function
+	// failure = function
+	function sendEmail (request, success, failure) {
+		$.ajax({
+			type: 'POST',
+			data: JSON.stringify(request),
+			url: '/sendEmail',
+			contentType: 'application/json',
+		}).done(success).fail(failure);
+	}
+
+	// send an email to the appropiate user, giving them a randomized, unique password
+	// id = string (id of user in database)
+	// successCallback = function
+	// errorCallback = function
+	function sendResetEmail(email, successCallback, errorCallback) {
+		return () => {
+			$.ajax({
+				url: `/reset-password`,
+				contentType: 'application/json',
+				data: JSON.stringify({ email }),
+				method: 'POST',
+				success: successCallback,
+				error: errorCallback,
+			});
+		}
 	}
 
 	function _duck(table) {
@@ -61,11 +92,23 @@ void function initDuck($){
 				error: errorCallback,
 			});
 		}
+
+		this.clearCache = (successCallback, errorCallback) => {
+			$.ajax({
+				url: `/admin/clear-cache/${table}`,
+				method: 'POST',
+				success: successCallback,
+				error: errorCallback,
+			});
+		}
 	}
 
 	// initialize with table name
 	const duck = (table) => (new _duck(table));
+
 	duck.uuid = uuid;
+	duck.sendEmail = sendEmail;
+	duck.sendResetEmail = sendResetEmail;
 
 	window.duck = duck;
 }(jQuery.noConflict());

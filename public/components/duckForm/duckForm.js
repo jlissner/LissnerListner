@@ -3,11 +3,11 @@
 void function initCityFood($, duck, window) {
 	'use strict'
 
-	function deleteArrayItem(){
+	function deleteArrayItem() {
 		$(this).parent().remove();
 	}
 
-	function addArrayItem(){
+	function addArrayItem() {
 		const $this = $(this);
 		const $wrapper = $this.parent();
 		const $item = $wrapper.find('> [duck-type]').first();
@@ -34,7 +34,7 @@ void function initCityFood($, duck, window) {
 		$this.before($clone);
 	}
 
-	function removeFromObject(obj, path, value){
+	function removeFromObject(obj, path, value) {
 		const pathList = typeof path === 'string' ? path.split('.') : path;
 		const length = pathList.length
 
@@ -67,6 +67,93 @@ void function initCityFood($, duck, window) {
 		return obj;
 	}
 
+	function parseObject(obj, $item, fieldName, buildObjectFunction) {
+		const key = $item.attr('duck-key');
+		const newObj = obj[fieldName] || {};
+
+		if(key && !newObj[key]){
+			newObj[key] = $item.attr('duck-key-value') || duck.uuid();
+		}
+
+		obj[fieldName] = buildObjectFunction(newObj, $item.find('> [duck-field]'));
+	}
+
+	function parseArray(obj, $item, fieldName, buildObjectFunction) {
+		const $objectToUpdate = $item.find('> [duck-type="object"]');
+		const value = $objectToUpdate.first().attr('duck-key') ? obj[fieldName] : [];
+
+		if($objectToUpdate.length) {
+			$objectToUpdate.each((i, objec) => {
+				const $objec = $(objec);
+				const key = $objec.attr('duck-key');
+				const keyValue = $objec.attr('duck-key-value') || duck.uuid();
+				const newObj = key ? value.filter((o) => o[key] === keyValue)[0] : {}
+
+				// if the key is defined, the object is being altered/added without the context of the other items
+				if(key){
+					// if the key doesn't have a preset value, give it a uuid
+					newObj[key] = keyValue;
+
+					// check to see if an item with the same key exists in the array
+					const indexOfCurrentId = value.map((o) => o[key]).indexOf(newObj[key]);
+
+					// if it does, remove it from the list of values
+					if(indexOfCurrentId !== -1){
+						value.splice(indexOfCurrentId, 1);
+					}
+				}
+
+				// add the new object to the list of values
+				value.push(buildObjectFunction(newObj, $objec.find('> [duck-field]')));
+			});
+		} else {
+			$item.find('[duck-value]').each((i, arrayItem) => {
+				const val = $(arrayItem).val();
+
+				if(val){
+					value.push(val);
+				}
+			});
+		}
+
+		if(obj[fieldName] || value.length){
+			obj[fieldName] = value;
+		}
+	}
+
+	function parseCheckbox(obj, $item, fieldName) {
+		const value = [];
+
+		$item.find('input[type="checkbox"]').each((j, checkbox) => {
+			const $checkbox = $(checkbox);
+
+			if($checkbox.prop('checked')){
+				value.push($checkbox.val());
+			}
+		});
+
+		if(obj[fieldName] || value.length){
+			obj[fieldName] = value;
+		}
+	}
+
+	function parseRadio(obj, $item, fieldName) {
+		const value = $item.find('input[type="radio"]:checked').val();
+
+		if(obj[fieldName] || value){
+			obj[fieldName] = value;
+		}
+	}
+
+	function parseWysiwyg(obj, $item, fieldName, editor) {
+		const summernote = editor || '.summernote';
+		const value = $item.find(summernote).summernote('code');
+
+		if(value){
+			obj[fieldName] = value;
+		}
+	}
+
 	function buildObject(obj, $context) {
 		$context.each((i, item) => {
 			const $item = $(item);
@@ -75,81 +162,22 @@ void function initCityFood($, duck, window) {
 
 			switch(type){
 				case 'object': {
-					const key = $item.attr('duck-key');
-					const newObj = obj[fieldName] || {};
+					parseObject(obj, $item, fieldName, buildObject);
 
-					if(key && !newObj[key]){
-						newObj[key] = $item.attr('duck-key-value') || duck.uuid();
-					}
-
-					obj[fieldName] = buildObject(newObj, $item.find('> [duck-field]'));
 					break;
 				}
 				case 'array': {
-					const $objectToUpdate = $item.find('> [duck-type="object"]');
-					const value = $objectToUpdate.first().attr('duck-key') ? obj[fieldName] : [];
+					parseArray(obj, $item, fieldName, buildObject);
 
-					if($objectToUpdate.length) {
-						$objectToUpdate.each((j, objec) => {
-							const $objec = $(objec);
-							const key = $objec.attr('duck-key');
-							const newObj = {}
-
-							// if the key is defined, the object is being altered/added without the context of the other items
-							if(key){
-								// if the key doesn't have a preset value, give it a uuid
-								newObj[key] = $objec.attr('duck-key-value') || duck.uuid();
-
-								// check to see if an item with the same key exists in the array
-								const indexOfCurrentId = value.map((o) => o[key]).indexOf(newObj[key]);
-
-								// if it does, remove it from the list of values
-								if(indexOfCurrentId !== -1){
-									value.splice(indexOfCurrentId, 1);
-								}
-							}
-
-							// add the new object to the list of values
-							value.push(buildObject(newObj, $objec.find('> [duck-field]')));
-						});
-					} else {
-						$item.find('[duck-value]').each((j, arrayItem) => {
-							const val = $(arrayItem).val();
-
-							if(val){
-								value.push(val);
-							}
-						});
-					}
-
-					if(value.length){
-						obj[fieldName] = value;
-					}
 					break;
 				}
 				case 'checkbox': {
-					const value = [];
-
-					$item.find('input[type="checkbox"]').each((j, checkbox) => {
-						const $checkbox = $(checkbox);
-
-						if($checkbox.prop('checked')){
-							value.push($checkbox.val());
-						}
-					});
-
-					if(value.length){
-						obj[fieldName] = value;
-					}
+					parseCheckbox(obj, $item, fieldName);
 
 					break;
 				}
 				case 'radio': {
-					const value = $item.find('input[type="radio"]:checked').val();
-
-					if(value){
-						obj[fieldName] = value;
-					}			
+					parseRadio(obj, $item, fieldName);
 
 					break;
 				}
@@ -159,14 +187,11 @@ void function initCityFood($, duck, window) {
 					break;
 				}
 				case 'wysiwyg': {
-					const value = $item.find('.summernote').summernote('code');
-
-					if(value){
-						obj[fieldName] = value;
-					}
+					parseWysiwyg(obj, $item, fieldName);
 					
 					break;
 				}
+				case 'image':
 				case 'select': 
 				case 'number': 
 				case 'string':
@@ -174,7 +199,7 @@ void function initCityFood($, duck, window) {
 					const isInputValue = $item.val();
 					const value = isInputValue ? isInputValue : $item.find('[duck-value]').val();
 
-					if(value){
+					if(obj[fieldName] || value){
 						obj[fieldName] = value;
 					}
 
@@ -192,32 +217,42 @@ void function initCityFood($, duck, window) {
 		});
 	}
 
-	function duckForm(wrapper){
+	function duckForm(wrapper, options){
 		const $wrapper = $(wrapper);
 		const $startOfFields = $wrapper.find('> [duck-field]');
-		const $submit = $wrapper.find('[duck-button="submit"]');
-		const table = $wrapper.attr('duck-table');
-		const crud = $wrapper.attr('duck-function');
-		const key = $wrapper.attr('duck-key');
-		const keyValue = $wrapper.attr('duck-key-value');
-		const $urlWrapper = $wrapper.find('[duck-field="url"]');
-		const $urlField = $urlWrapper.find('input');
-		const $setUrlFrom = $wrapper.find('[duck-field="name"] input');
+		//const $submit = $wrapper.find('[duck-button="submit"]');
+		const $editButton = $wrapper.find('[duck-button="edit"]');
+		const $cancelButton = $wrapper.find('[duck-button="cancel"]');
+		const table = (options && options.table) || $wrapper.attr('duck-table');
+		const crud = (options && options.crud) || $wrapper.attr('duck-function');
+		const key = (options && options.key) || $wrapper.attr('duck-key');
+		const keyValue = (options && options.keyValue) || $wrapper.attr('duck-key-value');
+		const $urlField = $wrapper.find('[duck-field="url"] input');
+		const successCallback = (options && options.successCallback) || (() => {window.location.reload(true)});
+		const failureCallBack = (options && options.failureCallBack) || (() => {window.location.reload(true)});
 
 		if($urlField.length){
-			autoSetUrl($urlField, $setUrlFrom);
+			autoSetUrl($urlField, $wrapper.find('[duck-field="names"] [duck-field="display"] input'));
 		}
 
 		if(!table || !crud || !key || ((crud === 'update' || crud === 'delete') && !keyValue)) {
 			return; // need to have a table, key, and it's function set, and must have key value if it's for an update or delete
 		}
 
+		$editButton.click(() => {
+			$wrapper.attr('duck-edit-form', $wrapper.attr('duck-edit-form') === 'view' ? 'edit' : 'view');
+		})
+
+		$cancelButton.click(() => {
+			$wrapper.attr('duck-edit-form', $wrapper.attr('duck-edit-form') === 'view' ? 'edit' : 'view');
+		})
+
 		// set what happens when the submit button is clicked
-		$submit.click((e) => {
+		$wrapper.on('click', '[duck-button="submit"]', (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 
-			$submit.prop('disabled', true);
+			$(e.currentTarget).prop('disabled', true);
 
 			switch(crud){
 				// adds an item to the table
@@ -225,7 +260,7 @@ void function initCityFood($, duck, window) {
 					const item = {};
 					item[key] = keyValue || duck.uuid();
 
-					duck(table).add(buildObject(item, $startOfFields), () => {window.location.reload(true)});
+					duck(table).add(buildObject(item, $startOfFields), successCallback, failureCallBack);
 
 					break;
 				}
@@ -234,7 +269,7 @@ void function initCityFood($, duck, window) {
 				case 'update':{
 					duck(table).get({field: key, value: keyValue, findOne: true}, (data) => {
 						const item = buildObject(data, $startOfFields);
-						duck(table).update(item, () => {window.location.reload(true)});
+						duck(table).update(item, successCallback, failureCallBack);
 					});
 
 					break;
@@ -272,7 +307,7 @@ void function initCityFood($, duck, window) {
 					duck(table).get({field: key, value: keyValue, findOne: true}, (data) => {
 						const item = removeFromObject(data, path, value);
 
-						duck(table).update(item, () => {window.location.reload(true)});
+						duck(table).update(item, successCallback, failureCallBack);
 					});
 
 					break;
@@ -312,13 +347,13 @@ void function initCityFood($, duck, window) {
 		});
 	}
 
-	$.fn.duckForm = function init() {
+	$.fn.duckForm = function init(options) {
 		return this.each((index, wrapper) => {
-			duckForm(wrapper);
+			duckForm(wrapper, options);
 		});
 	}
 
-	$(window).load(() => {
+	$(window).on('load', () => {
 		$('[duck-table]').duckForm();
 	});
 }(jQuery.noConflict(), duck, window)
