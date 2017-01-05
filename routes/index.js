@@ -31,7 +31,7 @@ router.get('/:recipe', function(req, res, next){
 	});
 }); 
 
-router.get('/profile', isLoggedIn, function(req, res, next){
+router.get('/profile', isLoggedIn(), function(req, res, next){
 	res.render('profile/profile', {
 		key: User.hash,
 		users: User.find().items.sort()

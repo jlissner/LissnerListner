@@ -3,7 +3,7 @@ const isLoggedIn     = require('../middleware/isLoggedIn');
 const pickTable      = require('../modules/pickTable');
 const router         = express.Router();
 
-router.get('/get/:table', isLoggedIn, (req, res) => {
+router.get('/get/:table', isLoggedIn(), (req, res) => {
 	const field = req.query.field
 	const value = req.query.value
 	const findOne = req.query.findOne
@@ -23,7 +23,7 @@ router.get('/get/:table', isLoggedIn, (req, res) => {
 	}
 });
 
-router.post('/add/:table', isLoggedIn, (req, res) => {
+router.post('/add/:table', isLoggedIn(true), (req, res) => {
 	const item = req.body;
 	const table = pickTable(req.params.table);
 
@@ -43,7 +43,7 @@ router.post('/add/:table', isLoggedIn, (req, res) => {
 	});
 });
 
-router.post('/update/:table', isLoggedIn, (req, res) => {
+router.post('/update/:table', isLoggedIn(true), (req, res) => {
 	const item = req.body;
 	const table = pickTable(req.params.table);
 
@@ -63,7 +63,7 @@ router.post('/update/:table', isLoggedIn, (req, res) => {
 		});
 });
 
-router.post('/delete/:table', isLoggedIn, (req, res) => {
+router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 	const key = req.body['key'];
 	const table = pickTable(req.params.table);
 

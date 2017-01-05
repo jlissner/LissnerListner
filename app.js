@@ -10,7 +10,6 @@ const cookieParser     = require('cookie-parser');
 const bodyParser       = require('body-parser');
 const session          = require('cookie-session');
 const getUser          = require('./middleware/getUser');
-const isLoggedIn       = require('./middleware/isLoggedIn');
 const setFlash         = require('./modules/setFlash');
 const routes           = require('./routes/index');
 const ajax             = require('./routes/ajax');
