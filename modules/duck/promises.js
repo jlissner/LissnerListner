@@ -6,7 +6,7 @@ const flattenObject = require('../flattenObject');
 const parseData     = require('../parseData');
 const readJSON      = require('../readJSON');
 
-module.exports = function(_duck){
+module.exports = (_duck) => {
 	// Write an item into the database
 	// Data is the object being added to the database
 	// Conditions - TODO
@@ -20,6 +20,7 @@ module.exports = function(_duck){
 		const uniqueBy = this.uniqueBy;
 		const items = this.cached() || [];
 
+		reAssign = reAssign === undefined ? false : reAssign;
 		checkSchema = checkSchema === undefined ? true : checkSchema;
 
 		return new Promise(function(resolve, reject){

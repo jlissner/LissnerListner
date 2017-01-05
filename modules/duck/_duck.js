@@ -75,7 +75,7 @@ const _duck = function(schema, items, isReady){
 								if (err) {
 									console.error(JSON.stringify(err, null, 2));
 
-									console.error('~~~ failed to initialize after creating table ~~~');
+									console.error('~~~ failed to initialize ~~~');
 									process.exit();
 								} else {
 									cache.set(table, data.Items, cacheDuration);
@@ -89,7 +89,7 @@ const _duck = function(schema, items, isReady){
 							if (err) {
 								console.error(JSON.stringify(err, null, 2));
 
-								console.error('~~~ failed to initialize on existing table ~~~');
+								console.error('~~~ failed to initialize ~~~');
 								process.exit();
 							} else {
 								cache.set(table, data.Items, cacheDuration);
