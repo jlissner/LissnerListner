@@ -26,19 +26,25 @@ mixin RecipieForm(crud, recipe)
 			label Description
 			.summernote!= recipe && recipe.description
 
-		div(duck-field='type', duck-type='array')
-			label Type
-			if recipe && recipe.type
-				for type in recipe.type
-					.form-group(duck-type='string')
-						input.form-control(type='text', duck-value, value= type)
-			else
+		.form-group(duck-field='note', duck-type='wysiwyg')
+			label Notes
+			.summernote!= recipe && recipe.note
+
+		div(duck-field='dishType', duck-type='array')
+			label Dish Type
+			for type in recipe.dishType ? recipe.dishType : [null]
 				.form-group(duck-type='string')
-					input.form-control(type='text', duck-value)
+					input.form-control(type='text', duck-value, value= type)
+
+		div(duck-field='ethnicity', duck-type='array')
+			label Ethnicity
+			for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
+				.form-group(duck-type='string')
+					input.form-control(type='text', duck-value, value= ethnicity)
 
 
-		div(duck-field='ingredients', duck-type='array')
-			label Ingredients
+		div(duck-field='ingredientSections', duck-type='array')
+			label Ingredient Sections
 			if recipe && recipe.ingredients
 				for ingredient in recipe.ingredients
 					div(duck-type='object')
@@ -64,26 +70,21 @@ mixin RecipieForm(crud, recipe)
 						.form-group(duck-type='string')
 							input.form-control(type='text', duck-value)
 
-		.form-group(duck-field='directions', duck-type='array')
-			h3 Directions
-			if recipe && recipe.directions
-				for direction in recipe.directions
-					div(duck-type='object')
-						.form-group(duck-field='order', duck-type='numer')
-							label Order
-								input.form-control(type='number', value= direction.order, duck-value)
-						.form-group(duck-field='direction', duck-type='wysiwyg')
-							label Direction
-							.summernote!= direction.direction
-
-			else
+		h3 Directions
+		div(duck-field='directions', duck-type='array')
+			for direction in recipe && recipe.directions ? recipe.directions : [{}]
 				div(duck-type='object')
-					.form-group(duck-field='order', duck-type='numer')
-						label Order
-							input.form-control(type='number', duck-value)
-					.form-group(duck-field='direction', duck-type='wysiwyg')
-						label Direction
-						.summernote
+					.form-group(duck-field='title', duck-type='string')
+						label Title
+							input.form-control(type='text', value= direction.title, duck-value)
+
+					div(duck-field='steps', duck-type='array')
+						h4 Steps
+						for step in direction.steps ? direction.steps : [null]
+							.form-group(duck-type='string')
+								input.form-control(type='text', duck-value, value= step)
+
+
 
 		.checkbox(duck-field='isGlutenFree', duck-type='bool')
 			label

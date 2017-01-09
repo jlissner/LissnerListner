@@ -9,9 +9,34 @@ block content
 		if user && user.isAdmin
 			+modal('AddRecipie')
 				+RecipieForm('add')
-		.col-xs-12.col-sm-10
+		.hidden-xs.col-sm-2
+			h2 Filter
+			#CookbookFilter
+				- var types = [];
+				h3 Type
+				for recipe, i in recipes
+					for type in recipe.dishType ? recipe.dishType : []
+						if types.indexOf(type) === -1
+							.checkbox
+								label
+									input(type='checkbox', value= type)
+									= type
+							- types.push(type)
+
+				- var ethnicities = [];
+				h3 Ethnicity
+				for recipe, i in recipes
+					for type in recipe.ethnicity ? recipe.ethnicity : []
+						if ethnicities.indexOf(type) === -1
+							.checkbox
+								label
+									input(type='checkbox', value= type)
+									= type
+							- ethnicities.push(type)
+
+		#CookbookFoods.col-xs-12.col-sm-10
 			for recipe, i in recipes
-				.row.mtb-Sm
+				.row.mtb-Sm(data-dish= recipe.dishType && recipe.dishType.join('|'), data-ethnicity= recipe.ethnicity && recipe.ethnicity.join('|'))
 					.col-xs-12.col-sm-5.col-md-3
 						img.w-100(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
 					.col-xs-12.col-sm-7.col-md-9
@@ -27,9 +52,48 @@ block content
 							li(data-icon='fa fa-clock-o')= ` ${recipe.time}`
 							if recipe.serves
 								li.pl-0= `| Serves ${recipe.serves}`
-						if recipe.description !== '<p><br></p>' && recipe.description !== '<br>'
+						if recipe.description && wysiwygHasData(recipe.description)
 							div!= recipe.description
 
 						a(href=`/${recipe.url}`) Full Recipe
-				if i !== recipes.length -1
-					hr
+
+	script.
+		void function initCookbookFilter($, duck){
+			'use strict';
+
+			function filter($foods) {
+				return (e) => {
+					const values = [];
+
+					$('#CookbookFilter').find('input:checked').each((i, val) => {values.push($(val).val())});
+
+
+					$foods.removeClass('hidden')
+
+					if(values.length) {
+						$foods.filter((i, food) => {
+								const $food = $(food);
+								const dishes = $food.attr('data-dish');
+								const arrOfDishes = dishes ? dishes.split('|') : [];
+								const ethnicities = $food.attr('data-ethnicity');
+								const arrOfEthnicities = ethnicities ? ethnicities.split('|') : [];
+
+								const types = arrOfDishes.concat(arrOfEthnicities);
+
+								while (types.length) {
+									if(values.indexOf(types.shift()) !== -1) {
+										return false
+									}
+								}
+
+								return true;
+							}).addClass('hidden')
+					}
+				}
+			}
+
+			const $foods = $('#CookbookFoods').find('[data-dish]');
+			const $filters = $('#CookbookFilter').find('input[type="checkbox"]');
+
+			$filters.click(filter($foods));
+		}(jQuery.noConflict(), duck);

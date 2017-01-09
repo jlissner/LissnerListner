@@ -11,13 +11,13 @@ const router     = express.Router();
 
 strategies.local(passport);
 
-router.get('/', function(req, res, next){
+router.get('/', (req, res, next) => {
 	res.render('index', {
 		recipes: Recipe.find().items || []
 	});
 });
 
-router.get('/:recipe', function(req, res, next){
+router.get('/:recipe', (req, res, next) => {
 	const recipe = Recipe.findOne('url', req.params.recipe).items;
 
 	if (!recipe){
@@ -29,24 +29,28 @@ router.get('/:recipe', function(req, res, next){
 		recipe: recipe,
 		recipes: Recipe.find().items || []
 	});
-}); 
+});
 
-router.get('/profile', isLoggedIn(), function(req, res, next){
+router.get('/new-recipe', (req, res, next) => {
+	res.render('pages/newRecipe', {});
+});
+
+router.get('/profile', isLoggedIn(), (req, res, next) => {
 	res.render('profile/profile', {
 		key: User.hash,
 		users: User.find().items.sort()
 	});
 });
 
-router.post('/profile/update', function(req, res){
+router.post('/profile/update', (req, res) => {
 	if (req.body.delete){
-		User.delete(req.body[User.hash]).then(function(){
+		User.delete(req.body[User.hash]).then(() => {
 			// resolved
 
 			req.flash('success', 'User successfully deleted')
 			res.redirect('/logout');
 			return;
-		}, function(){
+		}, () => {
 			// rejected
 
 			req.flash('error', 'Oops, something went wrong. Please try again.');
@@ -68,7 +72,7 @@ router.post('/profile/update', function(req, res){
 			params.isAdmin = params.isAdmin.indexOf('true') > -1 ? true : false;
 		}
 
-		User.update(params, true).then(function(){
+		User.update(params, true).then(() => {
 			// resolved
 
 			User.updateCache().then(() => {
@@ -81,7 +85,7 @@ router.post('/profile/update', function(req, res){
 				res.redirect('/profile');
 				return;
 			});
-		}, function(err){
+		}, (err) => {
 			// rejected
 
 			console.error(err);
@@ -97,7 +101,7 @@ router.post('/profile/update', function(req, res){
 });
 
 // authentication
-router.get('/logout', function(req, res){
+router.get('/logout', (req, res) => {
 	req.logout();
 	res.redirect('/');
 });

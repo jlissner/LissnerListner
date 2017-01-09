@@ -10,18 +10,20 @@ const Recipe = Duck({
 		image: String,
 		difficulty: String,
 		description: String,
-		type: Array,
+		note: String,
+		ethnicity: Array,
+		dishType: Array,
 		time: String,
 		serves: String,
-		ingredients: [{
+		ingredientSections: [{
 			title: String,
 			ingredients: Array,
 		}],
 		directions: [{
-			Id: String,
-			order: Number,
-			direction: String
+			title: String,
+			steps: Array,
 		}],
+		suggestedDishes: Array, // array of id's for other dishes that would go well with this one
 		isGlutenFree: Boolean,
 		isVegetarian: Boolean,
 		isDairyFree: Boolean
