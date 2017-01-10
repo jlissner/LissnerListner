@@ -1,19 +1,77 @@
 extends ..\layout.pug
 
 block content
-	if user && user.isAdmin
-		//+modal(recipe.url)(class='modal-lg')
+	//if user && user.isAdmin
+		+modal(recipe.url)(class='modal-lg')
 			+RecipieForm('update', recipe)
 	.container
-		h1= recipe.name
-			|&nbsp;
-			small= recipe.author
-			if user && user.isAdmin
-				button.btn.btn-primary.f-R(duck-button='edit-mode') Edit
+		if user && user.isAdmin
+			div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+				button.btn.btn-edit.p-A.mt-NegSm.ml-NegLg(duck-button='edit', data-icon='fa fa-pencil')
+				div(duck-current-value)
+					h1= recipe.name
+						|&nbsp;
+						small= recipe.author
+				.form-inline
+					.form-group(duck-field='name', duck-type='string')
+						label.sr-only Recipe Name
+						input.form-control(type='text', duck-value, value=recipe.name)
+					.form-group.ml-Xs(duck-field='author', duck-type='string')
+						label.sr-only Author
+						input.form-control(type='text', duck-value, value=recipe.author)
+
+					button.btn.btn-primary.ml-Sm(duck-button='submit') Save
+					button.btn.btn-warning(duck-button='cancel') Cancel
+
+		else
+			h1= recipe.name
+				|&nbsp;
+				small= recipe.author
+
 		.row.mt-Lg
 			.col-xs-12.col-sm-5.col-md-3
-				img.w-100.br-Md(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
-				if recipe.ingredientSections
+				if user && user.isAdmin
+					.p-R(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+						button.btn.btn-edit.p-A.t-Xs.r-Xs(duck-button='edit', data-icon='fa fa-pencil')
+						.form-group.m-0(duck-field='image', duck-type='image')
+							input.form-control.p-A.t-Sm.l-Sm.r-Sm(type='text', duck-value, value= recipe.image)
+						img.w-100.br-Md(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
+
+						.p-A.b-Sm.r-Sm
+							button.btn.btn-primary.ml-Sm(duck-button='submit') Save
+							button.btn.btn-warning(duck-button='cancel') Cancel
+				else
+					img.w-100.br-Md(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
+				if user && user.isAdmin
+					.content-card(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+						h2.content-card--header Ingredients
+							button.btn.btn-edit.f-R.mt-NegSm.mr-NegSm(duck-button='edit', data-icon='fa fa-pencil')
+						for section in recipe.ingredientSections ? recipe.ingredientSections : []
+							div(duck-current-value)
+								if section.title
+									h3= section.title
+								if section.ingredients
+									ul
+										for ingredient in section.ingredients
+											li= ingredient
+						div(duck-field='ingredientSections', duck-type='array')
+							button.btn.btn-primary(duck-button='add') Add Ingredient Section
+							for section in recipe.ingredientSections ? recipe.ingredientSections : [{}]
+								.p-Sm.bg-G__ltr(duck-type='object')
+									div(duck-field='title', duck-type='string')
+										h3 Section Title
+										input.form-control(type='text', duck-value, value= section.title)
+									.mt-Lg(duck-field='ingredients', duck-type='array')
+										h4 Ingredients&nbsp;
+											button.btn.btn-primary(duck-button='add') Add Ingredient
+										for ingredient in section.ingredients ? section.ingredients : [null]
+											.form-group(duck-type='string')
+												input.form-control(type='text', duck-value, value= ingredient)
+									button.btn.btn-danger(duck-button='delete') Delete Ingredient Section
+						button.btn.btn-primary(duck-button='submit') Save
+						button.btn.btn-warning(duck-button='cancel') Cancel
+
+				else if recipe.ingredientSections
 					.content-card
 						h2.content-card--header Ingredients
 						for section in recipe.ingredientSections
@@ -25,45 +83,130 @@ block content
 										li= ingredient
 				
 			.col-xs-12.col-sm-7.col-md-9
-				if recipe.description && wysiwygHasData(recipe.description)
+				if user && user.isAdmin
+					div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+						button.btn.btn-edit.f-R.mt-NegSm.mr-NegSm(duck-button='edit')
+							if recipe.description && wysiwygHasData(recipe.description)
+								| Edit Description
+							else
+								| Add Description	
+						if recipe.description && wysiwygHasData(recipe.description)
+							.lead(duck-current-value)!= recipe.description
+
+						.form-group(duck-field='description', duck-type='wysiwyg')
+							label Description
+							.summernote!= recipe.description
+
+						button.btn.btn-primary(duck-button='submit') Save
+						button.btn.btn-warning(duck-button='cancel') Cancel
+
+				else if recipe.description && wysiwygHasData(recipe.description)
 					.lead!= recipe.description
 
-				if recipe.note && wysiwygHasData(recipe.note)
+				if user && user.isAdmin
+					div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+						button.btn.btn-edit.f-R.mt-NegSm.mr-NegSm(duck-button='edit')
+							if recipe.note && wysiwygHasData(recipe.note)
+								| Edit Note
+							else
+								| Add Note	
+						if recipe.note && wysiwygHasData(recipe.note)
+							.alert.alert-info.d-Ib(duck-current-value)
+								h3.mt-0 Note!
+								div!= recipe.note
+
+						.form-group(duck-field='note', duck-type='wysiwyg')
+							label Note
+							.summernote!= recipe.note
+
+						button.btn.btn-primary(duck-button='submit') Save
+						button.btn.btn-warning(duck-button='cancel') Cancel
+
+				else if recipe.note && wysiwygHasData(recipe.note)
 					.alert.alert-info.d-Ib
 						h3.mt-0 Note!
 						div!= recipe.note
 
 				.content-card
 					h2.content-card--header Directions
-					ul.fc-G__dk.fs-Sm.list-inline
-						if recipe.isGlutenFree
-							li.pr-0 Gluten Free |
-						if recipe.isVegitarian
-							li.pr-0 Vegitarian |
-						if recipe.isDairyFree
-							li.pr-0 Dairy Free |
-						li(data-icon='fa fa-clock-o')= ` ${recipe.time}`
-						if recipe.serves
-							li.pl-0= `| Serves ${recipe.serves}`
-					ul.p-0.ls-N
-						for direction, i in recipe.directions ? recipe.directions : []
-							li
-								if direction.title
-									h3= direction.title
-								ol
-									for step in direction.steps
-										li= step
+					if user && user.isAdmin
+						div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+							button.btn.btn-edit.f-R(duck-button='edit', data-icon='fa fa-pencil')
+							ul.fc-G__dk.fs-Sm.list-inline
+								if recipe.isGlutenFree
+									li.pr-0(duck-current-value) Gluten Free |
+								if recipe.isVegitarian
+									li.pr-0(duck-current-value) Vegitarian |
+								if recipe.isDairyFree
+									li.pr-0(duck-current-value) Dairy Free |
+								li(data-icon='fa fa-clock-o', duck-current-value)= ` ${recipe.time}`
+								if recipe.serves
+									li.pl-0(duck-current-value)= `| Serves ${recipe.serves}`
+
+								li.checkbox(duck-field='isGlutenFree', duck-type='bool')
+									label
+										input(type='checkbox', duck-value, checked= recipe.isGlutenFree)
+										| Is Gluten Free
+								li.checkbox(duck-field='isVegitarian', duck-type='bool')
+									label
+										input(type='checkbox', duck-value, checked= recipe.isVegitarian)
+										| Is Vegitarian Free
+								li.checkbox(duck-field='isDairyFree', duck-type='bool')
+									label
+										input(type='checkbox', duck-value, checked= recipe.isDairyFree)
+										| Is Dairy Free
+								li(duck-field='time', duck-type='string')
+									input.form-control(type='text', duck-value, placeholder='Time to Make', value= recipe.time)
+								li(duck-field='serves', duck-type='string')
+									input.form-control(type='text', duck-value, placeholder='Serves How Many?', value= recipe.serves)
+							ul.p-0.ls-N(duck-current-value)
+								for direction, i in recipe.directions ? recipe.directions : []
+									li
+										if direction.title
+											h3= direction.title
+										ol
+											for step in direction.steps ? direction.steps : []
+												li= step
+							ul.p-0.ls-N(duck-field='directions', duck-type='array')
+								li: button.btn.btn-primary(duck-button='add') Add Direction Section
+								for direction, i in recipe.directions ? recipe.directions : [{}]
+									li.bg-G__ltr.mb-Md.p-Sm(duck-type='object')
+										.form-group(duck-field='title', duck-type='string')
+											label Direction Section Title
+												input.form-control(type='text', duck-value, value= direction.title)
+										h3 Steps
+										ul.p-0.ls-N(duck-field='steps', duck-type='array')
+											for step in direction.steps ? direction.steps : [null]
+												li.form-group(duck-type='string')
+													input.form-control(type='text', duck-value, value=step)
+											li.ta-R.mt-Xs: button.btn.btn-primary(duck-button='add') Add Step
+										button.btn.btn-danger(duck-button='delete') Delete Direction Section
+
+							button.btn.btn-primary.ml-Sm(duck-button='submit') Save
+							button.btn.btn-warning(duck-button='cancel') Cancel
+					else
+						ul.fc-G__dk.fs-Sm.list-inline
+							if recipe.isGlutenFree
+								li.pr-0 Gluten Free |
+							if recipe.isVegitarian
+								li.pr-0 Vegitarian |
+							if recipe.isDairyFree
+								li.pr-0 Dairy Free |
+							li(data-icon='fa fa-clock-o')= ` ${recipe.time}`
+							if recipe.serves
+								li.pl-0= `| Serves ${recipe.serves}`
+						ul.p-0.ls-N
+							for direction, i in recipe.directions ? recipe.directions : []
+								li
+									if direction.title
+										h3= direction.title
+									ol
+										for step in direction.steps ? direction.steps : []
+											li= step
 
 			.col-xs-12
 				h2 Other Recipes
 				.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md
-					for otherRecipe in recipes.filter((i) => i.Id !== recipe.Id)
-						.masonry--item(data-toggle='modal', data-target= `#${otherRecipe.url}`)
+					for otherRecipe in recipes ? recipes.filter((i) => i.Id !== recipe.Id) : []
+						a.masonry--item(href= otherRecipe.url)
 							+card(otherRecipe.image, otherRecipe.name)
-
-	for otherRecipe in recipes.filter((i) => i.Id !== recipe.Id)
-		+modal(otherRecipe.url)(class='modal-lg')
-			h2= otherRecipe.name
-			img.img-responsive.f-L(src=otherRecipe.image, alt= otherRecipe.name)
-			.lead!= otherRecipe.description
-			a(href=`/${otherRecipe.url}`) Full Recipie

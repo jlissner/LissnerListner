@@ -32,43 +32,29 @@ mixin RecipieForm(crud, recipe)
 
 		div(duck-field='dishType', duck-type='array')
 			label Dish Type
-			for type in recipe.dishType ? recipe.dishType : [null]
+			for type in recipe && recipe.dishType ? recipe.dishType : [null]
 				.form-group(duck-type='string')
 					input.form-control(type='text', duck-value, value= type)
 
 		div(duck-field='ethnicity', duck-type='array')
 			label Ethnicity
-			for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
+			for ethnicity in recipe && recipe.ethnicity ? recipe.ethnicity : [null]
 				.form-group(duck-type='string')
 					input.form-control(type='text', duck-value, value= ethnicity)
 
 
 		div(duck-field='ingredientSections', duck-type='array')
 			label Ingredient Sections
-			if recipe && recipe.ingredients
-				for ingredient in recipe.ingredients
-					div(duck-type='object')
-						.form-group(duck-field='title', duck-type='string')
-							label Title
-								input.form-control(type='text', value= ingredient.title, duck-value)
-						.form-group(duck-field='ingredients', duck-type='array')
-							label Ingredients
-							if ingredient.ingredients
-								for subIngredient in ingredient.ingredients
-									.form-group(duck-type='string')
-										input.form-control(type='text', duck-value, value= subIngredient)
-							else
-								.form-group(duck-type='string')
-									input.form-control(type='text', duck-value)
-			else
+			for ingredient in recipe && recipe.ingredients ? recipe.ingredients : [{}]
 				div(duck-type='object')
 					.form-group(duck-field='title', duck-type='string')
 						label Title
-							input.form-control(type='text', duck-value)
+							input.form-control(type='text', value= ingredient.title, duck-value)
 					.form-group(duck-field='ingredients', duck-type='array')
 						label Ingredients
-						.form-group(duck-type='string')
-							input.form-control(type='text', duck-value)
+						for subIngredient in ingredient && ingredient.ingredients ? ingredient.ingredients : [null]
+							.form-group(duck-type='string')
+								input.form-control(type='text', duck-value, value= subIngredient)
 
 		h3 Directions
 		div(duck-field='directions', duck-type='array')

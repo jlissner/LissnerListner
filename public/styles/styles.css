@@ -3076,6 +3076,9 @@ fieldset[disabled] .btn {
   filter: alpha(opacity=65);
   box-shadow: none;
 }
+.btn + .btn {
+  margin-left: 6px;
+}
 a.btn.disabled,
 fieldset[disabled] a.btn {
   pointer-events: none;
@@ -3132,6 +3135,9 @@ fieldset[disabled] .btn-default {
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
+}
+.btn-default + .btn {
+  margin-left: 6px;
 }
 a.btn-default.disabled,
 fieldset[disabled] a.btn-default {
@@ -3243,6 +3249,9 @@ fieldset[disabled] .btn-primary {
   filter: alpha(opacity=65);
   box-shadow: none;
 }
+.btn-primary + .btn {
+  margin-left: 6px;
+}
 a.btn-primary.disabled,
 fieldset[disabled] a.btn-primary {
   pointer-events: none;
@@ -3351,6 +3360,9 @@ fieldset[disabled] .btn-secondary {
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
+}
+.btn-secondary + .btn {
+  margin-left: 6px;
 }
 a.btn-secondary.disabled,
 fieldset[disabled] a.btn-secondary {
@@ -3461,6 +3473,9 @@ fieldset[disabled] .btn-success {
   filter: alpha(opacity=65);
   box-shadow: none;
 }
+.btn-success + .btn {
+  margin-left: 6px;
+}
 a.btn-success.disabled,
 fieldset[disabled] a.btn-success {
   pointer-events: none;
@@ -3569,6 +3584,9 @@ fieldset[disabled] .btn-info {
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
+}
+.btn-info + .btn {
+  margin-left: 6px;
 }
 a.btn-info.disabled,
 fieldset[disabled] a.btn-info {
@@ -3679,6 +3697,9 @@ fieldset[disabled] .btn-warning {
   filter: alpha(opacity=65);
   box-shadow: none;
 }
+.btn-warning + .btn {
+  margin-left: 6px;
+}
 a.btn-warning.disabled,
 fieldset[disabled] a.btn-warning {
   pointer-events: none;
@@ -3787,6 +3808,9 @@ fieldset[disabled] .btn-danger {
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
+}
+.btn-danger + .btn {
+  margin-left: 6px;
 }
 a.btn-danger.disabled,
 fieldset[disabled] a.btn-danger {
