@@ -5,7 +5,7 @@ const User              = require('../schemas/user');
 
 const strategies    = {};
 
-strategies.local = function(passport){
+strategies.local = (passport) => {
 	// =========================================================================
     // passport session setup ==================================================
     // =========================================================================
@@ -13,12 +13,12 @@ strategies.local = function(passport){
 	// passport needs ability to serialize and unserialize user out of session
 
 	// used to serialize the user for the session
-	passport.serializeUser(function(user, done){
+	passport.serializeUser((user, done) => {
 		done(null, user.Id);
 	});
 
 	// used to deserialize the user
-	passport.deserializeUser(function(id, done){
+	passport.deserializeUser((id, done) => {
 		var user = User.findOne('Id', id).items;
 
 		if (user){
@@ -37,7 +37,7 @@ strategies.local = function(passport){
 			usernameField: 'local.email',
 			passwordField: 'local.password',
 			passReqToCallback: true // allows us to pass back the entire request to the callback
-		}, function(req, email, password, done){
+		}, (req, email, password, done) => {
 			if (User.findOne('local.email', email).items) {
 				return done(null, false, req.flash('error', 'That email is already taken'));
 			} else if(password.length < 4) {
@@ -56,10 +56,11 @@ strategies.local = function(passport){
 				}
 			}
 
-			User.add(newUser).then(function(user){
-				User.updateCache();
-				done(null, newUser);
-			}, function(err){
+			User.add(newUser).then((user) => {
+				User.updateCache().then(() => {
+					done(null, req.user);
+				});
+			}, (err) => {
 				console.error(err);
 				return done(null, false, req.flash('error', 'Something went wrong, please try again.'));
 			});
@@ -70,7 +71,7 @@ strategies.local = function(passport){
 			usernameField: 'email',
 			passwordField: 'password',
 			passReqToCallback: true
-		}, function(req, email, password, done){
+		}, (req, email, password, done) => {
 			const user = User.findOne('local.email', email).items;
 
 			if(user && User.validPassword(password, user.local.password)){

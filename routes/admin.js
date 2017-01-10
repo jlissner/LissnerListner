@@ -7,7 +7,6 @@ const router         = express.Router();
 router.get('/', (req, res) => {
 	res.render('admin', {
 		title: 'Stellaroute: Admin Controls',
-		description: 'Stellaroute, founded in 2015, is the world\'s foremost innovator in travel technologies and services.',
 		users: pickTable('Users').cached(),
 	});
 });

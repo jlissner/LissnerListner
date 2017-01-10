@@ -103,7 +103,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
-	successRedirect: '/profile',
+	successRedirect: '/admin',
 	failureRedirect: '/',
 	failureFlash: true
 }));

@@ -19,7 +19,6 @@ block content
 					li.col-xs-12.col-sm-6.col-md-4.col-lg-3.ls-N
 						.content-card
 							h3.content-card--header= user.name ? `${user.name.first} ${user.name.last}` : 'N/A'
-								button.btn-warning.f-R.mt-NegSm.mr-NegSm.js-password-reset(type='button') Reset Password
 							strong Email:&nbsp;
 							span.js-user-email= user.local ? user.local.email : 'N/A'
 
