@@ -1,7 +1,6 @@
 const uuid              = require('uuid');
 const LocalStrategy     = require('passport-local').Strategy;
 const InstagramStrategy = require('passport-instagram').Strategy;
-const instagram         = require('./instagram');
 const User              = require('../schemas/user');
 
 const strategies    = {};
@@ -81,60 +80,6 @@ strategies.local = function(passport){
 			return done(null, false, req.flash('error', 'Sorry, the password and email did not match!'));
 		}
 	));
-};
-
-strategies.instagram = function(passport){
-	passport.serializeUser(function(user, done){
-		done(null, user.Id);
-	});
-
-	// used to deserialize the user
-	passport.deserializeUser(function(id, done){
-		var user = User.findOne('Id', id).items;
-
-		if (user){
-			done(null, user);
-		} else {
-			done(null, false);
-		}
-	});
-
-	passport.use(new InstagramStrategy({
-		clientID: process.env.INSTAGRAM_ID,
-		clientSecret: process.env.INSTAGRAM_SECRET,
-		callbackURL: '/auth/instagram/callback'
-	},
-	function(accessToken, refreshToken, profile, done) {
-		instagram.use({ access_token: accessToken });
-
-		process.nextTick(function () {
-			const user = User.findOne('instagram', profile.id).items;
-
-			if(!user){
-				const newUser = {
-					Id: uuid.v4(),
-					instagram: profile.id,
-					name: {
-						first: (profile.name.givenName ? profile.name.givenName : profile.displayName),
-					},
-				};
-
-				if(profile.name.familyName){
-					newUser.name.last = profile.name.familyName
-				}
-
-				User.add(newUser, false).then(function success(){
-					User.deleteCached();
-					return done(null, newUser);
-				}, function error(err){
-					console.error(err);
-					return done(null, false, req.flash('error', 'Something went wrong, please try again.'));
-				});
-			} else {
-				return done(null, user);
-			}			
-		});
-	}));
 };
 
 module.exports = strategies;
