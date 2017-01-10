@@ -14,6 +14,7 @@ const isLoggedIn       = require('./middleware/isLoggedIn');
 const setFlash         = require('./modules/setFlash');
 const routes           = require('./routes/index');
 const ajax             = require('./routes/ajax');
+const admin            = require('./routes/admin');
 const fs               = require('fs');
 const app              = express();
 
@@ -49,6 +50,8 @@ app.use('/', routes);
 
 // CRUD
 app.use('/', isLoggedIn(), ajax);
+
+app.use('/admin', isLoggedIn(true), admin);
 
 // error handlers /////////////////////////////////////////////////////
 

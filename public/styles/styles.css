@@ -569,6 +569,7 @@
 }
 [data-function='scroll'].no-scrollbar [data-scroll='content-wrapper'] {
   right: 0;
+  overflow: hidden;
 }
 [data-function='scroll'].no-scrollbar [data-scroll='content'] {
   padding-right: 0;
