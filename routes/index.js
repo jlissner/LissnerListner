@@ -31,10 +31,6 @@ router.get('/:recipe', (req, res, next) => {
 	});
 });
 
-router.get('/new-recipe', (req, res, next) => {
-	res.render('pages/newRecipe', {});
-});
-
 router.get('/profile', isLoggedIn(), (req, res, next) => {
 	res.render('profile/profile', {
 		key: User.hash,
@@ -42,7 +38,7 @@ router.get('/profile', isLoggedIn(), (req, res, next) => {
 	});
 });
 
-router.post('/profile/update', (req, res) => {
+router.post('/profile/update', isLoggedIn(), (req, res) => {
 	if (req.body.delete){
 		User.delete(req.body[User.hash]).then(() => {
 			// resolved

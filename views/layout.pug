@@ -12,14 +12,36 @@ html(lang='en', style='height: 100%')
 <!-- End Google Tag Manager (noscript) -->
 		div#Body(data-scroll='content-wrapper')
 			div(data-scroll='content')
-				block header
-					include controls/header.pug
-					
-				main.site-body
-					include controls/flash.pug
-					block content
+				if user
+					block header
+						include controls/header.pug
+						
+					main.site-body
+						include controls/flash.pug
+						block content
 
-				block footer
-					include controls/footer.pug
+					block footer
+						include controls/footer.pug
+				else
+					include controls/flash.pug
+					.container
+						form.col-xs-12.col-sm-10.col-sm-push-1.col-md-8.col-md-push-2.col-lg-6.col-lg-push-3(method='POST', action='/auth/local')
+							h1.mt-XXl--sm The Lissner Listner
+							p.lead In order to view this site you must be logged in. Don't have a log in or forgot your password? Send an email to <a href='mailto:lissnerlistner@gmail.com '>lissnerlistner@gmail.com </a> and ask for login credentials.
+
+							h2.mt-0 Log In
+							.row
+
+								.col-xs-12
+									label.input-label.w-100.p-R
+										i.fa.fa-envelope.p-A.t-0.b-0.r-Md.d-F.fj-C.fd-C.fs-Lg(aria-hidden="true")
+										input#Email.form-control.input-lg(name='email', type='email', placeholder='Email Address')
+
+								.col-xs-12
+									label.input-label.w-100.p-R
+										i.fa.fa-lock.p-A.t-0.b-0.r-Md.d-F.fj-C.fd-C.fs-Lg(aria-hidden="true")
+										input#Passphrase.form-control.input-lg(name='password', type='password', placeholder='Password')
+
+									input.btn.btn-primary.btn-lg.mt-Sm(type='submit', value='Log In')
 		div(data-scroll='scrollbar')
 			button
