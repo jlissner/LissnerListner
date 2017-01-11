@@ -129,7 +129,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-console.log('~~~~ Stellroute Has Started ~~~~');
+console.log('~~~~ The Lissner Listner Has Started ~~~~');
 console.log('Current Environment: ' + app.get('env'));
 
 module.exports = app;
