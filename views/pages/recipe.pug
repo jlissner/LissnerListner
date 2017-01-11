@@ -142,7 +142,7 @@ block content
 									ul.fc-G__dk.fs-Sm.list-inline
 										if recipe.isGlutenFree
 											li.pr-0.duck-edit-hidden Gluten Free |
-										if recipe.isVegitarian
+										if recipe.isVegetarian
 											li.pr-0.duck-edit-hidden Vegitarian |
 										if recipe.isDairyFree
 											li.pr-0.duck-edit-hidden Dairy Free |
@@ -154,9 +154,9 @@ block content
 											label
 												input(type='checkbox', duck-value, checked= recipe.isGlutenFree)
 												| Is Gluten Free
-										li.duck-view-hidden.checkbox(duck-field='isVegitarian', duck-type='bool')
+										li.duck-view-hidden.checkbox(duck-field='isVegetarian', duck-type='bool')
 											label
-												input(type='checkbox', duck-value, checked= recipe.isVegitarian)
+												input(type='checkbox', duck-value, checked= recipe.isVegetarian)
 												| Is Vegitarian Free
 										li.duck-view-hidden.checkbox(duck-field='isDairyFree', duck-type='bool')
 											label
@@ -196,7 +196,7 @@ block content
 								ul.fc-G__dk.fs-Sm.list-inline
 									if recipe.isGlutenFree
 										li.pr-0 Gluten Free |
-									if recipe.isVegitarian
+									if recipe.isVegetarian
 										li.pr-0 Vegitarian |
 									if recipe.isDairyFree
 										li.pr-0 Dairy Free |
@@ -220,24 +220,34 @@ block content
 									ul
 										for type in recipe.dishType ? recipe.dishType : [null]
 											li= type === null ? 'Unknown' : type
-								.duck-view-hidden(duck-field='dishType', duck-type='array')
+								.duck-view-hidden.mb-Lg(duck-field='dishType', duck-type='array')
 									h3 Dish Type
-										button.btn.btn-primary.ml-Sm(duck-button='add') Add Type
-									for type in recipe.dishType ? recipe.dishType : [null]
-										.form-group(duck-type='string')
-											input.form-control(type='text', duck-value, value= type)
+									div
+										for type in recipe.dishType ? recipe.dishType : [null]
+											.form-group.d-F.pl-Sm(duck-type='string')
+												input.form-control(type='text', duck-value, value= type)
+												button.btn.btn-danger(duck-button='delete')
+									.ta-R
+										button.btn.btn-primary(duck-button='add') Add Dish Type
 								
 								.duck-edit-hidden
 									h3 Ethnicity
 									ul
 										for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
 											li= ethnicity === null ? 'Unknown' : ethnicity
-								.duck-view-hidden(duck-field='ethnicity', duck-type='array')
+								.duck-view-hidden.mb-Lg(duck-field='ethnicity', duck-type='array')
 									h3 Ethnicity
-										button.btn.btn-primary.ml-Sm(duck-button='add') Add Ethnicity
-									for type in recipe.ethnicity ? recipe.ethnicity : [null]
-										.form-group(duck-type='string')
-											input.form-control(type='text', duck-value, value= type)
+									div
+										for type in recipe.ethnicity ? recipe.ethnicity : [null]
+											.form-group.pl-Sm(duck-type='string')
+												.d-F
+													input.form-control(type='text', duck-value, value= type)
+													button.btn.btn-danger(duck-button='delete')
+												.ta-C
+													button.btn(duck-button='add', duck-add='after')
+
+									.ta-R
+										button.btn.btn-primary(duck-button='add') Add Ethnicity
 								
 								h3(class= recipe.difficulty ? '' : 'duck-view-hidden') Difficulty
 								if recipe.difficulty && recipe.difficulty !== 'Unknown'
