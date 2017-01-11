@@ -24,6 +24,7 @@ head
 	script(type='text/javascript', src='/components/accordionsTabs/accordions-tabs.min.js')
 	script(type='text/javascript', src='/components/banner/banner.min.js')
 	script(type='text/javascript', src='/components/copy/copy.min.js')
+	script(type='text/javascript', src='/components/filter/filter.min.js')
 	script(type='text/javascript', src='/components/icon/icon.min.js')
 	script(type='text/javascript', src='/components/interiorNav/interiorNav.min.js')
 	script(type='text/javascript', src='/components/scroll/scroll.min.js')
@@ -41,7 +42,7 @@ head
 	link(href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css", rel="stylesheet")
 	script(src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js")
 
-	// scripts
+	// server scripts
 	-
 		function uuid() {return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);return v.toString(16);})}
 		function randomizeArray(a, b) { var x = Math.random(); if(x>.5){return 1;}if(x<.5){return -1;}return 0;}
