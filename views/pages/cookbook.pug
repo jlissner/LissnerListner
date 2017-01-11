@@ -14,29 +14,40 @@ block content
 			#CookbookFilter
 				- var types = [];
 				h3 Type
-				for recipe, i in recipes
-					for type in recipe.dishType ? recipe.dishType : []
-						if types.indexOf(type) === -1
-							.checkbox
-								label
-									input(type='checkbox', value= type)
-									= type
-							- types.push(type)
+				div(data-function='filter', data-filter-section='dish')
+					for recipe, i in recipes
+						for type in recipe.dishType ? recipe.dishType : []
+							if types.indexOf(type) === -1
+								.checkbox
+									label
+										input(type='checkbox', value= type)
+										= type
+								- types.push(type)
 
 				- var ethnicities = [];
 				h3 Ethnicity
-				for recipe, i in recipes
-					for type in recipe.ethnicity ? recipe.ethnicity : []
-						if ethnicities.indexOf(type) === -1
-							.checkbox
-								label
-									input(type='checkbox', value= type)
-									= type
-							- ethnicities.push(type)
+				div(data-function='filter', data-filter-section='ethnicity')
+					for recipe, i in recipes
+						for type in recipe.ethnicity ? recipe.ethnicity : []
+							if ethnicities.indexOf(type) === -1
+								.checkbox
+									label
+										input(type='checkbox', value= type)
+										= type
+								- ethnicities.push(type)
+
+				- var difficulties = ['Easy', 'Medium', 'Hard', 'Advanced'];
+				h3 Difficulty
+				div(data-function='filter', data-filter-section='difficulty')
+					for difficulty in difficulties
+						.checkbox
+							label
+								input(type='checkbox', value= difficulty)
+								= difficulty
 
 		#CookbookFoods.col-xs-12.col-sm-10
 			for recipe, i in recipes
-				.row.mtb-Sm(data-dish= recipe.dishType && recipe.dishType.join('|'), data-ethnicity= recipe.ethnicity && recipe.ethnicity.join('|'))
+				.row.mtb-Sm(data-dish= recipe.dishType && recipe.dishType.join('|'), data-ethnicity= recipe.ethnicity && recipe.ethnicity.join('|'), data-difficulty= recipe.difficulty || 'Unknown')
 					.col-xs-12.col-sm-5.col-md-3
 						img.w-100(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
 					.col-xs-12.col-sm-7.col-md-9
@@ -79,6 +90,7 @@ block content
 								const arrOfEthnicities = ethnicities ? ethnicities.split('|') : [];
 
 								const types = arrOfDishes.concat(arrOfEthnicities);
+								types.push($food.attr('data-difficulty'));
 
 								while (types.length) {
 									if(values.indexOf(types.shift()) !== -1) {
