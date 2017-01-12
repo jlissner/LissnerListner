@@ -56,19 +56,25 @@ block content
 										for ingredient in section.ingredients
 											li= ingredient
 						.duck-view-hidden(duck-field='ingredientSections', duck-type='array')
-							button.btn.btn-primary(duck-button='add') Add Ingredient Section
-							for section in recipe.ingredientSections ? recipe.ingredientSections : [{}]
-								.p-Sm.bg-G__ltr(duck-type='object')
-									div(duck-field='title', duck-type='string')
-										h3 Section Title
-										input.form-control(type='text', duck-value, value= section.title)
-									.mt-Lg(duck-field='ingredients', duck-type='array')
-										h4 Ingredients&nbsp;
-											button.btn.btn-primary(duck-button='add') Add Ingredient
-										for ingredient in section.ingredients ? section.ingredients : [null]
-											.form-group(duck-type='string')
-												input.form-control(type='text', duck-value, value= ingredient)
-									button.btn.btn-danger(duck-button='delete') Delete Ingredient Section
+							div
+								for section in recipe.ingredientSections ? recipe.ingredientSections : [{}]
+									.p-Sm.bg-G__ltr(duck-type='object')
+										div(duck-field='title', duck-type='string')
+											h3 Section Title
+											input.form-control(type='text', duck-value, value= section.title)
+										.mt-Lg(duck-field='ingredients', duck-type='array')
+											h4 Ingredients&nbsp;
+											div
+												for ingredient in section.ingredients ? section.ingredients : [null]
+													.form-group.d-F(duck-type='string')
+														input.form-control(type='text', duck-value, value= ingredient)
+														button.btn.btn-danger(duck-button='delete')
+											.ta-R
+												button.btn.btn-primary(duck-button='add') Add Ingredient
+									.ta-C.mb-Md
+										button.btn.btn-danger(duck-button='delete') Delete Ingredient Section
+							.ta-R
+								button.btn.btn-primary(duck-button='add') Add Ingredient Section
 						.duck-view-hidden
 							button.btn.btn-primary(duck-button='submit') Save
 							button.btn.btn-warning(duck-button='cancel') Cancel
@@ -259,25 +265,28 @@ block content
 									ul
 										for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
 											li= ethnicity === null ? 'Unknown' : ethnicity
-								.duck-view-hidden.mb-Lg(duck-field='ethnicity', duck-type='array')
+								.duck-view-hidden.mb-Lg(duck-field='ethnicity', duck-type='checkbox')
 									h3 Ethnicity
 									div
 										-
 											var ethnicities = [
+																'Other',
 																'Italian',
 																'American',
 																'Mexican',
 																'German',
 																'Irish',
+																'Asian',
+																'Chinese',
+																'Japanese',
+																'Korean',
 															]
 
-										for type in recipe.ethnicity ? recipe.ethnicity : [null]
-											.form-group.pl-Sm(duck-type='string')
-												.d-F
-													input.form-control(type='text', duck-value, value= type)
-													button.btn.btn-danger(duck-button='delete')
-												.ta-C
-													button.btn(duck-button='add', duck-add='after')
+										for ethnicity in ethnicities
+											.checkbox
+												label
+													input(type='checkbox', value= ethnicity, checked= recipe.ethnicity && recipe.ethnicity.indexOf(ethnicity) !== -1)
+													= ethnicity
 
 									.ta-R
 										button.btn.btn-primary(duck-button='add') Add Ethnicity
