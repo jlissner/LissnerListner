@@ -149,7 +149,7 @@ block content
 										if recipe.isGlutenFree
 											li.pr-0.duck-edit-hidden Gluten Free |
 										if recipe.isVegetarian
-											li.pr-0.duck-edit-hidden Vegitarian |
+											li.pr-0.duck-edit-hidden Vegetarian |
 										if recipe.isDairyFree
 											li.pr-0.duck-edit-hidden Dairy Free |
 										li.duck-edit-hidden(data-icon='fa fa-clock-o')= ` ${recipe.time}`
@@ -163,7 +163,7 @@ block content
 										li.duck-view-hidden.checkbox(duck-field='isVegetarian', duck-type='bool')
 											label
 												input(type='checkbox', duck-value, checked= recipe.isVegetarian)
-												| Is Vegitarian Free
+												| Is Vegetarian Free
 										li.duck-view-hidden.checkbox(duck-field='isDairyFree', duck-type='bool')
 											label
 												input(type='checkbox', duck-value, checked= recipe.isDairyFree)
@@ -188,11 +188,16 @@ block content
 													label Direction Section Title
 														input.form-control(type='text', duck-value, value= direction.title)
 												h3 Steps
-												ul.p-0.ls-N(duck-field='steps', duck-type='array')
-													for step in direction.steps ? direction.steps : [null]
-														li.form-group(duck-type='string')
-															input.form-control(type='text', duck-value, value=step)
-													li.ta-R.mt-Xs: button.btn.btn-primary(duck-button='add') Add Step
+												div(duck-field='steps', duck-type='array')
+													div
+														for step in direction.steps ? direction.steps : [null]
+															div.form-group.d-F.fj-C(duck-type='string')
+																i.fa.fa-arrows-v.p-Sm.pl-Xs
+																input.form-control(type='text', duck-value, value=step)
+																button.btn.btn-danger(duck-button='delete')
+													div.ta-R.mt-Xs
+														button.btn.btn-primary(duck-button='add') Add Step
+
 												button.btn.btn-danger(duck-button='delete') Delete Direction Section
 
 									.duck-view-hidden
@@ -203,7 +208,7 @@ block content
 									if recipe.isGlutenFree
 										li.pr-0 Gluten Free |
 									if recipe.isVegetarian
-										li.pr-0 Vegitarian |
+										li.pr-0 Vegetarian |
 									if recipe.isDairyFree
 										li.pr-0 Dairy Free |
 									li(data-icon='fa fa-clock-o')= ` ${recipe.time}`
