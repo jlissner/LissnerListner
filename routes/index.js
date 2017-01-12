@@ -25,9 +25,12 @@ router.get('/:recipe', (req, res, next) => {
 		return;
 	}
 
+	const suggestedRecipes = Recipe.find('Id', recipe.suggestedRecipes).items;
+
 	res.render('pages/recipe', {
 		recipe: recipe,
-		recipes: Recipe.find().items || []
+		recipes: Recipe.find().items || [],
+		suggestedRecipes,
 	});
 });
 

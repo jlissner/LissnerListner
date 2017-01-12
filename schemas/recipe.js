@@ -23,7 +23,7 @@ const Recipe = Duck({
 			title: String,
 			steps: Array,
 		}],
-		suggestedDishes: Array, // array of id's for other dishes that would go well with this one
+		suggestedRecipes: Array, // array of id's for other dishes that would go well with this one
 		isGlutenFree: Boolean,
 		isVegetarian: Boolean,
 		isDairyFree: Boolean

@@ -220,15 +220,39 @@ block content
 									ul
 										for type in recipe.dishType ? recipe.dishType : [null]
 											li= type === null ? 'Unknown' : type
-								.duck-view-hidden.mb-Lg(duck-field='dishType', duck-type='array')
+								.duck-view-hidden.mb-Lg(duck-field='dishType', duck-type='checkbox')
+									-
+										var dishTypes = [
+														'Breakfast',
+														'Lunch/Brunch',
+														'Appetizer',
+														'Soup',
+														'Salad',
+														'Bread',
+														'Vegetable',
+														'Fruit',
+														'Sauce',
+														'Poultry',
+														'Pork',
+														'Beef',
+														'Fish',
+														'Dessert',
+														'Cookie',
+														'Cake',
+														'Bars',
+														'Pie',
+														'Brownies',
+														'Candy',
+														'Drinks',
+														'Other',
+														]
 									h3 Dish Type
 									div
-										for type in recipe.dishType ? recipe.dishType : [null]
-											.form-group.d-F.pl-Sm(duck-type='string')
-												input.form-control(type='text', duck-value, value= type)
-												button.btn.btn-danger(duck-button='delete')
-									.ta-R
-										button.btn.btn-primary(duck-button='add') Add Dish Type
+										for type in dishTypes
+											.checkbox
+												label
+													input(type='checkbox', value= type, checked= recipe.dishType && recipe.dishType.indexOf(type) !== -1)
+													= type
 								
 								.duck-edit-hidden
 									h3 Ethnicity
@@ -238,6 +262,15 @@ block content
 								.duck-view-hidden.mb-Lg(duck-field='ethnicity', duck-type='array')
 									h3 Ethnicity
 									div
+										-
+											var ethnicities = [
+																'Italian',
+																'American',
+																'Mexican',
+																'German',
+																'Irish',
+															]
+
 										for type in recipe.ethnicity ? recipe.ethnicity : [null]
 											.form-group.pl-Sm(duck-type='string')
 												.d-F
@@ -279,7 +312,37 @@ block content
 									for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
 										li= ethnicity === null ? 'Unknown' : ethnicity
 
-			.col-xs-12
+			
+			if user && user.isAdmin
+				.col-xs-12
+					div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
+						h2 Suggested Recipes
+							button.btn.btn-edit.f-R(duck-button='edit', data-icon='fa fa-pencil')
+						.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md.duck-edit-hidden
+							for suggested in suggestedRecipes
+								a.masonry--item(href= suggested.url)
+									+card(suggested.image, suggested.name)
+						.duck-view-hidden
+							.row(duck-field='suggestedRecipes', duck-type='checkbox')
+								for otherRecipe in recipes.filter((i) => i.Id !== recipe.Id)
+									.col-xs-12.col-sm-6.col-md-4.col-lg-3
+										.checkbox
+											label
+												input(type='checkbox', value= otherRecipe.Id, checked= recipe.suggestedRecipes && recipe.suggestedRecipes.indexOf(otherRecipe.Id) !== -1)
+												= otherRecipe.name
+							button.btn.btn-primary.ml-Sm(duck-button='submit') Save
+							button.btn.btn-warning(duck-button='cancel') Cancel
+
+
+			else if suggestedRecipes
+				.col-xs-12
+					h2 Suggested Recipes
+					.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md
+						for suggested in suggestedRecipes ? suggestedRecipes : []
+							a.masonry--item(href= suggested.url)
+								+card(suggested.image, suggested.name)
+
+			//.col-xs-12
 				h2 Other Recipes
 				.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md
 					for otherRecipe in recipes ? recipes.filter((i) => i.Id !== recipe.Id) : []
