@@ -6,7 +6,6 @@ const router         = express.Router();
 // admin
 router.get('/', (req, res) => {
 	res.render('admin', {
-		title: 'Stellaroute: Admin Controls',
 		users: pickTable('Users').cached(),
 	});
 });

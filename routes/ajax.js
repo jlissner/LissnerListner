@@ -95,8 +95,9 @@ router.post('/upload', (req, res) => {
 	//form.multiples = true;
 
 	form.on('file', function(field, file) {
+		console.log('file.name', file.name);
 		fs.rename(file.path, path.join(form.uploadDir, file.name));
-
+		console.log('path.join(form.uploadDir, file.name)', path.join(form.uploadDir, file.name));
 		s3.upload(path.join(form.uploadDir, file.name), {}, function(err, versions, meta) {
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
