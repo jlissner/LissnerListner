@@ -93,9 +93,7 @@ router.post('/upload', (req, res) => {
 	form.multiples = true;
 
 	form.on('file', function(field, file) {
-		console.log(file.path);
-
-		s3.upload(file.path, {}, function(err, versions, meta) {
+		s3.upload(`${file.path}\\${file.name}`, {}, function(err, versions, meta) {
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
 			versions.forEach(function(image) {
