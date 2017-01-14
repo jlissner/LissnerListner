@@ -100,7 +100,7 @@ router.post('/upload', (req, res) => {
 		console.log(4)
 		console.log('file.name', file.name);
 		fs.rename(file.path, path.join(uploadDir, file.name));
-		console.log('path.join(form.uploadDir, file.name)', path.join(form.uploadDir, file.name));
+		console.log('path.join(uploadDir, file.name)', path.join(uploadDir, file.name));
 		s3.upload(path.join(uploadDir, file.name), {}, function(err, versions, meta) {
 			console.log(7)
 			if (err) {console.log(err); res.status(500).send(err);return;}
