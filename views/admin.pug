@@ -5,6 +5,20 @@ block content
 		.container
 			h1 Control Panel
 	.container
+		button#test Test me
+		//.content-card
+			form#upload(enctype="multipart/form-data" method="post")
+				.row
+					label(for='file') Select a File to Upload
+					br
+					input#file(type='file', name='file', onchange="fileSelected()")
+				#fileName
+				#fileSize
+				#fileType
+				.row
+					button(type='button', onclick='uploadFile()', value='Upload')
+				#progressNumber
+
 		.row
 			.col-xs-12.col-sm-6
 				.content-card
@@ -54,3 +68,13 @@ block content
 
 
 	script(src='js/pages/admin.min.js')
+	script.
+		var $ = jQuery.noConflict();
+
+		$('#test').click(() => {
+			$.ajax({
+				url: `/upload`,
+				contentType: 'application/json',
+				method: 'POST',
+			});
+		})

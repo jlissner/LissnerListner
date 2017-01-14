@@ -1,17 +1,14 @@
 {
-  "name": "stellaroute",
+  "name": "lissnerlistner",
   "version": "1.0.0",
   "private": true,
-  "description": "A product of Bagus Tech",
+  "description": "A product of Joe Lissner",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www"
   },
   "keywords": [
-    "Bagus",
-    "Bagus Co.",
-    "Stellaroute"
   ],
   "author": "Joe Lissner",
   "license": "ISC",
@@ -38,7 +35,7 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.3",
     "pug": "^2.0.0-beta6",
-    "s3-uploader": "^2.0.2",
+    "s3-uploader": "^2.0.3",
     "serve-favicon": "~2.3.0",
     "uuid": "^2.0.1"
   }

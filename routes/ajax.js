@@ -1,4 +1,5 @@
 const express        = require('express');
+const s3             = require('../config/s3');
 const isLoggedIn     = require('../middleware/isLoggedIn');
 const pickTable      = require('../modules/pickTable');
 const router         = express.Router();
@@ -80,6 +81,17 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 	}, (err) => {
 		console.error(err);
 		res.status(500).send(err);
+	});
+});
+
+router.post('/upload', (req, res) => {
+	s3.upload('../../Stellaroute/website/public/images/index-bg.jpg', {}, function(err, versions, meta) {
+		if (err) {console.log(err); res.status(500).send(err);return;}
+
+		res.send('success');
+		versions.forEach(function(image) {
+			console.log(image.width, image.height, image.url);
+		});
 	});
 });
 
