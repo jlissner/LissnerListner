@@ -27,20 +27,24 @@ const client = new Upload('lissnerlistner.com', {
 		awsImageMaxAge: 31536000
 	},{
 		maxWidth: 780,
+		format: 'jpg',
 		aspect: '3:2!h',
 		suffix: '-medium'
 	},{
 		maxWidth: 320,
+		format: 'jpg',
 		aspect: '16:9!h',
 		suffix: '-small'
 	},{
 		maxHeight: 100,
+		format: 'jpg',
 		aspect: '1:1',
 		format: 'png',
 		suffix: '-thumb1'
 	},{
 		maxHeight: 250,
 		maxWidth: 250,
+		format: 'jpg',
 		aspect: '1:1',
 		suffix: '-thumb2'
 	}],
