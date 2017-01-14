@@ -1,4 +1,6 @@
 const express        = require('express');
+const formidable     = require('formidable');
+const fs             = require('fs');
 const s3             = require('../config/s3');
 const isLoggedIn     = require('../middleware/isLoggedIn');
 const pickTable      = require('../modules/pickTable');
@@ -85,14 +87,35 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 });
 
 router.post('/upload', (req, res) => {
-	s3.upload('../../Stellaroute/website/public/images/index-bg.jpg', {}, function(err, versions, meta) {
-		if (err) {console.log(err); res.status(500).send(err);return;}
+	const form = new formidable.IncomingForm();
 
-		res.send('success');
-		versions.forEach(function(image) {
-			console.log(image.width, image.height, image.url);
+	// specify that we want to allow the user to upload multiple files in a single request
+	form.multiples = true;
+
+	form.on('file', function(field, file) {
+		console.log(file.path);
+
+		s3.upload(file.path, {}, function(err, versions, meta) {
+			if (err) {console.log(err); res.status(500).send(err);return;}
+
+			versions.forEach(function(image) {
+				console.log(image.width, image.height, image.url);
+			});
+			res.send('success2')
 		});
 	});
+
+	// log any errors that occur
+	form.on('error', function(err) {
+		console.log('An error has occured: \n' + err);
+	});
+
+	// once all the files have been uploaded, send a response to the client
+	//form.on('end', function() {
+	//	res.end('success');
+	//});
+
+	form.parse(req);
 });
 
 module.exports = router;

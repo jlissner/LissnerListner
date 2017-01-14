@@ -5,7 +5,17 @@ block content
 		.container
 			h1 Control Panel
 	.container
-		button#test Test me
+		.row
+			.col-xs-12
+				.panel.panel-default
+					.panel-body
+						span.glyphicon.glyphicon-cloud-upload
+						h2 File Uploader
+
+						button.btn.btn-lg.upload-btn(type="button") Upload File
+
+						input#upload-input(type="file", name="uploads[]", multiple="multiple")
+						br
 		//.content-card
 			form#upload(enctype="multipart/form-data" method="post")
 				.row
@@ -69,12 +79,38 @@ block content
 
 	script(src='js/pages/admin.min.js')
 	script.
-		var $ = jQuery.noConflict();
+		const $ = jQuery.noConflict();
 
-		$('#test').click(() => {
-			$.ajax({
-				url: `/upload`,
-				contentType: 'application/json',
-				method: 'POST',
-			});
-		})
+		$('.upload-btn').on('click', function (){
+			$('#upload-input').click();
+		});
+
+		$('#upload-input').on('change', function(){
+
+			var files = $(this).get(0).files;
+
+			if (files.length > 0){
+				// create a FormData object which will be sent as the data payload in the
+				// AJAX request
+				var formData = new FormData();
+
+				// loop through all the selected files and add them to the formData object
+				for (var i = 0; i < files.length; i++) {
+					var file = files[i];
+
+					// add the files to formData object for the data payload
+					formData.append('uploads[]', file, file.name);
+				}
+
+				$.ajax({
+					url: '/upload',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function(data){
+						console.log('upload successful!\n' + data);
+					}
+				});
+			}
+		});
