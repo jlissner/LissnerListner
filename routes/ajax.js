@@ -96,13 +96,15 @@ router.post('/upload', (req, res) => {
 	// specify that we want to allow the user to upload multiple files in a single request
 	form.multiples = true;
 	console.log(3)
+	
 	form.on('file', function(field, file) {
 		console.log(4)
 		console.log('file.name', file.name);
-		fs.rename(file.path, path.join(uploadDir, file.name));
+		//fs.rename(file.path, path.join(uploadDir, file.name));
 		console.log('path.join(uploadDir, file.name)', path.join(uploadDir, file.name));
 		console.log(5)
-		s3.upload(path.join(uploadDir, file.name), {}, function(err, versions, meta) {
+
+		s3.upload(file.path, {}, function(err, versions, meta) {
 			console.log(6)
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
@@ -112,6 +114,7 @@ router.post('/upload', (req, res) => {
 			res.send('success2');
 		});
 	});
+
 
 	// log any errors that occur
 	form.on('error', function(err) {
