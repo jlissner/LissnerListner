@@ -9,13 +9,13 @@ const client = new Upload('lissnerlistner.com', {
 	},
 
 	cleanup: {
-		versions: false,
-		original: true
+		versions: true,
+		original: false
 	},
 
 	original: {
 		awsImageAcl: 'public-read'
-	}
+	},
 });
 
 module.exports = client; 
