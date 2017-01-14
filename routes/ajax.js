@@ -101,8 +101,9 @@ router.post('/upload', (req, res) => {
 		console.log('file.name', file.name);
 		fs.rename(file.path, path.join(uploadDir, file.name));
 		console.log('path.join(uploadDir, file.name)', path.join(uploadDir, file.name));
+		console.log(5)
 		s3.upload(path.join(uploadDir, file.name), {}, function(err, versions, meta) {
-			console.log(7)
+			console.log(6)
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
 			versions.forEach(function(image) {
@@ -114,13 +115,13 @@ router.post('/upload', (req, res) => {
 
 	// log any errors that occur
 	form.on('error', function(err) {
-		console.log(6)
+		console.log(7)
 		console.log('An error has occured: \n' + err);
 	});
 
 	// once all the files have been uploaded, send a response to the client
 	form.on('end', function() {
-		console.log(5)
+		console.log(8)
 	});
 
 	form.parse(req);
