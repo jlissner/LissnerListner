@@ -87,18 +87,22 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 	});
 });
 
+
+const uploadDir = path.join(__dirname, '../public', '/images/uploads');
 router.post('/upload', (req, res) => {
+	console.log(1)
 	const form = new formidable.IncomingForm();
-
-	form.uploadDir = path.join(__dirname, '../public', '/images/uploads');
+	console.log(2)
 	// specify that we want to allow the user to upload multiple files in a single request
-	//form.multiples = true;
-
+	form.multiples = true;
+	console.log(3)
 	form.on('file', function(field, file) {
+		console.log(4)
 		console.log('file.name', file.name);
-		fs.rename(file.path, path.join(form.uploadDir, file.name));
+		fs.rename(file.path, path.join(uploadDir, file.name));
 		console.log('path.join(form.uploadDir, file.name)', path.join(form.uploadDir, file.name));
-		s3.upload(path.join(form.uploadDir, file.name), {}, function(err, versions, meta) {
+		s3.upload(path.join(uploadDir, file.name), {}, function(err, versions, meta) {
+			console.log(7)
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
 			versions.forEach(function(image) {
@@ -110,11 +114,13 @@ router.post('/upload', (req, res) => {
 
 	// log any errors that occur
 	form.on('error', function(err) {
+		console.log(6)
 		console.log('An error has occured: \n' + err);
 	});
 
 	// once all the files have been uploaded, send a response to the client
 	form.on('end', function() {
+		console.log(5)
 	});
 
 	form.parse(req);
