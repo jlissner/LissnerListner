@@ -91,17 +91,16 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 const uploadDir = path.join(__dirname, '../public', '/images/uploads');
 router.post('/upload', (req, res) => {
 	const form = new formidable.IncomingForm();
+	const fileName = file.name.split('.');
+	fileName.pop();
 
 	// specify that we want to allow the user to upload multiple files in a single request
 	form.multiples = true;
 	
 	form.on('file', function(field, file) {
-		s3.upload(file.path, {path: file.name}, function(err, versions, meta) {
+		s3.upload(file.path, {path: fileName.join('')}, function(err, versions, meta) {
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
-			versions.forEach(function(image) {
-				console.log(image.width, image.height, image.url);
-			});
 			res.send('success');
 		});
 	});
