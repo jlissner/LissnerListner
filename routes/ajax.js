@@ -1,10 +1,9 @@
 const express        = require('express');
 const formidable     = require('formidable');
 const path           = require('path');
-const fs             = require('fs');
-const s3             = require('../config/s3');
 const isLoggedIn     = require('../middleware/isLoggedIn');
 const pickTable      = require('../modules/pickTable');
+const s3             = require('../modules/s3');
 const router         = express.Router();
 
 router.get('/get/:table', isLoggedIn(), (req, res) => {
@@ -25,6 +24,16 @@ router.get('/get/:table', isLoggedIn(), (req, res) => {
 	} else {
 		res.send('Nothing Found');
 	}
+});
+
+router.get('/getFiles', isLoggedIn(), (req, res) => {
+	s3.getFiles((data) => {
+		if(!data) {
+			res.status(500).send('No Data To Return')
+		}
+
+		res.send(data);
+	})
 });
 
 router.post('/add/:table', isLoggedIn(true), (req, res) => {
@@ -87,9 +96,7 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 	});
 });
 
-
-const uploadDir = path.join(__dirname, '../public', '/images/uploads');
-router.post('/upload', (req, res) => {
+router.post('/upload', isLoggedIn(), (req, res) => {
 	const form = new formidable.IncomingForm();	
 
 	// specify that we want to allow the user to upload multiple files in a single request
@@ -99,7 +106,7 @@ router.post('/upload', (req, res) => {
 		const fileName = file.name.split('.');
 		fileName.pop();
 
-		s3.upload(file.path, {path: fileName.join('')}, function(err, versions, meta) {
+		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
 			if (err) {console.log(err); res.status(500).send(err);return;}
 
 			res.send('success');

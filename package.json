@@ -12,7 +12,7 @@
   "author": "Joe Lissner",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "~2.2.17",
+    "aws-sdk": "~2.7.21",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.15.2",
     "connect-flash": "~0.1.1",
@@ -37,6 +37,6 @@
     "pug": "^2.0.0-beta6",
     "s3-uploader": "^2.0.3",
     "serve-favicon": "~2.3.0",
-    "uuid": "^2.0.1"
+    "uuid": "^3.0.1"
   }
 }
