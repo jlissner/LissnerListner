@@ -107,7 +107,7 @@ router.post('/upload', isLoggedIn(), (req, res) => {
 		fileName.pop();
 
 		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
-			if (err) {console.log(err); res.status(500).send(err);return;}
+			if (err) {console.log(err); res.status(500).send(err); return;}
 
 			res.send('success');
 		});

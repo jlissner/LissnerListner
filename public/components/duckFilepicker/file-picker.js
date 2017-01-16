@@ -20,13 +20,14 @@ void function initFilepicker($){
 			success: () => {
 				$wrapper.trigger('filesUploaded')
 			},
-			error: () => {
+			error: (err) => {
 				$wrapper.trigger('filesUploaded', [false])
 				$wrapper.find('input[type="file"]').val('')
 					.after($failed)
 
 				setTimeout(() => {$failed.slideUp(500)}, 3000);
 				setTimeout(() => {$failed.detach()}, 3500);
+				console.error(err);
 			}
 		});
 	}
