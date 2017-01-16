@@ -29,12 +29,14 @@ function redirectUrl(req, res) {
 };
 
 function enforceWWW(req, res, next) {
-    const isWWW = req.headers.host.split('.')[0].toLowerCase() === 'www';
+    if (req.method === "GET") {
+        const isWWW = req.headers.host.split('.')[0].toLowerCase() === 'www';
 
-    if (!isWWW) {
-        req.headers.host = `www.${req.headers.host}`
-        redirectUrl(req, res);
-        return;
+        if (!isWWW) {
+            req.headers.host = `www.${req.headers.host}`
+            redirectUrl(req, res);
+            return;
+        }
     }
 
     next();
