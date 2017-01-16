@@ -27,7 +27,7 @@ void function initFilepicker($){
 
 				setTimeout(() => {$failed.slideUp(500)}, 3000);
 				setTimeout(() => {$failed.detach()}, 3500);
-				console.error(err);
+				console.log(err);
 			}
 		});
 	}
