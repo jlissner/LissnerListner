@@ -64,8 +64,9 @@ app.set('view engine', 'pug');
 
 // App configuration ///////////////////////////////////////////////////
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(bodyParser.raw({limit: '150mb'}));
 app.use(bodyParser.json({limit: '150mb'})); // needed for post requests, still figuring out what it does
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '150mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // Sets the public folder to be available available to the front end
 
