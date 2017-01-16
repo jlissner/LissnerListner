@@ -106,11 +106,15 @@ router.post('/upload', isLoggedIn(), (req, res) => {
 		const fileName = file.name.split('.');
 		fileName.pop();
 
-		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
-			if (err) {console.log(err); res.status(500).send(err); return;}
+		setTimeout(() => {
+			s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
+				if (err) {console.log(err); res.status(500).send(err); return;}
 
-			res.send('success');
-		});
+				res.send('success');
+			});
+		}, 5000)
+
+		
 	});
 
 
