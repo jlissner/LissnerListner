@@ -97,6 +97,8 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 });
 
 router.post('/upload', isLoggedIn(), (req, res) => {
+	console.log(0);
+	
 	const form = new formidable.IncomingForm();
 
 	// specify that we want to allow the user to upload multiple files in a single request
