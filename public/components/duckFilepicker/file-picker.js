@@ -68,7 +68,8 @@ void function initFilepicker($){
 	}); */
 
 	function uploadImage(e) {
-		const files = $(e.currentTarget).get(0).files;
+		const $wrapper = e.data.wrapper;
+		const files = $wrapper.find('input').get(0).files;
 
 		if (files.length > 0){
 			// create a FormData object which will be sent as the data payload in the
@@ -80,7 +81,7 @@ void function initFilepicker($){
 				const file = files[i];
 
 				// add the files to formData object for the data payload
-				formData.append('uploads[]', file, file.name);
+				formData.append('files', file, file.name);
 			}
 
 			uploadFiles(formData, e.data.wrapper);
@@ -104,7 +105,8 @@ void function initFilepicker($){
 			$uploading.addClass('hidden');
 		})
 
-		$wrapper.find('input[type="file"]').on('change', {wrapper: $wrapper}, uploadImage);
+		$wrapper.find('.btn').on('click', {wrapper: $wrapper}, uploadImage)
+		//$wrapper.find('input[type="file"]').on('change', {wrapper: $wrapper}, uploadImage);
 	}
 
 	$.fn.filePicker = function init() {
