@@ -21,7 +21,6 @@ s3.getFiles = (callback, folder, extentions) => {
 }
 
 s3.uploadImage = (file, options, callback, fileType, filePath) => {
-	console.log(2.1);
 	const extention = fileType || 'jpg'
 	const path = filePath || 'images/';
 	const client = new Upload('lissnerlistner.com', {
@@ -73,8 +72,6 @@ s3.uploadImage = (file, options, callback, fileType, filePath) => {
 			suffix: '-thumb2'
 		}],
 	});
-
-	console.log(2.2);
 
 	client.upload(file, options, callback);
 }

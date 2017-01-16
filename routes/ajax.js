@@ -1,5 +1,4 @@
 const express        = require('express');
-const formidable     = require('formidable');
 const path           = require('path');
 const isLoggedIn     = require('../middleware/isLoggedIn');
 const pickTable      = require('../modules/pickTable');
@@ -97,40 +96,20 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 });
 
 router.post('/upload', isLoggedIn(), (req, res) => {
-	console.log(0);
-	
-	const form = new formidable.IncomingForm();
+	const files = req.files || [];
+	const length = files.length;
 
-	// specify that we want to allow the user to upload multiple files in a single request
-	form.multiples = true;
-
-	console.log(1);
-	
-	form.on('file', function(field, file) {
+	for (let i = 0; i < length; i++) {
+		const file = files[i];
 		const fileName = file.name.split('.');
 		fileName.pop();
-		console.log(2);
 
 		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
-			console.log(3);
 			if (err) {console.log(err); res.status(500).send(err); return;}
-			console.log(4);
+
 			res.send('success');
 		});
-	});
-
-
-	// log any errors that occur
-	form.on('error', function(err) {
-		console.log(5);
-		console.log('An error has occured: \n' + err);
-	});
-
-	// once all the files have been uploaded, send a response to the client
-	form.on('end', function() {
-	});
-
-	form.parse(req);
+	}	
 });
 
 module.exports = router;

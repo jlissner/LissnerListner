@@ -8,10 +8,8 @@ void function initFilepicker($){
 
 		const $failed = $('<p/>', {
 			'class': 'alert alert-danger p-A',
-			text: 'Sorry, something went wrong while uploading your file'
+			text: 'Sorry, something went wrong while uploading your file',
 		})
-
-		console.log(3)
 
 		$.ajax({
 			url: '/upload',
@@ -20,19 +18,16 @@ void function initFilepicker($){
 			processData: false,
 			contentType: false,
 			success: () => {
-				console.log(4)
 				$wrapper.trigger('filesUploaded')
 			},
 			error: (err) => {
-				console.log(5)
 				$wrapper.trigger('filesUploaded', [false])
 				$wrapper.find('input[type="file"]').val('')
 					.after($failed)
 
 				setTimeout(() => {$failed.slideUp(500)}, 3000);
 				setTimeout(() => {$failed.detach()}, 3500);
-				console.log(err);
-			}
+			},
 		});
 	}
 
@@ -86,10 +81,8 @@ void function initFilepicker($){
 
 				// add the files to formData object for the data payload
 				formData.append('files', file, file.name);
-				console.log(1);
 			}
 
-			console.log(2)
 			uploadFiles(formData, e.data.wrapper);
 		}
 	}
@@ -98,7 +91,7 @@ void function initFilepicker($){
 		const $wrapper = $(wrapper);
 		const $uploading = $('<i/>', {
 			'class': 'fa fa-spinner fa-spin d-Ib mr-Xs hidden',
-			'aria-hidden': 'true'
+			'aria-hidden': 'true',
 		});
 
 		$wrapper.prepend($uploading)

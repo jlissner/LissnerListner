@@ -9,6 +9,7 @@ const favicon          = require('serve-favicon');
 const cookieParser     = require('cookie-parser');
 const bodyParser       = require('body-parser');
 const session          = require('cookie-session');
+const formidable       = require('./middleware/formidable');
 const getUser          = require('./middleware/getUser');
 const isLoggedIn       = require('./middleware/isLoggedIn');
 const setFlash         = require('./modules/setFlash');
@@ -64,6 +65,7 @@ app.set('view engine', 'pug');
 
 // App configuration ///////////////////////////////////////////////////
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(formidable());
 app.use(bodyParser.json()); // needed for post requests, still figuring out what it does
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
