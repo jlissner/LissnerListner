@@ -11,6 +11,8 @@ void function initFilepicker($){
 			text: 'Sorry, something went wrong while uploading your file'
 		})
 
+		console.log(3)
+
 		$.ajax({
 			url: '/upload',
 			type: 'POST',
@@ -18,9 +20,11 @@ void function initFilepicker($){
 			processData: false,
 			contentType: false,
 			success: () => {
+				console.log(4)
 				$wrapper.trigger('filesUploaded')
 			},
 			error: (err) => {
+				console.log(5)
 				$wrapper.trigger('filesUploaded', [false])
 				$wrapper.find('input[type="file"]').val('')
 					.after($failed)
@@ -82,8 +86,10 @@ void function initFilepicker($){
 
 				// add the files to formData object for the data payload
 				formData.append('files', file, file.name);
+				console.log(1);
 			}
 
+			console.log(2)
 			uploadFiles(formData, e.data.wrapper);
 		}
 	}
