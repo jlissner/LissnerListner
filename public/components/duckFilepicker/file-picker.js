@@ -4,6 +4,13 @@ void function initFilepicker($){
 	'use strict'
 
 	function uploadFiles(formData, $wrapper) {
+		$wrapper.trigger('fileUploading');
+
+		const $failed = $('<p/>', {
+			'class': 'alert alert-danger p-A',
+			text: 'Sorry, something went wrong while uploading your file'
+		})
+
 		$.ajax({
 			url: '/upload',
 			type: 'POST',
@@ -12,6 +19,14 @@ void function initFilepicker($){
 			contentType: false,
 			success: () => {
 				$wrapper.trigger('filesUploaded')
+			},
+			error: () => {
+				$wrapper.trigger('filesUploaded', [false])
+				$wrapper.find('input[type="file"]').val('')
+					.after($failed)
+
+				setTimeout(() => {$failed.slideUp(500)}, 3000);
+				setTimeout(() => {$failed.detach()}, 3500);
 			}
 		});
 	}
@@ -73,6 +88,20 @@ void function initFilepicker($){
 
 	function filePicker(wrapper) {
 		const $wrapper = $(wrapper);
+		const $uploading = $('<i/>', {
+			'class': 'fa fa-spinner fa-spin d-Ib mr-Xs hidden',
+			'aria-hidden': 'true'
+		});
+
+		$wrapper.prepend($uploading)
+
+		$wrapper.on('fileUploading', () => {
+			$uploading.removeClass('hidden');
+		});
+
+		$wrapper.on('filesUploaded', () => {
+			$uploading.addClass('hidden');
+		})
 
 		$wrapper.find('input[type="file"]').on('change', {wrapper: $wrapper}, uploadImage);
 	}

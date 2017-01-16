@@ -34,8 +34,8 @@ block content
 					.p-R(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
 						button.btn.btn-edit.p-A.t-Xs.r-Xs(duck-button='edit', data-icon='fa fa-pencil')
 						.form-group.m-0.duck-view-hidden.p-Sm.bw-Sm.bs-S(duck-field='image', duck-type='image')
-							input(type='file', duck-value)
-						img.w-100.br-Md(src= recipe.image || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
+							input.d-Ib(type='file', duck-value)
+						img.w-100.br-Md(src= getImagePath(recipe.image, 'large') || 'http://maverickradio.com/wp-content/themes/fearless/images/missing-image-232x150.png', alt= recipe.name)
 
 						.p-A.b-Sm.r-Sm.duck-view-hidden
 							button.btn.btn-primary.ml-Sm(duck-button='submit') Save

@@ -70,4 +70,15 @@ head
 				.trim()
 				.replace(findAllSpaces, '-');
 		}
+		function getImagePath(img, size) {
+			if (!img) {
+				return null;
+			}
+
+			const imgPath = img.split('.');
+			const imgExtention = imgPath.pop();
+			const s3Path = 'https://s3-us-west-2.amazonaws.com/lissnerlistner.com/images/';
+
+			return `${s3Path}${imgPath.join('')}-${size}.${imgExtention}`
+		}
 	block head
