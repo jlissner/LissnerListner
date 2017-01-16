@@ -4,17 +4,20 @@ block content
 	.media-bg-img.request-page-header
 		.container
 			h1 Control Panel
+
+	+modal('Images')
+		#ImageList
+			h2 Images
+			i.fa.fa-spinner.fa-spin
+
 	.container
 		.row
 			.col-xs-12
 				.panel.panel-default
 					.panel-body
-						span.glyphicon.glyphicon-cloud-upload
-						h2 File Uploader
-
-						button.btn.btn-lg.upload-btn(type="button") Upload File
-
-						input#upload-input(type="file", name="uploads[]", multiple="multiple")
+						.form-group(duck-field='images', duck-type='image')
+							label Images
+								input(type='file', duck-value)
 						br
 
 		.row
@@ -66,39 +69,3 @@ block content
 
 
 	script(src='js/pages/admin.min.js')
-	script.
-		const $ = jQuery.noConflict();
-
-		$('.upload-btn').on('click', function (){
-			$('#upload-input').click();
-		});
-
-		$('#upload-input').on('change', function(){
-
-			var files = $(this).get(0).files;
-
-			if (files.length > 0){
-				// create a FormData object which will be sent as the data payload in the
-				// AJAX request
-				var formData = new FormData();
-
-				// loop through all the selected files and add them to the formData object
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i];
-
-					// add the files to formData object for the data payload
-					formData.append('uploads[]', file, file.name);
-				}
-
-				$.ajax({
-					url: '/upload',
-					type: 'POST',
-					data: formData,
-					processData: false,
-					contentType: false,
-					success: function(data){
-						console.log('upload successful!\n' + data);
-					}
-				});
-			}
-		});
