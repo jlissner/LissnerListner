@@ -2,6 +2,9 @@ const formidable = require('formidable');
 
 function formidableMiddleware() {
 	return (req, res, next) => {
+		console.log('~~~~~~~~~~~~~')
+		console.log(req.originalUrl);
+		console.log('~~~~~~~~~~~~~')
 		console.log(1)
 		req.fields = req.fields || [];
 		req.files = req.files || [];
