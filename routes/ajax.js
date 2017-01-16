@@ -1,6 +1,7 @@
 const express        = require('express');
 const path           = require('path');
 const isLoggedIn     = require('../middleware/isLoggedIn');
+const formidable     = require('../middleware/formidable');
 const pickTable      = require('../modules/pickTable');
 const s3             = require('../modules/s3');
 const router         = express.Router();
@@ -95,7 +96,7 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 	});
 });
 
-router.post('/upload', isLoggedIn(), (req, res) => {
+router.post('/upload', isLoggedIn(), formidable(), (req, res) => {
 	const files = req.files || [];
 	const length = files.length;
 
@@ -105,7 +106,7 @@ router.post('/upload', isLoggedIn(), (req, res) => {
 		fileName.pop();
 
 		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
-			if (err) {console.log(err); res.status(500).send(err); return;}
+			if (err) {console.error(err); res.status(500).send(err); return;}
 
 			res.send('success');
 		});

@@ -36,10 +36,6 @@ s3.uploadImage = (file, options, callback, fileType, filePath) => {
 			versions: true,
 			original: true
 		},
-	 
-		original: {
-			awsImageAcl: 'private'
-		},
 
 		versions: [{
 			maxHeight: 1040,
