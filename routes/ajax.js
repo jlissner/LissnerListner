@@ -97,18 +97,22 @@ router.post('/delete/:table', isLoggedIn(true), (req, res) => {
 });
 
 router.post('/upload', isLoggedIn(), (req, res) => {
-	const form = new formidable.IncomingForm();	
+	const form = new formidable.IncomingForm();
 
 	// specify that we want to allow the user to upload multiple files in a single request
 	form.multiples = true;
+
+	console.log(1);
 	
 	form.on('file', function(field, file) {
 		const fileName = file.name.split('.');
 		fileName.pop();
+		console.log(2);
 
 		s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
+			console.log(3);
 			if (err) {console.log(err); res.status(500).send(err); return;}
-
+			console.log(4);
 			res.send('success');
 		});
 	});
@@ -116,6 +120,7 @@ router.post('/upload', isLoggedIn(), (req, res) => {
 
 	// log any errors that occur
 	form.on('error', function(err) {
+		console.log(5);
 		console.log('An error has occured: \n' + err);
 	});
 
