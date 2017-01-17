@@ -33,20 +33,9 @@ block content
 				if user && user.isAdmin
 					.p-R(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
 						button.btn.btn-edit.p-A.t-Xs.r-Xs(duck-button='edit', data-icon='fa fa-pencil')
-						.form-group.m-0.duck-view-hidden.p-Sm.bw-Sm.bs-S(duck-field='image', duck-type='image')
-							input.hidden(type='file', duck-value)
-							button.btn.btn-secondary.p-Xs(data-icon='fa fa-image', duck-button='image-select')
-							span.pl-Sm(duck-image-value)= recipe.image
-							div(duck-image-picker)
-								+modal('ImagePickerModal1')(class='modal-lg')
-									h2.mt-0 Pick an Image
-									.mb-Md(duck-images='false')
-									.row(duck-image-uploader)
-										.col-xs-6
-											button.btn.btn-secondary(duck-button='upload') Upload New Image
-											button.btn.btn-primary(duck-button='save-image') Save
-										.col-xs-6.ta-R
-											button.btn.btn-default(data-dismiss='modal') Cancel
+						.duck-view-hidden
+							+imagePicker(recipe, 'image')(class='m-0')
+						
 						img.w-100.br-Md(src= getImagePath(recipe.image, 'large'), alt= recipe.name)
 
 						.p-A.b-Sm.r-Sm.duck-view-hidden

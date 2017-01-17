@@ -17,7 +17,7 @@ void function initFilepicker($){
 			},
 			error: (err) => {
 				$wrapper.trigger('gotFiles', [err])
-			}
+			},
 		});
 	}
 
