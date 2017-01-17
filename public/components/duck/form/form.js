@@ -357,7 +357,7 @@ void function initDuckForm($, duck, window) {
 		const failureCallBack = (options && options.failureCallBack) || (() => {window.location.reload(true)});
 
 		if($urlField.length){
-			autoSetUrl($urlField, $wrapper.find('[duck-field="names"] input'));
+			autoSetUrl($urlField, $wrapper.find('[duck-field="name"] input'));
 		}
 
 		if(!table || !crud || !key || ((crud === 'update' || crud === 'delete') && !keyValue)) {
