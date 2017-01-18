@@ -1,12 +1,12 @@
-// include all mixins
-include mixins/_mixins.pug
-
-block options
-
+doctype html
 html(lang='en', style='height: 100%')
 	include controls/common-resources.pug
 
 	body#Stellaroute(data-function='scroll')
+		// include all mixins
+		include mixins/_mixins.pug
+
+		block options
 		noscript
 			iframe(src="https://www.googletagmanager.com/ns.html?id=GTM-NG3DCTG", height="0", width="0", style="display:none;visibility:hidden")
 <!-- End Google Tag Manager (noscript) -->

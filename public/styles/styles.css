@@ -9190,7 +9190,8 @@ button.close {
 #Stellaroute .d-I {
   display: inline;
 }
-#Stellaroute .d-IB {
+#Stellaroute .d-IB,
+#Stellaroute .d-Ib {
   display: inline-block;
 }
 #Stellaroute .d-B {
@@ -9202,10 +9203,12 @@ button.close {
 #Stellaroute .d-T {
   display: table;
 }
-#Stellaroute .d-TR {
+#Stellaroute .d-TR,
+#Stellaroute .d-Tr {
   display: table-row;
 }
-#Stellaroute .d-TC {
+#Stellaroute .d-TC,
+#Stellaroute .d-Tc {
   display: table-cell;
 }
 #Stellaroute .f-L {
@@ -9225,7 +9228,8 @@ button.close {
   #Stellaroute .d-I--sm {
     display: inline;
   }
-  #Stellaroute .d-IB--sm {
+  #Stellaroute .d-IB--sm,
+  #Stellaroute .d-Ib--sm {
     display: inline-block;
   }
   #Stellaroute .d-B--sm {
@@ -9237,10 +9241,12 @@ button.close {
   #Stellaroute .d-T--sm {
     display: table;
   }
-  #Stellaroute .d-TR--sm {
+  #Stellaroute .d-TR--sm,
+  #Stellaroute .d-Tr--sm {
     display: table-row;
   }
-  #Stellaroute .d-TC--sm {
+  #Stellaroute .d-TC--sm,
+  #Stellaroute .d-Tr--sm {
     display: table-cell;
   }
   #Stellaroute .d-F--sm {
@@ -9266,7 +9272,8 @@ button.close {
   #Stellaroute .d-I--md {
     display: inline;
   }
-  #Stellaroute .d-IB--md {
+  #Stellaroute .d-IB--md,
+  #Stellaroute .d-Ib--md {
     display: inline-block;
   }
   #Stellaroute .d-B--md {
@@ -9278,10 +9285,12 @@ button.close {
   #Stellaroute .d-T--md {
     display: table;
   }
-  #Stellaroute .d-TR--md {
+  #Stellaroute .d-TR--md,
+  #Stellaroute .d-Tr--md {
     display: table-row;
   }
-  #Stellaroute .d-TC--md {
+  #Stellaroute .d-TC--md,
+  #Stellaroute .d-Tc--md {
     display: table-cell;
   }
   #Stellaroute .d-F--md {
@@ -11952,7 +11961,7 @@ button.close {
 #Stellaroute .ta-L {
   text-align: left;
 }
-#Stellaroute .ta-r {
+#Stellaroute .ta-R {
   text-align: right;
 }
 #Stellaroute .ta-C {
@@ -12094,7 +12103,7 @@ button.close {
   #Stellaroute .ta-L--sm {
     text-align: left;
   }
-  #Stellaroute .ta-r--sm {
+  #Stellaroute .ta-R--sm {
     text-align: right;
   }
   #Stellaroute .ta-C--sm {
@@ -12222,7 +12231,7 @@ button.close {
   #Stellaroute .ta-L--md {
     text-align: left;
   }
-  #Stellaroute .ta-r--md {
+  #Stellaroute .ta-R--md {
     text-align: right;
   }
   #Stellaroute .ta-C--md {
