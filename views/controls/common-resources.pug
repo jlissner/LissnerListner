@@ -61,6 +61,13 @@ head
 
 			return !(empytValues.indexOf(data) > -1)
 		}
+		function userIsAuthorized() {
+			if (!user) {
+				return false;
+			}
+
+			return user.isAdmin
+		}
 		function createValidAttributeFromTitle(title) {
 			const findInvalidAttributeCharacters = /[^a-z0-9\s]|^[^a-z\s]+/gi;
 			const findMultipleSpaces = /\s\s+/g;
