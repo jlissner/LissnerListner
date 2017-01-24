@@ -68,6 +68,17 @@ head
 
 			return user.isAdmin
 		}
+		function getNested(obj /*, level1, level2, ... levelN*/) {
+			var args = Array.prototype.slice.call(arguments, 1);
+
+			for (var i = 0; i < args.length; i++) {
+				if (!obj || !obj.hasOwnProperty(args[i])) {
+					return false;
+				}
+				obj = obj[args[i]];
+			}
+			return obj;
+		}
 		function createValidAttributeFromTitle(title) {
 			const findInvalidAttributeCharacters = /[^a-z0-9\s]|^[^a-z\s]+/gi;
 			const findMultipleSpaces = /\s\s+/g;

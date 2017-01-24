@@ -13,6 +13,8 @@ const Recipe = Duck({
 		note: String,
 		ethnicity: Array,
 		dishType: Array,
+		mealType: Array,
+		cookingStyle: Array,
 		time: String,
 		serves: String,
 		ingredientSections: [{
