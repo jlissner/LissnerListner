@@ -17,12 +17,12 @@ block content
 		.row.mt-Lg
 			.col-xs-12.col-sm-5.col-md-3
 				// Image
-				+formStart(recipe, 'Recipes')
-					+editButton('p-A t-Sm r-Md')
+				+formStart(recipe, 'Recipes')(class='p-R')
+					+editButton('p-A t-Xs r-Xs')
 
 					img.w-100.br-Md(src= getImagePath(recipe.image, 'large'), alt= recipe.name)
 
-					+edit('p-A b-Sm r-Sm')
+					+edit('p-A b-0 r-0 l-0 bg-Ltst p-Sm')
 						+image(recipe, 'image')(class='m-0')
 
 				// Ingredients
