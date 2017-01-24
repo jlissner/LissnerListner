@@ -1,0 +1,18 @@
+mixin checkbox(obj, field, title, items)
+	.form-group(duck-field=field, duck-type='checkbox')&attributes(attributes)
+		if title
+			h3= title
+
+		if items
+			if typeof items[0] === 'object'
+				for item in items
+					.checkbox
+						label
+							input(type='checkbox', value= item.value, checked= getNested(obj, field) && obj[field].indexOf(item.value) > -1)
+							= item.title
+			else
+				for item in items
+					.checkbox
+						label
+							input(type='checkbox', value= item, checked= getNested(obj, field) && obj[field].indexOf(item) > -1)
+							= item

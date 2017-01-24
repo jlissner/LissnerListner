@@ -1,210 +1,72 @@
 extends ../layout.pug
 
 block content
-	//if user && user.isAdmin
-		+modal(recipe.url)(class='modal-lg')
-			+RecipieForm('update', recipe)
 	.container
-		if user && user.isAdmin
-			div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-				button.btn.btn-edit.p-A.mt-NegSm.ml-NegLg(duck-button='edit', data-icon='fa fa-pencil')
-				.duck-edit-hidden
-					h1= recipe.name
-						|&nbsp;
-						small= recipe.author
-				.form-inline.duck-view-hidden
-					.form-group(duck-field='name', duck-type='string')
-						label.sr-only Recipe Name
-						input.form-control(type='text', duck-value, value=recipe.name)
-					.form-group.ml-Xs(duck-field='author', duck-type='string')
-						label.sr-only Author
-						input.form-control(type='text', duck-value, value=recipe.author)
+		// Header
+		+formStart(recipe, 'Recipes')
+			+editButton('p-A mt-NegSm ml-NegLg')
 
-					button.btn.btn-primary.ml-Sm(duck-button='submit') Save
-					button.btn.btn-warning(duck-button='cancel') Cancel
-
-		else
-			h1= recipe.name
-				|&nbsp;
-				small= recipe.author
+			+view
+				h1= recipe.name
+					|&nbsp;
+					small= recipe.author
+			+edit('form-inline')
+				+string(recipe, 'name', 'Name')
+				+string(recipe, 'author', 'Author')
 
 		.row.mt-Lg
 			.col-xs-12.col-sm-5.col-md-3
-				if user && user.isAdmin
-					.p-R(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-						button.btn.btn-edit.p-A.t-Xs.r-Xs(duck-button='edit', data-icon='fa fa-pencil')
-						.duck-view-hidden
-							+imagePicker(recipe, 'image')(class='m-0')
-						
-						img.w-100.br-Md(src= getImagePath(recipe.image, 'large'), alt= recipe.name)
+				// Image
+				+formStart(recipe, 'Recipes')
+					+editButton('p-A t-Sm r-Md')
 
-						.p-A.b-Sm.r-Sm.duck-view-hidden
-							button.btn.btn-primary.ml-Sm(duck-button='submit') Save
-							button.btn.btn-warning(duck-button='cancel') Cancel
-				else
 					img.w-100.br-Md(src= getImagePath(recipe.image, 'large'), alt= recipe.name)
 
-				if user && user.isAdmin
-					.content-card(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-						h2.content-card--header Ingredients
-							button.btn.btn-edit.f-R.mt-NegSm.mr-NegSm(duck-button='edit', data-icon='fa fa-pencil')
-						for section in recipe.ingredientSections ? recipe.ingredientSections : []
-							.duck-edit-hidden
-								if section.title
-									h3= section.title
-								if section.ingredients
-									ul
-										for ingredient in section.ingredients
-											li= ingredient
-						.duck-view-hidden(duck-field='ingredientSections', duck-type='array')
-							div
-								for section in recipe.ingredientSections ? recipe.ingredientSections : [{}]
-									.p-Sm.bg-G__ltr(duck-type='object')
-										div(duck-field='title', duck-type='string')
-											h3 Section Title
-											input.form-control(type='text', duck-value, value= section.title)
-										.mt-Lg(duck-field='ingredients', duck-type='array')
-											h4 Ingredients&nbsp;
-											div
-												for ingredient in section.ingredients ? section.ingredients : [null]
-													.form-group.d-F(duck-type='string')
-														input.form-control(type='text', duck-value, value= ingredient)
-														button.btn.btn-danger(duck-button='delete')
-											.ta-R
-												button.btn.btn-primary(duck-button='add') Add Ingredient
-									.ta-C.mb-Md
-										button.btn.btn-danger(duck-button='delete') Delete Ingredient Section
-							.ta-R
-								button.btn.btn-primary(duck-button='add') Add Ingredient Section
-						.duck-view-hidden
-							button.btn.btn-primary(duck-button='submit') Save
-							button.btn.btn-warning(duck-button='cancel') Cancel
+					+edit('p-A b-Sm r-Sm')
+						+image(recipe, 'image')(class='m-0')
 
-				else if recipe.ingredientSections
-					.content-card
-						h2.content-card--header Ingredients
-						for section in recipe.ingredientSections
+				// Ingredients
+				+formStart(recipe, 'Recipes', recipe.ingredientSections)(class='content-card')
+					h2.content-card--header Ingredients
+						+editButton('f-R mt-NegSm mr-NegSm')
+					+view
+						for section in recipe.ingredientSections ? recipe.ingredientSections : []
 							if section.title
 								h3= section.title
 							if section.ingredients
 								ul
 									for ingredient in section.ingredients
 										li= ingredient
+					+edit
+						+array(null, 'ingredientSections', null, 'Add Ingredient Section')
+							for section in recipe.ingredientSections ? recipe.ingredientSections : [{}]
+								+object(null, 'Section', 'Delete Section')
+									+string(section, 'title', 'Section Title')
+									+array(section, 'ingredients', 'Ingredients', 'Add Ingredient')
 				
 			.col-xs-12.col-sm-7.col-md-9
-				if user && user.isAdmin
-					.mb-Sm(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-						.ta-R
-							button.btn.btn-edit(duck-button='edit')
-								if recipe.description && wysiwygHasData(recipe.description)
-									| Edit Description
-								else
-									| Add Description	
+				// Description and Note
+				+formStart(recipe, 'Recipes')(class='mb-Sm')
+					+view
+						+editButton('f-R btn-Primary', 'Edit Description and Note')
 						if recipe.description && wysiwygHasData(recipe.description)
 							.lead.duck-edit-hidden!= recipe.description
-
-						.duck-view-hidden
-							.form-group(duck-field='description', duck-type='wysiwyg')
-								label Description
-								.summernote!= recipe.description
-
-							button.btn.btn-primary(duck-button='submit') Save
-							button.btn.btn-warning(duck-button='cancel') Cancel
-
-				else if recipe.description && wysiwygHasData(recipe.description)
-					.lead!= recipe.description
-
-				if user && user.isAdmin
-					div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-						.ta-R
-							button.btn.btn-edit(duck-button='edit')
-								if recipe.note && wysiwygHasData(recipe.note)
-									| Edit Note
-								else
-									| Add Note	
 						if recipe.note && wysiwygHasData(recipe.note)
 							.alert.alert-info.d-Ib.duck-edit-hidden
 								h3.mt-0 Note!
 								div!= recipe.note
-						.duck-view-hidden
-							.form-group(duck-field='note', duck-type='wysiwyg')
-								label Note
-								.summernote!= recipe.note
-
-							button.btn.btn-primary(duck-button='submit') Save
-							button.btn.btn-warning(duck-button='cancel') Cancel
-
-				else if recipe.note && wysiwygHasData(recipe.note)
-					.alert.alert-info.d-Ib
-						h3.mt-0 Note!
-						div!= recipe.note
+					+edit
+						+wysiwyg(recipe, 'description', 'Description')
+						+wysiwyg(recipe, 'note', 'Note')
 
 				.row
 					.col-xs-12.col-sm-7.col-md-9
-						.content-card
+						// Directions
+						+formStart(recipe, 'Recipes')(class= 'content-card')
 							h2.content-card--header Directions
-							if user && user.isAdmin
-								div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-									button.btn.btn-edit.f-R(duck-button='edit', data-icon='fa fa-pencil')
-									ul.fc-G__dk.fs-Sm.list-inline
-										if recipe.isGlutenFree
-											li.pr-0.duck-edit-hidden Gluten Free |
-										if recipe.isVegetarian
-											li.pr-0.duck-edit-hidden Vegetarian |
-										if recipe.isDairyFree
-											li.pr-0.duck-edit-hidden Dairy Free |
-										li.duck-edit-hidden(data-icon='fa fa-clock-o')= ` ${recipe.time}`
-										if recipe.serves
-											li.pl-0.duck-edit-hidden= `| Serves ${recipe.serves}`
+								+editButton('f-R')
 
-										li.duck-view-hidden.checkbox(duck-field='isGlutenFree', duck-type='bool')
-											label
-												input(type='checkbox', duck-value, checked= recipe.isGlutenFree)
-												| Is Gluten Free
-										li.duck-view-hidden.checkbox(duck-field='isVegetarian', duck-type='bool')
-											label
-												input(type='checkbox', duck-value, checked= recipe.isVegetarian)
-												| Is Vegetarian Free
-										li.duck-view-hidden.checkbox(duck-field='isDairyFree', duck-type='bool')
-											label
-												input(type='checkbox', duck-value, checked= recipe.isDairyFree)
-												| Is Dairy Free
-										li.duck-view-hidden(duck-field='time', duck-type='string')
-											input.form-control(type='text', duck-value, placeholder='Time to Make', value= recipe.time)
-										li.duck-view-hidden(duck-field='serves', duck-type='string')
-											input.form-control(type='text', duck-value, placeholder='Serves How Many?', value= recipe.serves)
-									ul.p-0.ls-N.duck-edit-hidden
-										for direction, i in recipe.directions ? recipe.directions : []
-											li
-												if direction.title
-													h3= direction.title
-												ol
-													for step in direction.steps ? direction.steps : []
-														li= step
-									ul.p-0.ls-N.duck-view-hidden(duck-field='directions', duck-type='array')
-										li: button.btn.btn-primary(duck-button='add') Add Direction Section
-										for direction, i in recipe.directions ? recipe.directions : [{}]
-											li.bg-G__ltr.mb-Md.p-Sm(duck-type='object')
-												.form-group(duck-field='title', duck-type='string')
-													label Direction Section Title
-														input.form-control(type='text', duck-value, value= direction.title)
-												h3 Steps
-												div(duck-field='steps', duck-type='array')
-													div
-														for step in direction.steps ? direction.steps : [null]
-															div.form-group.d-F.fj-C(duck-type='string')
-																i.fa.fa-arrows-v.p-Sm.pl-Xs
-																input.form-control(type='text', duck-value, value=step)
-																button.btn.btn-danger(duck-button='delete')
-													div.ta-R.mt-Xs
-														button.btn.btn-primary(duck-button='add') Add Step
-
-												button.btn.btn-danger(duck-button='delete') Delete Direction Section
-
-									.duck-view-hidden
-										button.btn.btn-primary.ml-Sm(duck-button='submit') Save
-										button.btn.btn-warning(duck-button='cancel') Cancel
-							else
+							+view
 								ul.fc-G__dk.fs-Sm.list-inline
 									if recipe.isGlutenFree
 										li.pr-0 Gluten Free |
@@ -223,136 +85,144 @@ block content
 											ol
 												for step in direction.steps ? direction.steps : []
 													li= step
+							+edit
+								.row
+									.col-xs-12.col-sm-4.col-md-2: +bool(recipe, 'isGlutenFree', 'Is Gluten Free')
+									.col-xs-12.col-sm-4.col-md-2: +bool(recipe, 'isVegetarian', 'Is Vegetarian')
+									.col-xs-12.col-sm-4.col-md-2: +bool(recipe, 'isDairyFree', 'Is Dairy Free')
+									.col-xs-12.col-sm-6.col-md-3: +string(recipe, 'time', null, 'Time to Make')
+									.col-xs-12.col-sm-6.col-md-3: +string(recipe, 'serves', null, 'Serves How Many?')
+
+								+array(null, 'directions', null, 'Add Direction Section')
+									ul.p-0.ls-N
+										for direction, i in recipe.directions ? recipe.directions : [{}]
+											+object(null, null, 'Delete Direction Section')
+												+string(direction, 'title', 'Direction Section Title')
+												+array(direction, 'steps', 'Steps', 'Add Step')
+							
 					.col-xs-12.col-sm-5.col-md-3
-						.content-card(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-							if user && user.isAdmin
-								button.btn.btn-edit.f-R(duck-button='edit', data-icon='fa fa-pencil')
-								.duck-edit-hidden
-									h3 Dish Type(s)
-									ul
-										for type in recipe.dishType ? recipe.dishType : [null]
-											li= type === null ? 'Unknown' : type
-								.duck-view-hidden.mb-Lg(duck-field='dishType', duck-type='checkbox')
-									-
-										var dishTypes = [
-														'Breakfast',
-														'Lunch/Brunch',
-														'Appetizer',
-														'Soup',
-														'Salad',
-														'Bread',
-														'Vegetable',
-														'Fruit',
-														'Sauce',
-														'Poultry',
-														'Pork',
-														'Beef',
-														'Fish',
-														'Dessert',
-														'Cookie',
-														'Cake',
-														'Bars',
-														'Pie',
-														'Brownies',
-														'Candy',
-														'Drinks',
-														'Other',
-														]
-									h3 Dish Type
-									div
-										for type in dishTypes
-											.checkbox
-												label
-													input(type='checkbox', value= type, checked= recipe.dishType && recipe.dishType.indexOf(type) !== -1)
-													= type
-								
-								.duck-edit-hidden
-									h3 Ethnicity
-									ul
-										for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
-											li= ethnicity === null ? 'Unknown' : ethnicity
-								.duck-view-hidden.mb-Lg(duck-field='ethnicity', duck-type='checkbox')
-									h3 Ethnicity
-									div
-										-
-											var ethnicities = [
-																'Other',
-																'Italian',
-																'American',
-																'Mexican',
-																'German',
-																'Irish',
-																'Asian',
-																'Chinese',
-																'Japanese',
-																'Korean',
-															]
+						// Meal and Dish Information
+						+formStart(recipe, 'Recipes')(class='content-card')
+							-
+								const difficulties = {
+									Easy: 'alert-success',
+									Medium: 'alert-info',
+									Hard: 'alert-warning',
+									Advanced: 'alert-danger'};
 
-										for ethnicity in ethnicities
-											.checkbox
-												label
-													input(type='checkbox', value= ethnicity, checked= recipe.ethnicity && recipe.ethnicity.indexOf(ethnicity) !== -1)
-													= ethnicity
+								const mealTypes = [
+									'Appetizers, Snacks, & Dips',
+									'Breakfast & Brunch',
+									'Dinners',
+									'Desserts',
+									'Drinks'];
 
-									.ta-R
-										button.btn.btn-primary(duck-button='add') Add Ethnicity
-								
-								h3(class= recipe.difficulty ? '' : 'duck-view-hidden') Difficulty
-								if recipe.difficulty && recipe.difficulty !== 'Unknown'
-									.duck-edit-hidden
-										- var difficulties = {Easy: 'alert-success', Medium: 'alert-info', Hard: 'alert-warning', Advanced: 'alert-danger'};
-										.alert(class= difficulties[recipe.difficulty])= recipe.difficulty
-								.duck-view-hidden
-									.form-group(duck-field='difficulty', duck-type='string')
-										select.form-control(duck-value)
-											option(selected= recipe.difficulty === 'Unknown', value='Unknown') Unknown
-											option(selected= recipe.difficulty === 'Easy', value='Easy') Easy
-											option(selected= recipe.difficulty === 'Medium', value='Medium') Medium
-											option(selected= recipe.difficulty === 'Hard', value='Hard') Hard
-											option(selected= recipe.difficulty === 'Advanced', value='Advanced') Advanced
+								const dishTypes = [
+									'Soups, Stews & Chilis',
+									'Salads',
+									'Pastry',
+									'Breads',
+									'Vegetables',
+									'Fruits',
+									'Sauce',
+									'Pasta',
+									'Poultry',
+									'Pork',
+									'Beef',
+									'Fish',
+									'Seafood',
+									'Other Desserts',
+									'Cookies',
+									'Cakes',
+									'Bars',
+									'Pies',
+									'Brownies',
+									'Candy',
+									'Drinks',
+									'Other'];
 
-								.duck-view-hidden
-									button.btn.btn-primary.ml-Sm(duck-button='submit') Save
-									button.btn.btn-warning(duck-button='cancel') Cancel
+								const ethnicities = [
+									'Other',
+									'Italian',
+									'American',
+									'Mexican',
+									'German',
+									'Irish',
+									'Asian',
+									'Chinese',
+									'Japanese',
+									'Korean'];
 
+								const cookingStyles = [
+									'Quick & Easy',
+									'BBQ & Grilling',
+									'Slow Cooker',
+									'Casserole',
+									'One Pan',
+									'Stir Fry'];
 
-							else
-								h3 Dish Type(s)
+								const difficulty = [
+									'Unknown',
+									'Easy',
+									'Medium',
+									'Hard',
+									'Advanced'];
+							+editButton('f-R')
+							+view
+								h3 Meal Type
+								ul
+									for type in recipe.mealType ? recipe.mealType : [null]
+										li= type === null ? 'Unknown' : type
+
+								h3 Dish Type
 								ul
 									for type in recipe.dishType ? recipe.dishType : [null]
 										li= type === null ? 'Unknown' : type
-
+								
 								h3 Ethnicity
 								ul
 									for ethnicity in recipe.ethnicity ? recipe.ethnicity : [null]
 										li= ethnicity === null ? 'Unknown' : ethnicity
 
-			
-			if user && user.isAdmin
-				.col-xs-12
-					div(duck-table='Recipes', duck-function='update', duck-key='Id', duck-key-value= recipe.Id, duck-edit-form='view')
-						h2 Suggested Recipes
-							button.btn.btn-edit.f-R(duck-button='edit', data-icon='fa fa-pencil')
-						.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md.duck-edit-hidden
+								h3 Cooking Style
+								ul
+									for style in recipe.cookingStyle ? recipe.cookingStyle : [null]
+										li= style === null ? 'Unknown' : style
+							+edit()(data-function='accordion')
+								h3(role='tab' aria-expanded='true' data-event='tab-changed', data-target='this i', data-function='toggle')
+									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180', class='rotate-Neg180')
+									| Meal Type
+								+checkbox(recipe, 'mealType', null, mealTypes)(role='tabpanel', aria-hidden='false', class='mb-0')
+
+								h3(role='tab' aria-expanded='false' data-event='tab-changed', data-target='this i', data-function='toggle')
+									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180')
+									|Dish Type
+								+checkbox(recipe, 'dishType', null, dishTypes)(role='tabpanel', aria-hidden='true', class='mb-0')
+								
+								h3(role='tab' aria-expanded='false' data-event='tab-changed', data-target='this i', data-function='toggle')
+									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180')
+									| Ethnicity
+								+checkbox(recipe, 'ethnicity', null, ethnicities)(role='tabpanel', aria-hidden='true', class='mb-0')
+
+								h3(role='tab' aria-expanded='false' data-event='tab-changed', data-target='this i', data-function='toggle')
+									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180')
+									| Cooking Style
+								+checkbox(recipe, 'cookingStyle', null, cookingStyles)(role='tabpanel', aria-hidden='true', class='mb-0')
+
+			// Suggested Recipes
+			+formStart(recipe, 'Recipes', suggestedRecipes)
+				h2 Suggested Recipes
+					+editButton('ml-Sm')
+					+view
+						.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md
 							for suggested in suggestedRecipes
 								a.masonry--item(href= suggested.url)
 									+card(suggested.image, suggested.name)
-						.duck-view-hidden
-							.row(duck-field='suggestedRecipes', duck-type='checkbox')
-								for otherRecipe in recipes.filter((i) => i.Id !== recipe.Id)
-									.col-xs-12.col-sm-6.col-md-4.col-lg-3
-										.checkbox
-											label
-												input(type='checkbox', value= otherRecipe.Id, checked= recipe.suggestedRecipes && recipe.suggestedRecipes.indexOf(otherRecipe.Id) !== -1)
-												= otherRecipe.name
-							button.btn.btn-primary.ml-Sm(duck-button='submit') Save
-							button.btn.btn-warning(duck-button='cancel') Cancel
-
-
-			else if suggestedRecipes
-				.col-xs-12
-					h2 Suggested Recipes
-					.masonry.masonry-grid-1.masonry-grid-2--sm.masonry-grid-3--md
-						for suggested in suggestedRecipes ? suggestedRecipes : []
-							a.masonry--item(href= suggested.url)
-								+card(suggested.image, suggested.name)
+					+edit
+						.row(duck-field='suggestedRecipes', duck-type='checkbox')
+							for otherRecipe in recipes.filter((i) => i.Id !== recipe.Id)
+								.col-xs-12.col-sm-6.col-md-4.col-lg-3
+									.checkbox
+										label
+											input(type='checkbox', value= otherRecipe.Id, checked= recipe.suggestedRecipes && recipe.suggestedRecipes.indexOf(otherRecipe.Id) !== -1)
+											= otherRecipe.name
