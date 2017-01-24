@@ -188,6 +188,9 @@ block content
 								ul
 									for style in recipe.cookingStyle ? recipe.cookingStyle : [null]
 										li= style === null ? 'Unknown' : style
+
+								h3 Difficulty
+								.alert(class= difficulties[recipe.difficulty])= recipe.difficulty
 							+edit()(data-function='accordion')
 								h3(role='tab' aria-expanded='true' data-event='tab-changed', data-target='this i', data-function='toggle')
 									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180', class='rotate-Neg180')
@@ -208,6 +211,11 @@ block content
 									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180')
 									| Cooking Style
 								+checkbox(recipe, 'cookingStyle', null, cookingStyles)(role='tabpanel', aria-hidden='true', class='mb-0')
+
+								h3(role='tab' aria-expanded='false' data-event='tab-changed', data-target='this i', data-function='toggle')
+									i.fa.fa-chevron-down(aria-hidden='true', data-toggle='rotate-Neg180')
+									| Difficulty
+								+select(recipe, 'difficulty', null, ['Unknown','Easy','Medium','Hard','Advanced'])(role='tabpanel', aria-hidden='true', class='mb-0')
 
 			// Suggested Recipes
 			+formStart(recipe, 'Recipes', suggestedRecipes)
