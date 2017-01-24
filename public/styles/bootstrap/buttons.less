@@ -51,15 +51,15 @@
     .box-shadow(none);
   }
 
-  + .btn {
-    margin-left: @gw-Xs;
-  }
-
   a& {
     &.disabled,
     fieldset[disabled] & {
       pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
     }
+  }
+
+  + .btn {
+    margin-left: @gw-Xs;
   }
 }
 
