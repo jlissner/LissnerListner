@@ -32,6 +32,18 @@
 }
 	[data-scroll='content'] {
 		padding-right: 17px;
+
+		.container {
+			@media (min-width: @screen-sm-min) {
+				width: @container-sm - 17;
+			}
+			@media (min-width: @screen-md-min) {
+				width: @container-md - 17;
+			}
+			@media (min-width: @screen-lg-min) {
+				width: @container-lg - 17;
+			}
+		}
 	}
 
 	@media (min-width: @screen-Sm) {
