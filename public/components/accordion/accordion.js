@@ -75,6 +75,10 @@ void function initializeAccordions($) {
             .slideToggle(animationSpeed);
 
         // trigger tab-changed event when done
+         setTimeout(() => {
+            $tabToToggle.closest('[data-function*="scroll"]').trigger('initScroll')
+        }, animationSpeed);
+
         $tabToToggle.trigger('tab-changed', [ true ]);
     }
 
@@ -154,7 +158,11 @@ void function initializeAccordions($) {
 
         //only trigger tab change if the tab we are going to isn't currently open
         if($anchorTab.attr('aria-expanded') === 'false'){
-            $anchorTab.trigger('tab-change', [ true ]);
+            if($anchorTab.attr('aria-expanded') === 'false'){
+                $(window).on('load', () => {
+                    $anchorTab.click();
+                });
+            }
         }
 
         $wrapper.trigger('accordion-initialized');
