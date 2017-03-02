@@ -75,7 +75,7 @@ void function initializeAccordions($) {
             .slideToggle(animationSpeed);
 
         // trigger tab-changed event when done
-         setTimeout(() => {
+        setTimeout(() => {
             $tabToToggle.closest('[data-function*="scroll"]').trigger('initScroll')
         }, animationSpeed);
 
@@ -84,7 +84,6 @@ void function initializeAccordions($) {
 
     function changeTab(e, isOnLoad) {
         e.stopPropagation();
-
         const $activeTab = e.data.wrapper.find('> [aria-expanded="true"]');
         const $tab = $(e.currentTarget);
         const currentTabIsActiveTab = ($tab[0] === $activeTab[0]);
@@ -104,7 +103,6 @@ void function initializeAccordions($) {
         }
 
         toggleTab($tab, animationSpeed);
-
         // set hash but don't move the page
         if (!isOnLoad) {
             if(!alwaysShowOne && currentTabIsActiveTab){
@@ -150,6 +148,7 @@ void function initializeAccordions($) {
 
         // if there isn't a page anchor, end here
         if (!pageAnchor) {
+            $wrapper.trigger('accordin-initialized');
             return;
         }
 
@@ -158,14 +157,12 @@ void function initializeAccordions($) {
 
         //only trigger tab change if the tab we are going to isn't currently open
         if($anchorTab.attr('aria-expanded') === 'false'){
-            if($anchorTab.attr('aria-expanded') === 'false'){
-                $(window).on('load', () => {
-                    $anchorTab.click();
-                });
-            }
+            $(window).on('load', () => {
+                $anchorTab.click();
+            });
         }
 
-        $wrapper.trigger('accordion-initialized');
+        $wrapper.trigger('accordin-initialized');
     }
 
     $.fn.makeAccordion = function makeAccordion() {

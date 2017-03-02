@@ -7,15 +7,16 @@
 	width: 100%;
 
 	&.no-scrollbar {
-		[data-scroll='content-wrapper'] {
+		> [data-scroll='content-wrapper'] {
 			right: 0;
 			overflow: hidden;
-		}
-			[data-scroll='content'] {
+
+			> [data-scroll='content'] {
 				padding-right: 0;
 			}
+		}
 
-		[data-scroll='scrollbar'] {
+		> [data-scroll='scrollbar'] {
 			display: none;
 		}
 	}
@@ -62,7 +63,7 @@
 	bottom: 3px;
 	right: 0;
 	cursor: pointer;
-	z-index: 1;
+	z-index: 3;
 
 	button {
 		background: rgba(50, 50, 50, .25);

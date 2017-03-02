@@ -1,5 +1,5 @@
-const User    = require('../schemas/user');
-const Recipe = require('../schemas/recipe');
+const User           = require('../schemas/user');
+const Recipe     = require('../schemas/recipe');
 
 function pickTable(table) {
 	switch(table) {

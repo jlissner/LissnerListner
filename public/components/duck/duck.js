@@ -3,6 +3,19 @@
 void function initDuck($){
 	'use strict'
 
+	// secure ajax requests
+	const CSRF_HEADER = 'X-CSRF-Token';
+
+	function setCSRFToken(securityToken) {
+		$.ajaxPrefilter((options, _, xhr) => {
+			if (!xhr.crossDomain) {
+				xhr.setRequestHeader(CSRF_HEADER, securityToken);
+			}
+		});
+	}
+
+	setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
 	// stops propagation
 	function stopProp(e) {
 		e.stopPropagation();
@@ -16,11 +29,22 @@ void function initDuck($){
 		})
 	}
 
+	// renders a pug file with given locals
+	function renderPug(file, locals, success) {
+		$.ajax({
+			type: 'GET',
+			url: '/renderPug',
+			contentType: 'json',
+			data: {file, locals},
+			success,
+		});
+	}
+
 	// sends an email, needs the html OR the template
 	// request = {html: (optional)String, template: (optional)String, toEmail: (optional)String, subject: String}
 	// success = function
 	// failure = function
-	function sendEmail (request, success, failure) {
+	function sendEmail(request, success, failure) {
 		$.ajax({
 			type: 'POST',
 			data: JSON.stringify(request),
@@ -99,6 +123,21 @@ void function initDuck($){
 		// -- (string)field - the field to search on
 		// -- (dynamic)value - matches the type the field represents
 		// -- (bool)findOne - if true, returns at most 1 item
+		// if no options are passed in, return how many items are in the table
+		this.exists = (options, successCallback, errorCallback) => {
+			$.ajax({
+				url: `/exists/${table}`,
+				contentType: 'json',
+				data: options,
+				success: successCallback,
+				error: errorCallback,
+			});
+		}
+
+		// (object)options
+		// -- (string)field - the field to search on
+		// -- (dynamic)value - matches the type the field represents
+		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return all items in provided table
 		this.get = (options, successCallback, errorCallback) => {
 			$.ajax({
@@ -150,9 +189,11 @@ void function initDuck($){
 
 	duck.stopProp = stopProp;
 	duck.uuid = uuid;
+	duck.renderPug = renderPug;
 	duck.sendEmail = sendEmail;
 	duck.sendResetEmail = sendResetEmail;
 	duck.findRelevantChildren = findRelevantChildren;
+	duck.callbacks = {};
 
 	window.duck = duck;
 }(jQuery.noConflict());

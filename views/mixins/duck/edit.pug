@@ -1,9 +1,8 @@
 mixin edit(classes, showEdit = true)
-	if userIsAuthorized()
+	if userIsAuthorized(user)
 		.duck-view-hidden(class=classes)&attributes(attributes)
 			block
 
 			if showEdit
-				.mt-Sm
-					button.btn.btn-primary(duck-button='submit') Save
-					button.btn.btn-warning(duck-button='cancel') Cancel
+				button.btn.btn-primary(duck-button='submit') Save
+				button.btn.btn-warning(duck-button='cancel') Cancel

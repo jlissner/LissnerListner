@@ -14,7 +14,7 @@ head
 
 	//// Scripts //////////////////////////////////////////////////////////////
 	// not hosted local
-	script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+	script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
 	script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
 	script(type='text/javascript', src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
 	script(type='text/javascript', src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
@@ -24,7 +24,7 @@ head
 	script(type='text/javascript', src='/components/accordion/accordion.min.js')
 	script(type='text/javascript', src='/components/banner/banner.min.js')
 	script(type='text/javascript', src='/components/copy/copy.min.js')
-	script(type='text/javascript', src='/components/filepicker/filepicker.min.js')
+	script(type='text/javascript', src='/components/fileManager/fileManager.min.js')
 	script(type='text/javascript', src='/components/filter/filter.min.js')
 	script(type='text/javascript', src='/components/icon/icon.min.js')
 	script(type='text/javascript', src='/components/interiorNav/interiorNav.min.js')
@@ -96,7 +96,7 @@ head
 
 			const imgPath = img.split('.');
 			const imgExtention = imgPath.pop();
-			const s3Path = 'https://s3-us-west-2.amazonaws.com/lissnerlistner.com/images/';
+			const s3Path = 'https://s3-us-west-2.amazonaws.com/lissnerlistner.com/';
 
 			return img.indexOf('http') === 0 ? null : `${s3Path}${imgPath.join('')}-${size}.${imgExtention}`
 		}

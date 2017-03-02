@@ -2,27 +2,79 @@ const awsS3 = require('../config/s3.js');
 const Upload = require('s3-uploader');
 const s3 = {};
 
-s3.getFiles = (callback, folder, extentions) => {
-	const filesFolder = folder || 'images/';
-	const fileExtensions = extentions || ['jpg'];
+function getSetFolders(folderName, folder, subFolders) {
+	if(subFolders && subFolders.length > 0) {
+		folder[folderName] = folder[folderName] || {};
 
-	awsS3.listObjects({Bucket: 'lissnerlistner.com', Prefix: filesFolder}, function(err, data) {
+		getSetFolders(subFolders.shift(), folder[folderName], subFolders)
+	} else if(!folder[folderName]) {
+		folder[folderName] = false;
+	};
+}
+
+function createFolderStructure(files) {
+	const folders = {};
+
+	files.forEach((file) => {
+		const fileArr = file.split('/');
+		fileArr.pop(); // get rid of the file name, only worrying about the folders
+
+		getSetFolders(fileArr.shift(), folders, fileArr);
+	});
+
+	return folders
+};
+
+s3.getFiles = (callback, folder, marker, subFolders, bucketObjects) => {
+	if(!callback) {
+		console.error('A callback is required for getFiles');
+		return;
+	}
+
+	const _subFolders = subFolders || [];
+	const _bucketObjects = bucketObjects || [];
+	const prefix = folder || ''
+	const options = {
+		Bucket: 'lissnerlistner.com',
+		Prefix: prefix,
+		Delimiter: '/',
+		Marker: marker,
+	}
+
+	awsS3.listObjects(options, function(err, data) {
 		if (err) {
-			console.log(err, err.stack)
+			callback(err);
+			console.error(err, err.stack)
 			return;
 		};
 
-		const bucketObjects = data.Contents.filter((i) => fileExtensions.indexOf(i.Key.split('.').pop()) > -1);
+		data.Contents.forEach((i) => {
+			const key = i.Key.split('/');
+			key.pop();
 
-		if (callback) {
-			callback(bucketObjects);
+			if((key.length && prefix === `${key.join('/')}/`) || (prefix === '')) {
+				_bucketObjects.push(i);
+			}
+		});
+
+		data.CommonPrefixes.map((folderPath) => {
+			const folders = folderPath.Prefix.split('/'); 
+
+			folders.pop(); // the last item in the array will always be an empty string
+			_subFolders.push(folders.pop()); // push the last item, the folder name
+		});
+
+		if(!data.NextMarker) {
+			callback(null, _bucketObjects, prefix, _subFolders, data.Marker, data.NextMarker);
+		} else {
+			s3.getFiles(callback, prefix, data.NextMarker, _subFolders, _bucketObjects)
 		}
 	});
 }
 
 s3.uploadImage = (file, options, callback, fileType, filePath) => {
 	const extention = fileType || 'jpg'
-	const path = filePath || 'images/';
+	const path = filePath || '';
 	const client = new Upload('lissnerlistner.com', {
 		aws: {
 			path: path,
@@ -34,7 +86,7 @@ s3.uploadImage = (file, options, callback, fileType, filePath) => {
 
 		cleanup: {
 			versions: true,
-			original: true
+			original: true,
 		},
 
 		versions: [{
@@ -70,6 +122,17 @@ s3.uploadImage = (file, options, callback, fileType, filePath) => {
 	});
 
 	client.upload(file, options, callback);
+}
+
+s3.deleteFiles = (files, callback) => {
+	const options = {
+		Bucket: 'lissnerlistner.com',
+		Delete: {
+			Objects: files,
+		},
+	};
+
+	awsS3.deleteObjects(options, callback);
 }
 
 module.exports = s3;

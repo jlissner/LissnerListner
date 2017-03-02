@@ -1,7 +1,6 @@
 mixin checkbox(obj, field, title, items)
 	.form-group(duck-field=field, duck-type='checkbox')&attributes(attributes)
-		if title
-			h3= title
+		h3= title
 
 		if items
 			if typeof items[0] === 'object'
