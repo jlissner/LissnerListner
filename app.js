@@ -15,6 +15,8 @@ const setFlash         = require('./modules/setFlash');
 const routes           = require('./routes/index');
 const ajax             = require('./routes/ajax');
 const admin            = require('./routes/admin');
+const Recipe           = require('./schemas/recipe');
+const User             = require('./schemas/user');
 const fs               = require('fs');
 const app              = express();
 
@@ -86,6 +88,8 @@ app.use(setFlash);
 
 // get the user
 app.use(getUser);
+
+app.use(Recipe.getCached(),User.getCached());
 
 // Set index.js to be the main router
 app.use('/', routes);

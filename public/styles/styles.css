@@ -7515,6 +7515,9 @@ button.close {
   width: 100%;
   z-index: 1;
 }
+[data-function*='stickey'] [data-stickey='content'] {
+  overflow: hidden;
+}
 [data-function*='stickey'].stickey [data-stickey='content'] {
   position: fixed;
   top: 0 !important;
