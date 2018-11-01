@@ -3,15 +3,19 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
+import PersonIcon from '@material-ui/icons/Person';
 import LoginButton from '../Login/LoginButton';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
-  actionButton: {
+  actions: {
     marginLeft: 'auto',
   },
   home: {
@@ -20,8 +24,56 @@ const styles = (theme) => ({
 });
 
 class NavBar extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      menuAnchor: null,
+    }
+
+    this.openMenu = this.openMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
+  }
+
+  openMenu(e) {
+    this.setState({
+      menuAnchor: e.currentTarget,
+    });
+  }
+  closeMenu() {
+    this.setState({
+      menuAnchor: null,
+    });
+  }
+
+  renderLogin() {
+    const { classes } = this.props;
+
+    return <LoginButton color="inherit" className={classes.actionButton} />
+  }
+  renderActions() {
+    const { classes, logout } = this.props;
+    const { menuAnchor } = this.state;
+
+    return (
+      <div className={classes.actions}>
+        <IconButton color="inherit" onClick={this.openMenu}>
+          <PersonIcon />
+        </IconButton>
+        <Menu
+          anchorEl={menuAnchor}
+          open={Boolean(menuAnchor)}
+          onClose={this.closeMenu}
+        >
+          <MenuItem>My Profile - Make this work</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
+        </Menu>
+      </div>
+    )
+  }
+
   render() {
-    const { classes, user, logout } = this.props;
+    const { classes, user } = this.props;
 
     return (
       <nav className={classes.root}>
@@ -34,14 +86,8 @@ class NavBar extends React.PureComponent {
 
             {
               user
-              ? <Button
-                  color="inherit"
-                  className={classes.actionButton}
-                  onClick={logout}
-                >
-                  Logout
-                </Button>
-              : <LoginButton color="inherit" className={classes.actionButton} />
+              ? this.renderActions()
+              : this.renderLogin()
             }
           </Toolbar>
         </AppBar>
