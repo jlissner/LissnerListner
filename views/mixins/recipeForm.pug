@@ -1,7 +1,0 @@
-mixin RecipieForm(crud, recipe)
-	+formStart(recipe, 'Recipes', true, crud)
-		+string(recipe, 'name', 'Name')
-		+string(recipe, 'url', 'Url')
-		+string(recipe, 'author', 'Author')
-
-		button.btn.btn-primary(duck-button='submit') Save

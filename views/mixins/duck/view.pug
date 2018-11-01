@@ -1,7 +1,0 @@
-mixin view(classes)
-	if userIsAuthorized(user)
-		.duck-edit-hidden(class= classes)&attributes(attributes)
-			block
-	else
-		div(class= classes)&attributes(attributes)
-			block 
