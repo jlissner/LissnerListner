@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js'
 import { toast } from 'react-toastify'
-import { getCurrentUser } from '../../lib/awsLib'
+import { getAuthenticatedUser } from '../../lib/awsLib'
 import { withStyles } from '@material-ui/core/styles';
-import config from '../../config'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography'
@@ -71,32 +69,6 @@ class Login extends Component {
     })
   }
 
-  login = (email, password) => {
-    const userPool = new CognitoUserPool({
-      UserPoolId: config.cognito.USER_POOL_ID,
-      ClientId: config.cognito.APP_CLIENT_ID
-    })
-    
-    const user = new CognitoUser({
-      Username: email,
-      Pool: userPool
-    })
-
-    const authenticationData = {
-      Username: email,
-      Password: password
-    }
-
-    const authenticationDetails = new AuthenticationDetails(authenticationData)
-
-    return new Promise((resolve, reject) => {
-      user.authenticateUser(authenticationDetails, {
-        onSuccess: result => resolve(getCurrentUser()),
-        onFailure: err => reject(err)
-      })
-    })
-  }
-
   closeModal = () => {
     this.setState({
       open: false,
@@ -115,9 +87,9 @@ class Login extends Component {
     this.setState({ isLoading: true })
 
     try {
-      const user = await this.login(this.state.email, this.state.password)
+      await getAuthenticatedUser(this.state.email, this.state.password)
 
-      this.props.login(user.username)
+      this.props.login()
       toast.success('Logged in')
     } catch (err) {
       console.error(err)

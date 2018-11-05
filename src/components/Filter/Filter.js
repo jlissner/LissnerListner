@@ -1,38 +1,41 @@
 import React from 'react';
-import FilterSection from './FilterSection'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FilterSection from './FilterSection';
 
 class Filter extends React.Component {
-  componentDidMount() {
-    const { tags, getTags } = this.props;
+  render() {
+    const { filters, tags, category } = this.props;
 
     if (tags.length === 0) {
-      getTags()
+      return (
+        <CircularProgress />
+      );
     }
-  }
-
-  render() {
-    const { filters } = this.props;
 
     return (
         <React.Fragment>
           <FilterSection
             filters={filters.Difficulty}
-            category={'Difficulty'}
+            category={category}
+            subCategory={'Difficulty'}
           />
 
           <FilterSection
             filters={filters.Section}
-            category={'Section'}
+            category={category}
+            subCategory={'Section'}
           />
 
           <FilterSection
             filters={filters['Dietary Preference']}
-            category={'Dietary Preference'}
+            category={category}
+            subCategory={'Dietary Preference'}
           />
 
           <FilterSection
             filters={filters.Ethnicity}
-            category={'Ethnicity'}
+            category={category}
+            subCategory={'Ethnicity'}
           />
         </React.Fragment>
     );

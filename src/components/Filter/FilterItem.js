@@ -6,9 +6,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import green from '@material-ui/core/colors/green';
-import _filter from 'lodash/filter';
-import _get from 'lodash/get';
-import _find from 'lodash/find';
+import _isEqual from 'lodash/isEqual';
+import _pick from 'lodash/pick';
 
 const styles = (theme) => ({
   checked: {
@@ -17,42 +16,17 @@ const styles = (theme) => ({
 });
 
 class FilterItem extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      checked: false,
-    }
-  }
-
-  toggleChecked = () => {
-    this.setState({
-      checked: !this.state.checked,
-    });
-  }
-
   handleCheck = () => {
-    const { toggleFilter, category, label } = this.props
+    const { toggleFilter, category, label, subCategory } = this.props;
 
-    this.toggleChecked()
-
-    toggleFilter({category, label})
-  }
-
-  checkDisabled = () => {
-    const { label, category, recipes } = this.props;
-    const currentFilter = { label, category };
-    const availableRecipes = _filter(recipes, (recipe) => _find(recipe.tags, currentFilter));
-
-    return !Boolean(_get(availableRecipes, 'length', true))
+    toggleFilter({category, value: {label, category: subCategory}});
   }
 
   render() {
-    const { label, classes } = this.props;
-    const { checked } = this.state;
+    const { classes, checked, disabled, label } = this.props;
 
     return (
-      <ListItem button onClick={this.handleCheck} disabled={this.checkDisabled()}>
+      <ListItem button onClick={this.handleCheck} disabled={disabled}>
         <ListItemIcon>
           {
             checked

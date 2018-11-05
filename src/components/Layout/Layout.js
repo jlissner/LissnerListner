@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Login from '../Login/Login';
 import Home from '../../pages/Home';
 import RecipeDetail from '../../pages/RecipeDetail';
+import UserProfile from '../../pages/UserProfile';
 import NoPage from '../../pages/NoPage';
 import NavBar from './NavBar'
 
@@ -18,7 +19,7 @@ const styles = (theme) => ({
     minHeight: '100vh',
   },
   authenticating: {
-    margin: '0 auto',
+    margin: `${theme.spacing.unit * 3}px auto 0`,
     width: 40,
   },
   content: {
@@ -43,6 +44,7 @@ class Layout extends React.Component {
       <div className={classes.content}>
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
           <Route path='/:recipe' component={RecipeDetail} />
         </Switch>
@@ -51,15 +53,7 @@ class Layout extends React.Component {
   }
 
   renderLander = () => {
-    const { classes, isAuthenticating } = this.props;
-
-    if (isAuthenticating) {
-      return (
-        <div className={classes.authenticating}>
-          <CircularProgress />
-        </div>
-      )
-    }
+    const { classes } = this.props;
 
     return (
       <div className={classes.content}>
@@ -75,7 +69,15 @@ class Layout extends React.Component {
   }
 
   render() {
-    const { classes, user, logout } = this.props
+    const { classes, user, logout, isAuthenticating } = this.props
+
+    if (isAuthenticating) {
+      return (
+        <div className={classes.authenticating}>
+          <CircularProgress />
+        </div>
+      )
+    }
 
     return (
       <div className={classes.app}>

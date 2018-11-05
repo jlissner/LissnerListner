@@ -4,7 +4,6 @@ import getFilteredRecipes from './getFilteredRecipes';
 import FilterItem from './FilterItem';
 
 const mapStateTopProps = (state) => ({
-  recipes: getFilteredRecipes(state),
 });
 
 const mapActionsToProps = {

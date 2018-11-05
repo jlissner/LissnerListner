@@ -9,8 +9,18 @@ import _find from 'lodash/find';
 import ItemizedList from '../ItemizedList/ItemizedList';
 import RecipeSummary from './RecipeSummary';
 import RecipeForm from './RecipeForm/RecipeFormContainer';
+import Favorite from '../Favorite/FavoriteContainer';
 
 const styles = (theme) => ({
+  titleContainer: {
+    position: 'relative',
+  },
+  title: {
+    padding: `0 ${theme.spacing.unit * 5}px`,
+  },
+  description: {
+    color: theme.palette.grey[800],
+  },
   editButton: {
     position: 'fixed',
     bottom: theme.spacing.unit * 4,
@@ -25,36 +35,37 @@ const styles = (theme) => ({
     color: theme.palette.grey[600],
     marginLeft: theme.spacing.unit,
     fontStyle: 'italic',
-  }
+  },
+  favorite: {
+    position: 'absolute',
+    top: 0,
+    left: 0
+  },
 })
 
 class RecipeDetail extends React.Component {
-  componentDidMount() {
-    const { recipes, getRecipes } = this.props;
-    
-    if (recipes.length === 0) {
-      getRecipes();
-    }
-  }
+  constructor(props) {
+    super(props);
 
-  getRecipe = () => {
     const { recipes, match, setForm } = this.props;
-    const recipe = _find(recipes, {recipeUrl: `/${match.params.recipe}`})
+    this.recipe = _find(recipes, {recipeUrl: `/${match.params.recipe}`})
 
-    if (recipe) {
-      setForm(recipe)
+    if (this.recipe) {
+      setForm(this.recipe)
     }
 
-    return recipe;
+
   }
 
   renderDescription(recipe) {
-    if (!recipe.description) {
+    const { classes } = this.props;
+
+    if (!this.recipe.description) {
       return null;
     }
 
     return (
-      <Typography variant="subheading" align="center">{recipe.description}</Typography>
+      <Typography variant="h4" align="center" className={classes.description}>{this.recipe.description}</Typography>
     )
   }
 
@@ -65,35 +76,34 @@ class RecipeDetail extends React.Component {
       return <div className={classes.progress}><CircularProgress /></div>
     }
 
-    const recipe = this.getRecipe();
-
-    if (!recipe) {
+    if (!this.recipe) {
       return <Redirect to={`/404?missingPage=${match.url}`} />
     }
 
     return (
       <React.Fragment>
         <Grid container spacing={24}>
-          <Grid item xs={12}>
-            <Typography align="center" variant="h4" paragraph>
-              {recipe.title}
+          <Grid item xs={12} className={classes.titleContainer}>
+            <Favorite className={classes.favorite} recipe={this.recipe.Id} />
+            <Typography align="center" variant="h4" paragraph className={classes.title}>
+              {this.recipe.title}
               {
-                recipe.serves
-                ? <span className={classes.subHeader}>{recipe.serves}</span>
+                this.recipe.serves
+                ? <span className={classes.subHeader}>{this.recipe.serves}</span>
                 : null
               }
             </Typography>
-            {this.renderDescription(recipe)}
+            {this.renderDescription(this.recipe)}
           </Grid>
           <Grid item xs={12} sm={5} md={4}>
-            <ItemizedList title="Ingredients" groups={recipe.ingredients} items="ingredients" />
+            <ItemizedList title="Ingredients" groups={this.recipe.ingredients} items="ingredients" />
 
           </Grid>
           <Grid item xs={12} sm={7} md={8}>
-            <ItemizedList title="Directions" groups={recipe.directions} items="steps" />
+            <ItemizedList title="Directions" groups={this.recipe.directions} items="steps" />
           </Grid>
           <Grid item xs={12}>
-            <RecipeSummary recipe={recipe} />
+            <RecipeSummary recipe={this.recipe} />
           </Grid>
         </Grid>
 

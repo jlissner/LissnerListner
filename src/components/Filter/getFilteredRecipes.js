@@ -5,7 +5,7 @@ import _uniqBy from 'lodash/uniqBy';
 
 const getFilteredRecipes = createSelector(
   state => state.recipes,
-  state => state.filters,
+  (state, props) => state.filters[props.category],
   (recipes, filters) => {
     if (filters.length === 0) {
       return recipes;

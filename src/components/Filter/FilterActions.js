@@ -29,17 +29,17 @@ export function removeFilter(filter) {
   };
 }
 
-export function toggleFilter(filter) {
+export function toggleFilter({category, value}) {
   return (dispatch, getState) => {
-    dispatch({ type: TOGGLE_FILTER, payload: filter });
+    dispatch({ type: TOGGLE_FILTER, payload: { category, value } });
 
-    const filters = getState().filters;
-    const alreadyExists = _find(filters, filter);
+    const filters = getState().filters[category];
+    const alreadyExists = _find(filters, value);
 
     if (alreadyExists) {
-      dispatch(removeFilter(filter))
+      dispatch(removeFilter({category, value}))
     } else {
-      dispatch(addFilter(filter))
+      dispatch(addFilter({category, value}))
     }
   }
 }
@@ -53,17 +53,28 @@ export const actions = {
 
 const ACTION_HANDLERS = {
   [ADD_FILTER]: (state, action) => {
-    return _uniq(_concat(state, action.payload))
+    return {
+      ...state,
+      [action.payload.category]: _uniq(_concat(state[action.payload.category], action.payload.value))
+    }
   },
   [REMOVE_FILTER]: (state, action) => {
-    return _filter(state, (filter) => JSON.stringify(filter) !== JSON.stringify(action.payload))
+    return {
+      ...state,
+      [action.payload.category]: _filter(state[action.payload.category], (filter) => JSON.stringify(filter) !== JSON.stringify(action.payload.value))
+    }
   },
   [SET_FILTERS]: (state, action) => {
-    return action.payload
+    return {
+      ...state,
+      [action.payload.category]: action.payload.value,
+    }
   },
 }
 
-const initialState = []
+const initialState = {
+  recipes: []
+}
 
 export default function recipeReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

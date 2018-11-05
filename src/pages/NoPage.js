@@ -15,8 +15,8 @@ class NoPage extends React.PureComponent {
 
     return (
       <Paper elevation={1} className={classes.root}>
-        <Typography component='h1' variant='display3'>404 - Nothing to See Here</Typography>
-        <Typography component='p'>
+        <Typography variant='h3' paragraph>404 - Nothing to See Here</Typography>
+        <Typography>
           If you think you think there should be something here, let Joe know.
         </Typography>
       </Paper>

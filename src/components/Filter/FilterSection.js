@@ -6,31 +6,43 @@ import Paper from '@material-ui/core/Paper';
 import _map from 'lodash/map';
 import FilterItem from './FilterItemContainer';
 
-const styles = (theme) => ({
+const styles = (theme) => console.log(theme) || ({
   root: {
+    background: '#fff',
     '& + $root': {
-      marginTop: theme.spacing.unit * 2,
+      paddingTop: theme.spacing.unit * 2,
     },
   },
+  list: {
+      width: '100%',
+  }
 });
 
 class FilterSection extends React.Component {
   render() {
-    const { classes, filters, category } = this.props;
+    const { classes, filters, category, subCategory } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <div className={classes.root}>
         <List
-          subheader={<ListSubheader disableSticky>{category}</ListSubheader>}
+          className={classes.list}
+          subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
         >
           {
-            _map(filters, ({label}) => (
-                <FilterItem key={label} label={label} category={category}/>
+            _map(filters, ({label, checked, disabled}) => (
+                <FilterItem
+                  key={label}
+                  label={label}
+                  checked={checked}
+                  disabled={disabled}
+                  subCategory={subCategory}
+                  category={category}
+                />
               )
             )
           }
         </List>
-      </Paper>
+      </div>
     );
   }
 };

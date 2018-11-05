@@ -1,4 +1,4 @@
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
 import config from '../config';
 import sigV4Client from './sigV4Client'
@@ -55,6 +55,58 @@ export async function authUser() {
   await getAwsCredentials(userToken);
 
   return currentUser;
+}
+
+export function getAuthenticatedUser(email, password) {
+  const userPool = new CognitoUserPool({
+    UserPoolId: config.cognito.USER_POOL_ID,
+    ClientId: config.cognito.APP_CLIENT_ID
+  })
+  
+  const user = new CognitoUser({
+    Username: email,
+    Pool: userPool
+  })
+
+  const authenticationData = {
+    Username: email,
+    Password: password
+  }
+
+  const authenticationDetails = new AuthenticationDetails(authenticationData)
+
+  return new Promise((resolve, reject) => {
+    user.authenticateUser(authenticationDetails, {
+      onSuccess: result => resolve(getCurrentUser()),
+      onFailure: err => reject(err)
+    })
+  })
+}
+
+export async function changeUserPassword(oldPassword, newPassword) {
+  return new Promise(async (res, rej) => {
+    const currentUser = await authUser();
+
+    currentUser.getSession((sessionError, session) => {
+      if (sessionError) {
+        console.error({sessionError});
+
+        return rej('Invalid Session');
+      }
+
+      console.log('session validity: ' + session.isValid());
+
+      currentUser.changePassword(oldPassword, newPassword, (changePasswordError) => {
+        if (changePasswordError) {
+          console.error({changePasswordError})
+
+          return rej({changePasswordError})
+        }
+
+        res('Successfully changed password')
+      })
+    })
+  })
 }
 
 export async function signOutUser() {

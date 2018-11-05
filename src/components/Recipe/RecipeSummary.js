@@ -82,10 +82,26 @@ class RecipeSummary extends React.PureComponent {
             </Grid>
             <Grid item xs={12} sm={4}>
               <List className={classes.list}>
-                {recipe.serves && <ListItem><ListItemText color="inherit" primary={`Servers: ${recipe.serves}`} /></ListItem>}
-                {recipe.time && <ListItem><ListItemText primary={recipe.time} /></ListItem>}
-                {this.getTags('Difficulty') && <ListItem><ListItemText primary={`Difficulty: ${this.getTags('Difficulty')[0].label}`} /></ListItem>}
-                {this.getTags('Ethnicity') && <ListItem><ListItemText primary={`Ethnicity: ${this.getTags('Ethnicity').map(e => e.label).join(', ')}`} /></ListItem>}
+                {
+                  recipe.serves
+                    ? <ListItem><ListItemText color="inherit" primary={`Servers: ${recipe.serves}`} /></ListItem>
+                    : null
+                }
+                {
+                  recipe.time
+                    ? <ListItem><ListItemText primary={recipe.time} /></ListItem>
+                    : null
+                }
+                {
+                  this.getTags('Difficulty').length
+                    ? <ListItem><ListItemText primary={`Difficulty: ${this.getTags('Difficulty')[0].label}`} /></ListItem>
+                    : null
+                }
+                {
+                  this.getTags('Ethnicity').length
+                    ? <ListItem><ListItemText primary={`Ethnicity: ${this.getTags('Ethnicity').map(e => e.label).join(', ')}`} /></ListItem>
+                    : null
+                }
               </List>
             </Grid>
           </Grid>

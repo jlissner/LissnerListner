@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -49,7 +50,7 @@ class NavBar extends React.PureComponent {
   renderLogin() {
     const { classes } = this.props;
 
-    return <LoginButton color="inherit" className={classes.actionButton} />
+    return <LoginButton color="inherit" className={classes.actions} />
   }
   renderActions() {
     const { classes, logout } = this.props;
@@ -65,7 +66,8 @@ class NavBar extends React.PureComponent {
           open={Boolean(menuAnchor)}
           onClose={this.closeMenu}
         >
-          <MenuItem>My Profile - Make this work</MenuItem>
+          <MenuItem onClick={this.closeMenu} component={Link} to="/profile">My Profile</MenuItem>
+          <Divider />
           <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       </div>
@@ -81,7 +83,7 @@ class NavBar extends React.PureComponent {
           <Toolbar>
             <Button color="inherit" component={Link} to='/'>
               <HomeIcon className={classes.home} />
-              Lissner Cookbook
+              Lissner Family Website
             </Button>
 
             {
