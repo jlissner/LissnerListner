@@ -2,11 +2,10 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Paper from '@material-ui/core/Paper';
 import _map from 'lodash/map';
 import FilterItem from './FilterItemContainer';
 
-const styles = (theme) => console.log(theme) || ({
+const styles = (theme) => ({
   root: {
     background: '#fff',
     '& + $root': {

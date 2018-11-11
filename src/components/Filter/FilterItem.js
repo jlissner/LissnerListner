@@ -6,8 +6,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import green from '@material-ui/core/colors/green';
-import _isEqual from 'lodash/isEqual';
-import _pick from 'lodash/pick';
 
 const styles = (theme) => ({
   checked: {

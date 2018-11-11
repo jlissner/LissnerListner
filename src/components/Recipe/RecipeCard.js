@@ -63,7 +63,7 @@ class RecipeCard extends React.Component {
             <Tags classes={classes} tags={recipe.tags} />
           </CardContent>
           <CardActions>
-            <Button component={Link} to={recipe.recipeUrl}>
+            <Button color="secondary" variant="contained" component={Link} to={recipe.recipeUrl}>
               Go To Recipe
             </Button>
           </CardActions>

@@ -8,10 +8,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import { green } from '@material-ui/core/colors';
 import AddIcon from '@material-ui/icons/Add';
+import CancelIcon from '@material-ui/icons/Cancel';
 import _map from 'lodash/map';
 import Item from './Item'
 
 const styles = (theme) => ({
+  root: {
+    position: 'relative',
+  },
+  removeButton: {
+    position: 'absolute',
+    top: -24,
+    right: -24,
+    zIndex: 1,
+  },
   section: {
     background: theme.palette.grey[200],
     marginBottom: theme.spacing.unit * 3,
@@ -19,7 +29,6 @@ const styles = (theme) => ({
     paddingTop: theme.spacing.unit * 2,
   },
   addIcon: {
-    color: green[500],
   },
 });
 
@@ -78,6 +87,7 @@ class RecipeIngredientsSectionForm extends React.Component {
       classes,
       listSection,
       subSection,
+      removeSection,
       removeItem,
       newSubItemTitle,
       updateItem,
@@ -85,51 +95,54 @@ class RecipeIngredientsSectionForm extends React.Component {
     const { newItem } = this.state;
 
     return (
-      <List
-        className={classes.section}
-        subheader={
-          <ListSubheader>
-            <TextField
-              name={'newTitle'}
-              label="Section Title"
-              value={listSection.title}
-              onBlur={this.focusNewItem}
-              onChange={this.updateTitle}
-              onKeyDown={this.handleEnter(this.focusNewItem)}
-              placeholder="Sauce"
-              fullWidth
-              variant="outlined"
-            />
-          </ListSubheader>
-        }
-      >
-        {
-          _map(listSection[subSection], (item, indexOfItem) => (
-            <Item
-              key={indexOfItem}
-              item={item}
-              updateItem={updateItem(indexOfItem)}
-              removeItem={removeItem}
-            />
-          ))
-        }
-        <ListItem>
-          <ListItemText>
-            <TextField
-              name="newItem"
-              label={newSubItemTitle}
-              value={newItem}
-              onChange={this.handleFieldChange}
-              onKeyDown={this.handleEnter(this.addItem)}
-              fullWidth
-              inputProps={{ref: this.newItemRef}}
-            />
-          </ListItemText>
-          <IconButton disabled={!newItem} onClick={this.addItem} className={classes.addIcon}>
-            <AddIcon/>
-          </IconButton>
-        </ListItem>
-      </List>
+      <div className={classes.root}>
+        <IconButton color="secondary" className={classes.removeButton} onClick={removeSection}><CancelIcon /></IconButton>
+        <List
+          className={classes.section}
+          subheader={
+            <ListSubheader disableSticky>
+              <TextField
+                name={'newTitle'}
+                label="Section Title"
+                value={listSection.title}
+                onBlur={this.focusNewItem}
+                onChange={this.updateTitle}
+                onKeyDown={this.handleEnter(this.focusNewItem)}
+                placeholder="Sauce"
+                fullWidth
+                variant="outlined"
+              />
+            </ListSubheader>
+          }
+        >
+          {
+            _map(listSection[subSection], (item, indexOfItem) => (
+              <Item
+                key={indexOfItem}
+                item={item}
+                updateItem={updateItem(indexOfItem)}
+                removeItem={removeItem}
+              />
+            ))
+          }
+          <ListItem>
+            <ListItemText>
+              <TextField
+                name="newItem"
+                label={newSubItemTitle}
+                value={newItem}
+                onChange={this.handleFieldChange}
+                onKeyDown={this.handleEnter(this.addItem)}
+                fullWidth
+                inputProps={{ref: this.newItemRef}}
+              />
+            </ListItemText>
+            <IconButton disabled={!newItem} onClick={this.addItem} color="primary">
+              <AddIcon/>
+            </IconButton>
+          </ListItem>
+        </List>
+      </div>
     )
   }
 };

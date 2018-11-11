@@ -22,6 +22,16 @@ export const SAVE_FORM = 'RECIPE_FORM::SAVE_FORM';
 export const SAVE_FORM_SUCCESSFUL = 'RECIPE_FORM::SAVE_FORM_SUCCESSFUL';
 
 export function setForm(recipeForm) {
+  recipeForm.directions = recipeForm.directions || [{ title: '', steps: []}]
+  recipeForm.ingredients = recipeForm.ingredients || [{ title: '', ingredients: []}]
+  recipeForm.author = recipeForm.author || '';
+  recipeForm.cookTime = recipeForm.cookTime || '';
+  recipeForm.description = recipeForm.description || '';
+  recipeForm.image = recipeForm.image || '';
+  recipeForm.note = recipeForm.note || '';
+  recipeForm.serves = recipeForm.serves || '';
+  recipeForm.tags = recipeForm.tags || [];
+
   _forEach(recipeForm.directions, (direction) => direction.title = direction.title || '');
   _forEach(recipeForm.ingredients, (ingredient) => ingredient.title = ingredient.title || '');
 

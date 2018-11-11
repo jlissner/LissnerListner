@@ -10,6 +10,18 @@ const styles = (theme) => ({
 });
 
 class SectionListsForm extends React.Component {
+  removeSection = (indexOfSection) => {
+    return () => {
+      const { category, data } = this.props;
+      
+      data.splice(indexOfSection, 1);
+
+      this.props.setValue({
+        key: category,
+        value: data,
+      });
+    }
+  }
 
   removeItem = (indexOfSection) => (item) => {  
     const { category, data, subSection } = this.props;
@@ -84,6 +96,7 @@ class SectionListsForm extends React.Component {
               newSubItemTitle={newSubItemTitle}
               subSection={subSection}
               listSection={listSection}
+              removeSection={this.removeSection(indexOfSection)}
               removeItem={this.removeItem(indexOfSection)}
               updateItem={this.updateItem(indexOfSection)}
               updateSectionTitle={this.updateSectionTitle(indexOfSection)}

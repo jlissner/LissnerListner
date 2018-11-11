@@ -11,7 +11,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const styles = (theme) => ({
   removeIcon: {
-    color: red[500],
   }
 });
 
@@ -65,7 +64,7 @@ class Item extends React.Component {
               {item}
             </ListItemText>
         }
-        <IconButton className={classes.removeIcon} onClick={this.removeItem}>
+        <IconButton className={classes.removeIcon} onClick={this.removeItem} color="secondary">
           <CloseIcon />
         </IconButton>
       </ListItem>

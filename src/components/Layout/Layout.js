@@ -16,11 +16,22 @@ import NavBar from './NavBar'
 const styles = (theme) => ({
   app: {
     background: theme.palette.grey[300],
-    minHeight: '100vh',
+    height: '100%',
+    paddingTop: 64,
   },
   authenticating: {
     margin: `${theme.spacing.unit * 3}px auto 0`,
     width: 40,
+  },
+  contentContainer: {
+    height: '100%',
+    overflow: 'auto',
+    marginRight: 0,
+    transition: `margin-right ${theme.transitions.duration.leavingScreen}ms ${theme.transitions.easing.easeInOut}`
+  },
+  contentContainerOpen: {
+    marginRight: 319,
+    transition: `margin-right ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeInOut}`,
   },
   content: {
     maxWidth: 1600,
@@ -33,6 +44,11 @@ const styles = (theme) => ({
     marginTop: theme.spacing.unit * 2,
     marginLeft: 'auto',
     marginRight: 'auto',
+  },
+  '@global': {
+    'html, body, #root': {
+      height: '100%',
+    }
   },
 })
 
@@ -68,10 +84,13 @@ class Layout extends React.Component {
     )
   }
 
-  render() {
-    const { classes, user, logout, isAuthenticating } = this.props
+  renderContent = () => {
+    const { classes, isLoading, user, isAuthenticating } = this.props
+    const showLoader = user
+      ? isLoading
+      : isAuthenticating;
 
-    if (isAuthenticating) {
+    if (showLoader) {
       return (
         <div className={classes.authenticating}>
           <CircularProgress />
@@ -79,15 +98,21 @@ class Layout extends React.Component {
       )
     }
 
+    return user
+      ? this.renderApp()
+      : this.renderLander()
+  }
+
+  render() {
+    const { classes, drawer, user, logout } = this.props
+
     return (
       <div className={classes.app}>
         <NavBar user={user} logout={logout} />
-
-        {
-          user
-          ? this.renderApp()
-          : this.renderLander()
-        }
+        
+        <div className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
+          {this.renderContent()}
+        </div>
         
         <ToastContainer autoClose={3000} />
       </div>

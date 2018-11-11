@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,6 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
 import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
+import _find from 'lodash/find';
+import _get from 'lodash/get';
 import * as tags from  '../../../data/recipeTagOptions';
 
 const styles = (theme) => ({
@@ -60,8 +63,17 @@ class RecipeForm extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { buttonProps, classes, recipeForm, saveForm, text } = this.props;
+    const { 
+      buttonProps,
+      classes,
+      recipes,
+      recipeForm,
+      saveForm,
+      text,
+      isIcon,
+    } = this.props;
     const {
+      Id,
       title,
       author,
       description,
@@ -71,16 +83,23 @@ class RecipeForm extends React.Component {
       ingredients,
       directions,
     } = recipeForm;
+    const currentRecipe = _find(recipes, { Id });
+    const hasError = Boolean(
+      _find(recipes, { title })
+      && _get(currentRecipe, 'title') !== title
+    );
+    const ToggleModalButton = isIcon ? IconButton : Button;
 
     return (
       <React.Fragment>
-        <Button onClick={this.handleOpen} {...buttonProps}>{text}</Button>
+        <ToggleModalButton onClick={this.handleOpen} {...buttonProps}>{text}</ToggleModalButton>
         <Dialog onClose={this.handleClose} open={open} maxWidth="lg">
           <DialogTitle>New Recipe</DialogTitle>
           <DialogContent className={classes.form}>
             <Grid container spacing={24}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={hasError}
                   variant="outlined"
                   name="title"
                   label="Title"
@@ -89,6 +108,7 @@ class RecipeForm extends React.Component {
                   required
                   fullWidth
                   placeholder="Deep Fried Chicken"
+                  helperText={hasError ? 'Title Must Be Unique' : ''}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -203,7 +223,7 @@ class RecipeForm extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose}>Close</Button>
-            <Button variant="contained" color="primary" onClick={saveForm}>Save</Button>
+            <Button variant="contained" color="primary" onClick={saveForm} disabled={Boolean(!title) || hasError}>Save</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>

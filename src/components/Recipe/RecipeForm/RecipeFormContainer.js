@@ -4,6 +4,7 @@ import { actions as recipeActions } from '../RecipeActions'
 import RecipeForm from './RecipeForm';
 
 const mapStateToProps = (state) => ({
+  recipes: state.recipes,
   recipeForm: state.recipeForm,
 });
 

@@ -16,8 +16,12 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
   actions: {
     marginLeft: 'auto',
+    display: 'flex',
   },
   home: {
     marginRight: theme.spacing.unit,
@@ -58,6 +62,7 @@ class NavBar extends React.PureComponent {
 
     return (
       <div className={classes.actions}>
+        <div id="NavBarAction"></div>
         <IconButton color="inherit" onClick={this.openMenu}>
           <PersonIcon />
         </IconButton>
@@ -79,7 +84,7 @@ class NavBar extends React.PureComponent {
 
     return (
       <nav className={classes.root}>
-        <AppBar position="static">
+        <AppBar className={classes.appBar} position="fixed">
           <Toolbar>
             <Button color="inherit" component={Link} to='/'>
               <HomeIcon className={classes.home} />

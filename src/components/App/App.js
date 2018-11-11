@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import Layout from '../Layout/Layout';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import _get from 'lodash/get';
+import Layout from '../Layout/LayoutContainer';
 
 class App extends PureComponent {
   componentDidMount() {
@@ -10,20 +12,27 @@ class App extends PureComponent {
 
   componentDidUpdate() {
     const { user, recipes, getRecipes, tags, getTags } = this.props;
+    const Id = _get(user, 'activeUser.Id')
 
-    if (user.activeUser.Id && recipes.length === 0) {
+    if (Id && recipes.length === 0) {
       getRecipes();      
     }
 
-    if (user.activeUser.Id && tags.length === 0) {
+    if (Id && tags.length === 0) {
       getTags();      
     }
   }
 
   render() {
     const { user, logout, recipes } = this.props;
+    const Id = _get(user, 'activeUser.Id')
 
-    return (<Layout user={user.activeUser.Id} logout={logout} isAuthenticating={user.authenticating || recipes.length === 0} />);
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <Layout user={Id} logout={logout} isAuthenticating={user.authenticating} isLoading={Boolean(!recipes.length)} />
+      </React.Fragment>
+    );
   }
 }
 
