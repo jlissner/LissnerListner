@@ -48,7 +48,7 @@ const ACTION_HANDLERS = {
 }
 
 const initialState = {
-  drawer: true,
+  drawer: false,
 }
 
 export default function reducer(state = initialState, action = {}) {
