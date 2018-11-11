@@ -39,6 +39,7 @@ const styles = (theme) => ({
 
   },
   searchContainer: {
+    marginTop: theme.spacing.unit / 2,
     marginRight: theme.spacing.unit * 2,
   },
   filtersContainer: {
