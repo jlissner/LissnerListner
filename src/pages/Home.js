@@ -1,16 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import FilterIcon from '@material-ui/icons/FilterList';
 import RecipeList from '../components/Recipe/RecipeListContainer';
 import RecipeForm from '../components/Recipe/RecipeForm/RecipeFormContainer';
-import Filter from '../components/Filter/FilterContainer';
-import Search from '../components/Search/SearchContainer';
 
 
 const styles = (theme) => ({

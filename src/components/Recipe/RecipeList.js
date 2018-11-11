@@ -5,11 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import FilterIcon from '@material-ui/icons/FilterList';
 import Drawer from '@material-ui/core/Drawer';
-
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CancelIcon from '@material-ui/icons/Cancel';
-
 import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _groupBy from 'lodash/groupBy';
@@ -91,7 +89,7 @@ class RecipeList extends React.Component {
   }
 
   renderSection(recipes, section) {
-    const { classes, drawer, updateUser, activeUser, closeDrawer, toggleDrawer } = this.props;
+    const { classes, updateUser, activeUser } = this.props;
 
     if (!recipes) {
       return null;
