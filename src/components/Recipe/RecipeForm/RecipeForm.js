@@ -9,10 +9,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
-import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
 import _find from 'lodash/find';
 import _get from 'lodash/get';
+import LoaderButton from '../../LoaderButton/LoaderButton';
+import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
+import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
 import * as tags from  '../../../data/recipeTagOptions';
 
 const styles = (theme) => ({
@@ -34,11 +35,16 @@ class RecipeForm extends React.Component {
     }
   }
 
-  componentDidUpdate({recipeForm: {saving}}) {
-    if(saving && !this.props.recipeForm.saving) {
+  componentDidUpdate(prevProps) {
+    const { recipeForm, resetForm } = this.props;
+    if(prevProps.recipeForm.saving && !recipeForm.saving) {
       this.setState({
         open: false,
       });
+      
+      if (!prevProps.Id) {
+        resetForm();
+      }
     }
   }
 
@@ -78,6 +84,7 @@ class RecipeForm extends React.Component {
       author,
       description,
       note,
+      saving,
       serves,
       cookTime,
       ingredients,
@@ -85,8 +92,12 @@ class RecipeForm extends React.Component {
     } = recipeForm;
     const currentRecipe = _find(recipes, { Id });
     const hasError = Boolean(
-      _find(recipes, { title })
-      && _get(currentRecipe, 'title') !== title
+      (_find(recipes, { title }) && _get(currentRecipe, 'title') !== title)
+    );
+    const disabled = Boolean(
+      hasError
+      || !title // recipe must have a title
+      || !_find(recipeForm.tags, { category: 'Section' }) // recipe must have a Section tag
     );
     const ToggleModalButton = isIcon ? IconButton : Button;
 
@@ -94,7 +105,7 @@ class RecipeForm extends React.Component {
       <React.Fragment>
         <ToggleModalButton onClick={this.handleOpen} {...buttonProps}>{text}</ToggleModalButton>
         <Dialog onClose={this.handleClose} open={open} maxWidth="lg">
-          <DialogTitle>New Recipe</DialogTitle>
+          <DialogTitle>{Id ? 'Edit' : 'New'} Recipe</DialogTitle>
           <DialogContent className={classes.form}>
             <Grid container spacing={24}>
               <Grid item xs={12} sm={6}>
@@ -223,7 +234,15 @@ class RecipeForm extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose}>Close</Button>
-            <Button variant="contained" color="primary" onClick={saveForm} disabled={Boolean(!title) || hasError}>Save</Button>
+            <LoaderButton
+              variant="contained"
+              color="primary"
+              onClick={saveForm}
+              disabled={disabled}
+              text="Save"
+              loadingText="Saving..."
+              isLoading={saving}
+            />
           </DialogActions>
         </Dialog>
       </React.Fragment>

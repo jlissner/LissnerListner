@@ -1,7 +1,8 @@
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
 import config from '../config';
-import sigV4Client from './sigV4Client'
+import sigV4Client from './sigV4Client';
+import _get from 'lodash/get';
 
 const noUserErrorMessage = 'User is not logged in'
 
@@ -42,9 +43,6 @@ function getUserToken(currentUser) {
 }
 
 export async function authUser() {
-  if(AWS.config.credentials && Date.now() < AWS.config.credentials.expireTime - 60000) {
-    return getCurrentUser()
-  }
   const currentUser = getCurrentUser()
 
   if(currentUser === null) {

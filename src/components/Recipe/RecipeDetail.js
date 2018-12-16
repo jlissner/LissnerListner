@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
+import _includes from 'lodash/includes';
 import ItemizedList from '../ItemizedList/ItemizedList';
 import RecipeSummary from './RecipeSummary';
 import RecipeForm from './RecipeForm/RecipeFormContainer';
@@ -70,7 +71,7 @@ class RecipeDetail extends React.Component {
   }
 
   render() {
-    const { classes, recipes, match } = this.props;
+    const { classes, recipes, match, user } = this.props;
 
     if (recipes.length === 0) {
       return <div className={classes.progress}><CircularProgress /></div>
@@ -106,15 +107,18 @@ class RecipeDetail extends React.Component {
             <RecipeSummary recipe={this.recipe} />
           </Grid>
         </Grid>
-
-        <RecipeForm
-          text={<EditIcon />}
-          buttonProps={{
-            className: classes.editButton,
-            color: 'primary',
-            variant: 'fab',
-          }}
-        />
+        
+        { this.recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
+          ? <RecipeForm
+              text={<EditIcon />}
+              buttonProps={{
+                className: classes.editButton,
+                color: 'primary',
+                variant: 'fab',
+              }}
+            />
+          : null
+        }
       </React.Fragment>
     )
   }

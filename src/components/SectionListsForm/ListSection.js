@@ -46,6 +46,7 @@ class RecipeIngredientsSectionForm extends React.Component {
 
   handleEnter = (func) => (evt) => {
     if (evt.keyCode === 13) {
+      evt.preventDefault();
       func();
     }
   }
@@ -104,12 +105,11 @@ class RecipeIngredientsSectionForm extends React.Component {
                 name={'newTitle'}
                 label="Section Title"
                 value={listSection.title}
-                onBlur={this.focusNewItem}
                 onChange={this.updateTitle}
                 onKeyDown={this.handleEnter(this.focusNewItem)}
                 placeholder="Sauce"
                 fullWidth
-                variant="outlined"
+                variant="filled"
               />
             </ListSubheader>
           }
@@ -121,6 +121,7 @@ class RecipeIngredientsSectionForm extends React.Component {
                 item={item}
                 updateItem={updateItem(indexOfItem)}
                 removeItem={removeItem}
+                focusNewItem={this.focusNewItem}
               />
             ))
           }
@@ -134,6 +135,7 @@ class RecipeIngredientsSectionForm extends React.Component {
                 onKeyDown={this.handleEnter(this.addItem)}
                 fullWidth
                 inputProps={{ref: this.newItemRef}}
+                multiline
               />
             </ListItemText>
             <IconButton disabled={!newItem} onClick={this.addItem} color="primary">

@@ -2,6 +2,7 @@ import _forEach from 'lodash/forEach';
 import { invokeApig } from '../../../lib/awsLib';
 import { getRecipes } from '../RecipeActions';
 import _omit from 'lodash/omit';
+import _cloneDeep from 'lodash/cloneDeep';
 
 const initialState = {
   saving: false,
@@ -17,6 +18,7 @@ const initialState = {
 }
 
 export const SET_FORM = 'RECIPE_FORM::SET_FORM';
+export const RESET_FORM = 'RECIPE_FORM::RESET_FORM';
 export const SET_VALUE = 'RECIPE_FORM::SET_VALUE';
 export const SAVE_FORM = 'RECIPE_FORM::SAVE_FORM';
 export const SAVE_FORM_SUCCESSFUL = 'RECIPE_FORM::SAVE_FORM_SUCCESSFUL';
@@ -49,9 +51,12 @@ export function setValue(value) {
 }
 
 export function resetForm(){
-  return {
-    type: SET_FORM,
-    payload: initialState,
+  return (dispatch) => {
+    dispatch({ type: RESET_FORM });
+    dispatch({
+      type: SET_FORM,
+      payload: _cloneDeep(initialState),
+    })
   }
 }
 
@@ -81,7 +86,7 @@ export const actions = {
 
 const ACTION_HANDLERS = {
   [SET_FORM]: (state, action) => {
-    return action.payload
+    return { ...action.payload };
   },
   [SET_VALUE]: (state, action) => {
     const { key, value } = action.payload;
@@ -119,7 +124,7 @@ const ACTION_HANDLERS = {
   },
 }
 
-export default function recipeReducer(state = initialState, action) {
+export default function recipeReducer(state = _cloneDeep(initialState), action) {
   const handler = ACTION_HANDLERS[action.type]
 
   return handler ? handler(state, action) : state

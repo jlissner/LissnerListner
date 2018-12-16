@@ -132,7 +132,7 @@ class RecipeTagsForm extends Component {
 
     return (
       <React.Fragment>
-        <Typography variant="title">{title}</Typography>
+        <Typography variant="h6">{title}</Typography>
         <FormGroup className={classes.formGroup}>
           {
             radio

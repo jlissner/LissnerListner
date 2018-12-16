@@ -47,7 +47,7 @@ class RecipeCard extends React.Component {
         <Card className={classes.card}>
           <CardHeader
             title={recipe.title}
-            subheader={`Author: ${recipe.author}`}
+            subheader={`Author: ${recipe.author || 'Unknown'}`}
             action={
               <Favorite recipe={recipe.Id} />
             }

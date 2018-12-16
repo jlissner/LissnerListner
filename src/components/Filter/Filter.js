@@ -33,6 +33,12 @@ class Filter extends React.Component {
           />
 
           <FilterSection
+            filters={filters['Cooking Style']}
+            category={category}
+            subCategory={'Cooking Style'}
+          />
+
+          <FilterSection
             filters={filters.Ethnicity}
             category={category}
             subCategory={'Ethnicity'}

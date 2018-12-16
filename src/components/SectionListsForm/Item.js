@@ -9,33 +9,19 @@ import CloseIcon from '@material-ui/icons/Close';
 // import VertMoveIcon from '@material-ui/icons/UnfoldMore';
 
 const styles = (theme) => ({
+  item: {
+    // alignItems: 'flex-start',
+  },
   removeIcon: {
-  }
+    // marginTop: theme.spacing.unit / 2,
+  },  
 });
 
 class Item extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      editMode: false,
-    }
-
     this.inputRef = React.createRef();
-  }
-
-  stopEditing = () => {
-    this.setState({
-      editMode: false,
-    })
-  }
-
-  startEditing = () => {
-    this.setState({
-      editMode: true,
-    }, () => {
-      this.inputRef.current.focus();
-    })
   }
 
   removeItem = () => {
@@ -44,25 +30,26 @@ class Item extends React.Component {
     removeItem(item);
   }
 
+  handleEnter = (evt) => {
+    if (evt.keyCode === 13) {
+      this.props.focusNewItem();
+    }
+  }
+
   render() {
     const { classes, item, updateItem } = this.props;
-    const { editMode } = this.state;
 
     return (
-      <ListItem>
-        {
-          editMode
-          ? <TextField
-              value={item}
-              onChange={updateItem}
-              onBlur={this.stopEditing}
-              fullWidth
-              inputProps={{ref: this.inputRef}}
-            />
-          : <ListItemText onClick={this.startEditing}>
-              {item}
-            </ListItemText>
-        }
+      <ListItem className={classes.item}>
+        <TextField
+          value={item}
+          onChange={updateItem}
+          onKeyDown={this.handleEnter}
+          fullWidth
+          inputProps={{ref: this.inputRef}}
+          variant="outlined"
+          multiline
+        />
         <IconButton className={classes.removeIcon} onClick={this.removeItem} color="secondary">
           <CloseIcon />
         </IconButton>

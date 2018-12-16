@@ -87,7 +87,7 @@ class SectionListsForm extends React.Component {
 
     return (
       <React.Fragment>
-        <Typography paragraph variant="title">{title}</Typography>
+        <Typography paragraph variant="h6">{title}</Typography>
         {
           _map(data, (listSection, indexOfSection) => (
             <ListSection
