@@ -2,7 +2,6 @@ import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cogn
 import AWS from 'aws-sdk';
 import config from '../config';
 import sigV4Client from './sigV4Client';
-import _get from 'lodash/get';
 
 const noUserErrorMessage = 'User is not logged in'
 
@@ -45,7 +44,7 @@ function getUserToken(currentUser) {
 export async function authUser() {
   const currentUser = getCurrentUser()
 
-  if(currentUser === null) {
+  if(!currentUser) {
     return false;
   }
   const userToken = await getUserToken(currentUser);

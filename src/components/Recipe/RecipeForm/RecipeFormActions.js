@@ -50,14 +50,8 @@ export function setValue(value) {
   }
 }
 
-export function resetForm(){
-  return (dispatch) => {
-    dispatch({ type: RESET_FORM });
-    dispatch({
-      type: SET_FORM,
-      payload: _cloneDeep(initialState),
-    })
-  }
+export function resetForm() {
+  return { type: RESET_FORM };
 }
 
 export function saveForm(){
@@ -109,6 +103,9 @@ const ACTION_HANDLERS = {
       ...state,
       [key]: value
     }
+  },
+  [RESET_FORM]: (state, action) => {
+    return _cloneDeep(initialState);
   },
   [SAVE_FORM]: (state, action) => {
     return {

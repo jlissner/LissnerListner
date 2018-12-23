@@ -1,4 +1,9 @@
 export const SET_SEARCH = 'SEARCH::SET_SEARCH';
+export const RESET_SEARCH = 'SEARCH::RESET_SEARCH';
+
+const initialState = {
+  recipes: '',
+}
 
 export function setSearch(search) {
   return {
@@ -7,8 +12,15 @@ export function setSearch(search) {
   };
 }
 
+export function resetSearch(search) {
+  return {
+    type: RESET_SEARCH,
+  };
+}
+
 export const actions = {
   setSearch,
+  resetSearch,
 }
 
 const ACTION_HANDLERS = {
@@ -18,10 +30,9 @@ const ACTION_HANDLERS = {
       [action.payload.category]: action.payload.value
     }
   },
-}
-
-const initialState = {
-  recipes: '',
+  [RESET_SEARCH]: (state, action) => {
+    return initialState
+  }
 }
 
 export default function searchReducer(state = initialState, action) {

@@ -10,6 +10,7 @@ import Login from '../Login/Login';
 import Home from '../../pages/Home';
 import RecipeDetail from '../../pages/RecipeDetail';
 import UserProfile from '../../pages/UserProfile';
+import About from '../../pages/About';
 import NoPage from '../../pages/NoPage';
 import NavBar from './NavBar'
 
@@ -62,6 +63,7 @@ class Layout extends React.Component {
           <Route exact path='/' component={Home} />
           <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
+          <Route path='/about' component={About} />
           <Route path='/:recipe' component={RecipeDetail} />
         </Switch>
       </div>

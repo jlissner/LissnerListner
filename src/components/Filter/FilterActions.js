@@ -4,14 +4,25 @@ import _filter from 'lodash/filter'
 import _uniq from 'lodash/uniq'
 
 export const SET_FILTERS = 'FILTERS::SET_FILTERS';
+export const RESET_FILTERS = 'FILTERS::RESET_FILTERS';
 export const ADD_FILTER = 'FILTERS::ADD_FILTER';
 export const REMOVE_FILTER = 'FILTERS::REMOVE_FILTER';
 export const TOGGLE_FILTER = 'FILTERS::TOGGLE_FILTER';
+
+const initialState = {
+  recipes: []
+}
 
 export function setFilters(filters) {
   return {
     type: SET_FILTERS,
     payload: filters,
+  };
+}
+
+export function resetFilters(filters) {
+  return {
+    type: RESET_FILTERS,
   };
 }
 
@@ -46,6 +57,7 @@ export function toggleFilter({category, value}) {
 
 export const actions = {
   setFilters,
+  resetFilters,
   addFilter,
   removeFilter,
   toggleFilter,
@@ -70,10 +82,9 @@ const ACTION_HANDLERS = {
       [action.payload.category]: action.payload.value,
     }
   },
-}
-
-const initialState = {
-  recipes: []
+  [RESET_FILTERS]: (state, action) => {
+    return initialState
+  },
 }
 
 export default function recipeReducer(state = initialState, action) {

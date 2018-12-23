@@ -61,9 +61,11 @@ class RecipeList extends React.Component {
   }
 
   componentDidMount() {
-    const { resetForm } = this.props;
+    const { resetForm, resetSearch, resetFilters } = this.props;
 
     resetForm();
+    resetSearch();
+    resetFilters();
 
     this.actionRoot = document.getElementById('NavBarAction');
     this.actionRoot.appendChild(this.el);
