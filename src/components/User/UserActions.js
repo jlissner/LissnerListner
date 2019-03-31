@@ -10,44 +10,50 @@ export const LOGOUT = 'USER::LOGOUT';
 
 export function login() {
   return async (dispatch) => {
-    const cognitoUser = await authUser();
-    if (!cognitoUser) {
+    try {
+      const cognitoUser = await authUser();
+      if (!cognitoUser) {
+        return dispatch({type: LOGIN_FAILURE});
+      }
+
+      const attributes = await new Promise((res) => {
+        cognitoUser.getUserAttributes((err, _attributes) => {
+          if(err) {
+            console.error('Error getting user attributes', err)
+            return res(err)
+          }
+          
+          res(_attributes)
+        })
+      })
+
+      const activeUser = { Id: cognitoUser.username, attributes }    
+      const users = await invokeApig({ path: '/users'});
+
+
+      let user = _find(users, { Id: activeUser.Id })
+
+      if (!user) {
+        user = await invokeApig({ path: '/users', method: 'post', body: activeUser });
+        users.push(user);
+      }
+      
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: {
+          activeUser: {
+            favoriteRecipes: [],
+            ...cognitoUser,
+            ...user,
+          },
+          users,
+        }
+      })
+    } catch (err) {
+      console.error(err);
+
       return dispatch({type: LOGIN_FAILURE});
     }
-
-    const attributes = await new Promise((res) => {
-      cognitoUser.getUserAttributes((err, _attributes) => {
-        if(err) {
-          console.error('Error getting user attributes', err)
-          return res(err)
-        }
-        
-        res(_attributes)
-      })
-    })
-
-    const activeUser = { Id: cognitoUser.username, attributes }    
-    const users = await invokeApig({ path: '/users'});
-
-
-    let user = _find(users, { Id: activeUser.Id })
-
-    if (!user) {
-      user = await invokeApig({ path: '/users', method: 'post', body: activeUser });
-      users.push(user);
-    }
-    
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: {
-        activeUser: {
-          favoriteRecipes: [],
-          ...cognitoUser,
-          ...user,
-        },
-        users,
-      }
-    })
   }
 }
 
