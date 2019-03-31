@@ -42,6 +42,10 @@ function getUserToken(currentUser) {
 }
 
 export async function authUser() {
+  if(AWS.config.credentials && Date.now() < AWS.config.credentials.expireTime - 60000) {
+    return getCurrentUser()
+  }
+  
   const currentUser = getCurrentUser()
 
   if(!currentUser) {
