@@ -89,12 +89,14 @@ export const actions = {
 const ACTION_HANDLERS = {
   [LOGIN_SUCCESS]: (state, { payload }) => {
     return {
+      ...state,
       authenticating: false,
       ...payload,
     };
   },
   [LOGIN_FAILURE]: (state, { payload }) => {
     return {
+      ...state,
       authenticating: false,
     };
   },
@@ -110,7 +112,11 @@ const ACTION_HANDLERS = {
   [LOGOUT]: (state) => {
     return {
       ...state,
-      activeUser: {},
+      activeUser: {
+        id: '',
+        attributes: [],
+        favoriteRecipes: [],
+      },
     };
   }
 }

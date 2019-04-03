@@ -1,8 +1,39 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import _get from 'lodash/get';
+// import _get from 'lodash/get';
 import Layout from '../Layout/LayoutContainer';
 
+function App({ login, logout, user, recipes, getRecipes, tags, getTags }) {
+  const [ authenticated, setAuthenticated ] = useState(false);
+  const [ hasFetched, setHasFetched ] = useState(false);
+  const { activeUser = {}, authenticating } = user;
+  const { Id } = activeUser;
+
+  useEffect(() => {
+    if (!authenticated && authenticating) {
+      login();
+    } else if (!authenticated && Id) {
+      setAuthenticated(true);
+    }
+  });
+
+  useEffect(() => {
+    if (authenticated && !hasFetched) {
+      getRecipes();
+      getTags();
+      setHasFetched(true);
+    }
+  })
+
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <Layout user={Id} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
+    </React.Fragment>
+  )
+}
+
+/*
 class App extends PureComponent {
   componentDidMount() {
     const { login } = this.props;
@@ -35,5 +66,5 @@ class App extends PureComponent {
     );
   }
 }
-
+*/
 export default App;
