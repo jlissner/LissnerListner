@@ -13,29 +13,23 @@ const styles = (theme) => ({
   },
 });
 
-class FilterItem extends React.Component {
-  handleCheck = () => {
-    const { toggleFilter, category, label, subCategory } = this.props;
-
+function FilterItem({ classes, checked, disabled, toggleFilter, category, label, subCategory }) {
+  const handleCheck = () => {
     toggleFilter({category, value: {label, category: subCategory}});
   }
 
-  render() {
-    const { classes, checked, disabled, label } = this.props;
-
-    return (
-      <ListItem button onClick={this.handleCheck} disabled={disabled}>
-        <ListItemIcon>
-          {
-            checked
-              ? <CheckBoxIcon className={classes.checked} />
-              : <CheckBoxOutlineBlankIcon />
-          }
-        </ListItemIcon>
-        <ListItemText inset primary={label} />
-      </ListItem>
-    );
-  }
+  return (
+    <ListItem button onClick={handleCheck} disabled={disabled}>
+      <ListItemIcon>
+        {
+          checked
+            ? <CheckBoxIcon className={classes.checked} />
+            : <CheckBoxOutlineBlankIcon />
+        }
+      </ListItemIcon>
+      <ListItemText inset primary={label} />
+    </ListItem>
+  );
 };
 
 export default withStyles(styles)(FilterItem);

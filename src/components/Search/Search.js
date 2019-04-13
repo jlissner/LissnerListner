@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-// import FormControl from '@material-ui/core/FormControl';
-// import OutlinedInput from '@material-ui/core/OutlinedInput';
-// import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import qs from 'query-string';
 
 const styles = theme => ({
   search: {
@@ -16,60 +14,62 @@ const styles = theme => ({
   },
 })
 
-class Search extends Component {
-  updateSearch = (evt) => {
-    const { setSearch, category } = this.props;
+function Search({ classes, setSearch, category, search, variant, history, location }) {
+  const [ val, setVal ] = useState('');
+  const [ valTimeout, setValTimeout ] = useState(0);
 
-    setSearch({ category, value: evt.target.value });
+  function updateSearchUrl(value) {
+    const parsedQueryString = qs.parse(location.search);
+
+    parsedQueryString.search = value || undefined;
+
+    history.push({search: qs.stringify(parsedQueryString)})
   }
-  render() {
-    const { 
-      classes,
-      category,
-      search,
-    } = this.props;
 
-    return (
-      <TextField
-        className={classes.search}
-        placeholder="Search..."
-        fullWidth
-        id="search-input"
-        value={search[category]}
-        onChange={this.updateSearch}
-        InputProps={{
-          classes: {
-            root: classes.search,
-            underline: classes.search,
-            input: classes.search,
-            formControl: classes.search,
-          },
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const encodedParam = urlParams.get('search');
+    const decodedParam = encodedParam ? decodeURIComponent(encodedParam) : '';
 
-    // return (
-    //   <FormControl fullWidth variant="outlined" className={classes.search}>
-    //     <InputLabel htmlFor="search-input" variant="outlined">Search</InputLabel>
-    //     <OutlinedInput
-    //       id="search-input"
-    //       value={search[category]}
-    //       onChange={this.updateSearch}
-    //       labelWidth={55}
-    //       startAdornment={(
-    //         <InputAdornment position="start">
-    //           <SearchIcon />
-    //         </InputAdornment>
-    //       )}
-    //     />
-    //   </FormControl>
-    // );
-  }
+    setVal(decodedParam)
+    setSearch({ category, value: decodedParam })
+  }, [])
+
+  useEffect(() => {
+    clearTimeout(valTimeout);
+    updateSearchUrl(val)
+
+    setValTimeout(setTimeout(() => {
+      setSearch({ category, value: val })
+    }, 500))
+  }, [val])
+
+  return (
+    <TextField
+      className={classes.search}
+      placeholder="Search..."
+      fullWidth
+      id="search-input"
+      value={val}
+      onChange={evt => setVal(evt.target.value)}
+      variant={variant}
+      InputProps={{
+        classes: {
+          root: classes.search,
+          input: classes.search,
+        },
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        )
+      }}
+    />
+  )
+}
+
+Search.defaultProps = {
+  category: 'recipes',
 }
 
 export default withStyles(styles)(Search);

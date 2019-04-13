@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { actions as filterActions } from './FilterActions';
 import FilterItem from './FilterItem';
 
@@ -9,4 +10,4 @@ const mapActionsToProps = {
   ...filterActions,
 }
 
-export default connect(mapStateTopProps, mapActionsToProps)(FilterItem)
+export default withRouter(connect(mapStateTopProps, mapActionsToProps)(FilterItem))

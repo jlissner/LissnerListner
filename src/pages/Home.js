@@ -1,15 +1,29 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import RecipeList from '../components/Recipe/RecipeListContainer';
+import _map from 'lodash/map';
 import RecipeForm from '../components/Recipe/RecipeForm/RecipeFormContainer';
+import Search from '../components/Search/SearchContainer';
+import { sections } from '../data/recipeSections';
 
 
 const styles = (theme) => ({
   root: {
     position: 'relative',
+    width: '100%',
+    maxWidth: 1080,
+    margin: '0 auto',
+  },
+  btn: {
+    background: 'white',
+    '&:hover': {
+      background: theme.palette.grey[200],
+    },
   },
   addRecipe: {
     position: 'fixed',
@@ -46,33 +60,76 @@ const styles = (theme) => ({
   },
 })
 
-class Home extends React.Component {
-  render() {
-    const { classes } = this.props;
+function Home({ classes, location, history }) {
+  const searchPageUrl = `search${location.search}`;
 
-    return (
-      <div className={classes.root}>
-        <Grid className={classes.contentContainer} container spacing={16}>
-          <Grid item xs={12}>
-            <Typography align="center" paragraph variant="h3">
-              Lissner Cookbook
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <RecipeList />
-          </Grid>
-        </Grid>
-        <RecipeForm
-          text={<AddIcon />}
-          buttonProps={{
-            className: classes.addRecipe,
-            color: 'primary',
-            variant: 'fab',
-          }}
-        />
-      </div>
-    )
+  function submitSearch(evt) {
+    evt.preventDefault();
+
+    history.push(searchPageUrl)
   }
+
+  return (
+    <div className={classes.root}>
+      <Grid
+        container
+        component="form"
+        onSubmit={submitSearch}
+        alignItems="center"
+        justify="center"
+        spacing={16}
+        className={classes.contentContainer}
+      >
+        <Grid item xs={12}>
+          <Typography align="center" paragraph variant="h3">
+            Lissner Cookbook
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={8}>
+          <Search variant="outlined" />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            fullWidth
+            color="secondary"
+            size="large"
+            variant="contained"
+            to={searchPageUrl}
+            component={Link}
+          >
+            Search
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+        {
+          _map(sections, ({label, value}) => (
+            <Grid key={value} item xs={12} sm={6} md={4}>
+              <Button
+                fullWidth
+                size="large"
+                variant="contained"
+                className={classes.btn}
+                component={Link}
+                to={`search?filters=[{"category": "Section", "label": "${encodeURIComponent(value)}"}]`}
+              >
+                {label}
+              </Button>
+            </Grid>
+          ))
+        }
+      </Grid>
+      <RecipeForm
+        text={<AddIcon />}
+        buttonProps={{
+          className: classes.addRecipe,
+          color: 'primary',
+          variant: 'fab',
+        }}
+      />
+    </div>
+  )
 }
 
 export default withStyles(styles)(Home)

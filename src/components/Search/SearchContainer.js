@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router'
 import { actions as searchActions } from './SearchActions';
 import Search from './Search';
 
@@ -11,4 +12,4 @@ const mapActionsToProps = {
   ...searchActions,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(Search);
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(Search));

@@ -6,12 +6,12 @@ import { actions as searchActions } from '../Search/SearchActions';
 import { actions as filterActions } from '../Filter/FilterActions';
 import { actions as recipeFormActions } from './RecipeForm/RecipeFormActions';
 import RecipeList from './RecipeList';
-import getSearchedRecipes from '../Search/getSearchedRecipes';
+import getSearchedFilteredRecipes from './getSearchedFilteredRecipes';
 
 const mapStateToProps = (state) => ({
   drawer: state.app.drawer,
   recipes: state.recipes,
-  searchedRecipes: getSearchedRecipes(state, {category: 'recipes'}),
+  searchedRecipes: getSearchedFilteredRecipes(state),
   activeUser: state.user.activeUser,
 });
 

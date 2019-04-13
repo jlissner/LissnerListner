@@ -41,8 +41,8 @@ class RecipeForm extends React.Component {
       this.setState({
         open: false,
       });
-      
-      if (!prevProps.Id) {
+
+      if (!prevProps.recipeForm.Id) {
         resetForm();
       }
     }
@@ -69,7 +69,7 @@ class RecipeForm extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { 
+    const {
       buttonProps,
       classes,
       recipes,

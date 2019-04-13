@@ -11,6 +11,7 @@ import Home from '../../pages/Home';
 import RecipeDetail from '../../pages/RecipeDetail';
 import UserProfile from '../../pages/UserProfile';
 import About from '../../pages/About';
+import Search from '../../pages/Search';
 import NoPage from '../../pages/NoPage';
 import NavBar from './NavBar'
 
@@ -22,7 +23,10 @@ const styles = (theme) => ({
   },
   authenticating: {
     margin: `${theme.spacing.unit * 3}px auto 0`,
-    width: 40,
+    width: 200,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   contentContainer: {
     height: '100%',
@@ -56,7 +60,7 @@ const styles = (theme) => ({
 class Layout extends React.Component {
   renderApp = () => {
     const { classes } = this.props;
-    
+
     return (
       <div className={classes.content}>
         <Switch>
@@ -64,6 +68,7 @@ class Layout extends React.Component {
           <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
           <Route path='/about' component={About} />
+          <Route path='/search' component={Search} />
           <Route path='/:recipe' component={RecipeDetail} />
         </Switch>
       </div>
@@ -95,6 +100,7 @@ class Layout extends React.Component {
     if (showLoader) {
       return (
         <div className={classes.authenticating}>
+          Authenticating...
           <CircularProgress />
         </div>
       )
@@ -111,11 +117,11 @@ class Layout extends React.Component {
     return (
       <div className={classes.app}>
         <NavBar user={user} logout={logout} />
-        
+
         <div className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
           {this.renderContent()}
         </div>
-        
+
         <ToastContainer autoClose={3000} />
       </div>
     )

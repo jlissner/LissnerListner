@@ -2,6 +2,7 @@ import _concat from 'lodash/concat'
 import _find from 'lodash/find'
 import _filter from 'lodash/filter'
 import _uniq from 'lodash/uniq'
+import _isEqual from 'lodash/isEqual'
 
 export const SET_FILTERS = 'FILTERS::SET_FILTERS';
 export const RESET_FILTERS = 'FILTERS::RESET_FILTERS';
@@ -73,7 +74,7 @@ const ACTION_HANDLERS = {
   [REMOVE_FILTER]: (state, action) => {
     return {
       ...state,
-      [action.payload.category]: _filter(state[action.payload.category], (filter) => JSON.stringify(filter) !== JSON.stringify(action.payload.value))
+      [action.payload.category]: _filter(state[action.payload.category], (filter) => !_isEqual(filter, action.payload.value))
     }
   },
   [SET_FILTERS]: (state, action) => {

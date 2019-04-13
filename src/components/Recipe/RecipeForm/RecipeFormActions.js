@@ -65,7 +65,7 @@ export function saveForm(){
       method: recipeForm.Id ? 'put' : 'post',
       body: _omit(recipeForm, ['saving']),
     })
-    
+
     dispatch({ type: SAVE_FORM_SUCCESSFUL })
     dispatch(getRecipes())
   }

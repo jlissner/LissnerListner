@@ -1,0 +1,16 @@
+export const sections = [
+  { value: 'Appetizer', label: 'Appetizers' },
+  { value: 'Soup', label: 'Soup' },
+  { value: 'Salad', label: 'Salad' },
+  { value: 'Bread', label: 'Bread' },
+  { value: 'Lunch & Brunch', label: 'Lunch & Brunch' },
+  { value: 'Vegetable', label: 'Vegetable' },
+  { value: 'Poultry', label: 'Poultry' },
+  { value: 'Meat & Fish', label: 'Meat & Fish' },
+  { value: 'Desserts', label: 'Desserts' },
+  { value: 'Cookies & Bars', label: 'Cookies & Bars' },
+  { value: 'Cakes', label: 'Cakes' },
+  { value: 'Pies', label: 'Pies' },
+  { value: 'Candies & Sweets', label: 'Candies & Sweets' },
+  { value: 'Bits & Pieces', label: 'Bits & Pieces' },
+]
