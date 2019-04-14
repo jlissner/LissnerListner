@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom'
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -45,7 +45,6 @@ function Section({ recipes, section }) {
 }
 
 function RecipeList({
-  resetForm,
   recipes,
   searchedRecipes,
 }) {
@@ -60,11 +59,6 @@ function RecipeList({
     )),
     [groupedRecipes]
   )
-
-  useEffect(() => {
-    resetForm();
-  }, [])
-
 
   if (recipes.length === 0) {
     return <CircularProgress />

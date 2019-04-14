@@ -21,7 +21,7 @@ class Favorite extends Component {
       loading: false,
     }
 
-    this.toggleFavorite = this.toggleFavorite.bind(this); 
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
   async toggleFavorite() {

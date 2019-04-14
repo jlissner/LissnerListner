@@ -23,7 +23,8 @@ export const SET_VALUE = 'RECIPE_FORM::SET_VALUE';
 export const SAVE_FORM = 'RECIPE_FORM::SAVE_FORM';
 export const SAVE_FORM_SUCCESSFUL = 'RECIPE_FORM::SAVE_FORM_SUCCESSFUL';
 
-export function setForm(recipeForm) {
+export function setForm(_recipeForm) {
+  const recipeForm = _cloneDeep(_recipeForm)
   recipeForm.directions = recipeForm.directions || [{ title: '', steps: []}]
   recipeForm.ingredients = recipeForm.ingredients || [{ title: '', ingredients: []}]
   recipeForm.author = recipeForm.author || '';

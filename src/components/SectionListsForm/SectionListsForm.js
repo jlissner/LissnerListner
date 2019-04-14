@@ -13,7 +13,7 @@ class SectionListsForm extends React.Component {
   removeSection = (indexOfSection) => {
     return () => {
       const { category, data } = this.props;
-      
+
       data.splice(indexOfSection, 1);
 
       this.props.setValue({
@@ -23,7 +23,7 @@ class SectionListsForm extends React.Component {
     }
   }
 
-  removeItem = (indexOfSection) => (item) => {  
+  removeItem = (indexOfSection) => (item) => {
     const { category, data, subSection } = this.props;
 
     data[indexOfSection][subSection] = _without(data[indexOfSection][subSection], item);
