@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -14,7 +14,20 @@ import _sortBy from 'lodash/sortBy';
 import { sections } from '../../data/recipeSections';
 import Favorite from '../Favorite/FavoriteContainer';
 
-function Section({ recipes, section, history }) {
+function SectionItems({ recipes }) {
+  return useCallback(_map(recipes, (recipe) => (
+    <ListItem button key={recipe.Id} component={Link} to={recipe.recipeUrl}>
+      <ListItemIcon>
+        <Favorite recipe={recipe.Id} />
+      </ListItemIcon>
+      <ListItemText primary={recipe.title} secondary={recipe.author} />
+    </ListItem>
+  )), [ recipes ])
+}
+
+function Section({ recipes, section }) {
+  const sortedRecipes = useMemo(() => _sortBy(recipes, 'title'), [ recipes ]);
+
   if (!recipes) {
     return null;
   }
@@ -25,29 +38,28 @@ function Section({ recipes, section, history }) {
         title={section}
       />
       <List>
-        {
-          _map(_sortBy(recipes, 'title'), (recipe) => (
-            <ListItem button key={recipe.Id} component={Link} to={recipe.recipeUrl}>
-              <ListItemIcon>
-                <Favorite recipe={recipe.Id} />
-              </ListItemIcon>
-              <ListItemText primary={recipe.title} secondary={recipe.author} />
-            </ListItem>
-          ))
-        }
+        <SectionItems recipes={sortedRecipes} />
       </List>
     </Card>
   )
 }
 
-
 function RecipeList({
   resetForm,
   recipes,
   searchedRecipes,
-  history,
 }) {
-  const groupedRecipes = _groupBy(searchedRecipes, (r) => _find(r.tags, {category: 'Section'}).label);
+  const groupedRecipes = useMemo(() => _groupBy(searchedRecipes, (r) => _find(r.tags, {category: 'Section'}).label), [searchedRecipes]);
+  const MemoizedSections = useCallback(
+    _map(sections, ({ label, value }) => (
+      <Section
+        key={value}
+        recipes={groupedRecipes[value]}
+        section={label}
+      />
+    )),
+    [groupedRecipes]
+  )
 
   useEffect(() => {
     resetForm();
@@ -58,16 +70,7 @@ function RecipeList({
     return <CircularProgress />
   }
 
-  return (
-    _map(sections, ({ label, value }) => (
-      <Section
-        key={value}
-        recipes={groupedRecipes[value]}
-        section={label}
-        history={history}
-      />
-    ))
-  )
+  return MemoizedSections;
 }
 
 export default RecipeList;

@@ -3,8 +3,7 @@ import _find from 'lodash/find';
 import _transform from 'lodash/transform';
 import _sortBy from 'lodash/sortBy';
 import _filter from 'lodash/filter';
-import _intersectionWith from 'lodash/intersectionWith';
-import _isEqual from 'lodash/isEqual';
+import _intersectionBy from 'lodash/intersectionBy';
 import _pick from 'lodash/pick';
 import getSearchedRecipes from '../Search/getSearchedRecipes';
 import { filterRecipes } from './getFilteredRecipes';
@@ -18,12 +17,11 @@ const getAvailableFilters = createSelector(
     return _transform(tags, (memo, tag) => {
         const filter = _pick(tag, ['category', 'label']);
         const filteredRecipes = filterRecipes(allRecipes, [...filters, filter])
-        const searchedFilteredRecipes = _intersectionWith(filteredRecipes, searchedRecipes, _isEqual)
+        const searchedFilteredRecipes = _intersectionBy(filteredRecipes, searchedRecipes, 'Id')
+        const availableRecipes = _filter(searchedFilteredRecipes, (recipe) => _find(recipe.tags, filter));
 
-        tag.disabled = !_filter(searchedFilteredRecipes, (recipe) => _find(recipe.tags, filter)).length;
-
-         // = disabledBySearch || disabledByFilter;
         tag.checked = Boolean(_find(filters, filter));
+        tag.numberOfRecipes = availableRecipes.length;
 
         memo[tag.category] = memo[tag.category] || [];
         memo[tag.category].push(tag);

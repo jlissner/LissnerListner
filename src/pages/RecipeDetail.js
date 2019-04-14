@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 import RecipeDetail from '../components/Recipe/RecipeDetailContainer';
 import RecipeForm from '../components/Recipe/RecipeForm/RecipeFormContainer';
 
@@ -30,7 +31,7 @@ class RecipeDetailPage extends React.PureComponent {
               buttonProps={{
                 color: 'inherit',
               }}
-              isIcon
+              Component={IconButton}
             />,
             this.el
           )

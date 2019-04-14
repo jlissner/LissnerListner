@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import Fab from '@material-ui/core/Fab';
 import Divider from '@material-ui/core/Divider';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -76,7 +76,7 @@ class RecipeForm extends React.Component {
       recipeForm,
       saveForm,
       text,
-      isIcon,
+      Component,
     } = this.props;
     const {
       Id,
@@ -99,11 +99,10 @@ class RecipeForm extends React.Component {
       || !title // recipe must have a title
       || !_find(recipeForm.tags, { category: 'Section' }) // recipe must have a Section tag
     );
-    const ToggleModalButton = isIcon ? IconButton : Button;
 
     return (
       <React.Fragment>
-        <ToggleModalButton onClick={this.handleOpen} {...buttonProps}>{text}</ToggleModalButton>
+        <Component onClick={this.handleOpen} {...buttonProps}>{text}</Component>
         <Dialog onClose={this.handleClose} open={open} maxWidth="lg">
           <DialogTitle>{Id ? 'Edit' : 'New'} Recipe</DialogTitle>
           <DialogContent className={classes.form}>
@@ -251,7 +250,8 @@ class RecipeForm extends React.Component {
 };
 
 RecipeForm.defaultProps = {
-  text: 'Add New Recipe'
+  text: 'Add New Recipe',
+  Component: Fab,
 }
 
 export default withStyles(styles)(RecipeForm);

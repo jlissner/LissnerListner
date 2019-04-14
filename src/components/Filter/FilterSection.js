@@ -28,12 +28,12 @@ class FilterSection extends React.Component {
           subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
         >
           {
-            _map(filters, ({label, checked, disabled}) => (
+            _map(filters, ({label, checked, numberOfRecipes}) => (
                 <FilterItem
                   key={label}
                   label={label}
                   checked={checked}
-                  disabled={disabled}
+                  numberOfRecipes={numberOfRecipes}
                   subCategory={subCategory}
                   category={category}
                 />

@@ -125,7 +125,6 @@ function Home({ classes, location, history }) {
         buttonProps={{
           className: classes.addRecipe,
           color: 'primary',
-          variant: 'fab',
         }}
       />
     </div>

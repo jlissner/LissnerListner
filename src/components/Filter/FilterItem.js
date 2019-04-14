@@ -13,13 +13,13 @@ const styles = (theme) => ({
   },
 });
 
-function FilterItem({ classes, checked, disabled, toggleFilter, category, label, subCategory }) {
+function FilterItem({ classes, checked, numberOfRecipes, toggleFilter, category, label, subCategory }) {
   const handleCheck = () => {
     toggleFilter({category, value: {label, category: subCategory}});
   }
 
   return (
-    <ListItem button onClick={handleCheck} disabled={disabled}>
+    <ListItem button onClick={handleCheck} disabled={!numberOfRecipes}>
       <ListItemIcon>
         {
           checked
@@ -27,7 +27,7 @@ function FilterItem({ classes, checked, disabled, toggleFilter, category, label,
             : <CheckBoxOutlineBlankIcon />
         }
       </ListItemIcon>
-      <ListItemText inset primary={label} />
+      <ListItemText inset primary={`${label} (${numberOfRecipes})`} />
     </ListItem>
   );
 };

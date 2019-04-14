@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import _filter from 'lodash/filter';
 import _lowerCase from 'lodash/lowerCase';
-import getFilteredRecipes from '../Filter/getFilteredRecipes';
 
 const getSearchedRecipes = createSelector(
   state => state.recipes,

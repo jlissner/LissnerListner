@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
@@ -107,14 +107,13 @@ class RecipeDetail extends React.Component {
             <RecipeSummary recipe={this.recipe} />
           </Grid>
         </Grid>
-        
+
         { this.recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
           ? <RecipeForm
               text={<EditIcon />}
               buttonProps={{
                 className: classes.editButton,
                 color: 'primary',
-                variant: 'fab',
               }}
             />
           : null
