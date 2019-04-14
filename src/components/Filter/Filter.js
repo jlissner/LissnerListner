@@ -11,24 +11,22 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
 
     if (filtersString) {
       const filtersObj = JSON.parse(filtersString)
-      console.time('1')
+
       setFilters({ category: 'recipes', value: filtersObj})
-      console.timeEnd('1')
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log('here', appliedFilters)
-  //   const curSearch = qs.parse(location.search);
+  useEffect(() => {
+    const curSearch = qs.parse(location.search);
 
-  //   curSearch.filters = _get(appliedFilters, `${category}.length`)
-  //     ? JSON.stringify(appliedFilters[category])
-  //     : undefined;
+    curSearch.filters = _get(appliedFilters, `${category}.length`)
+      ? JSON.stringify(appliedFilters[category])
+      : undefined;
 
-  //   history.push({
-  //     search: qs.stringify(curSearch)
-  //   })
-  // }, [appliedFilters])
+    history.push({
+      search: qs.stringify(curSearch)
+    })
+  }, [appliedFilters])
 
   if (tags.length === 0) {
     return (
