@@ -78,7 +78,6 @@ class SectionListsForm extends React.Component {
 
   render() {
     const {
-      // classes,
       data,
       newSubItemTitle,
       title,

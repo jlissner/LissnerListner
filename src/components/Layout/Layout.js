@@ -39,7 +39,7 @@ const styles = (theme) => ({
     transition: `margin-right ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeInOut}`,
   },
   content: {
-    maxWidth: 1600,
+    maxWidth: 1080,
     margin: '0 auto',
     padding: theme.spacing.unit * 4,
   },

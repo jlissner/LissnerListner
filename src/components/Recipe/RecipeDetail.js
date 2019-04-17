@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import Hidden from '@material-ui/core/Hidden';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -13,11 +14,6 @@ import RecipeForm from './RecipeForm/RecipeFormContainer';
 import Favorite from '../Favorite/FavoriteContainer';
 
 const styles = (theme) => ({
-  root: {
-    maxWidth: 1080,
-    width: '100%',
-    margin: '0 auto',
-  },
   description: {
     color: theme.palette.grey[700],
   },
@@ -37,30 +33,23 @@ const styles = (theme) => ({
 
 function RecipeDetailHeader({ classes, recipe }) {
   return (
-    <Grid container spacing={24} alignItems="center">
-      <Grid item xs={12} md={7}>
-        <Grid container spacing={8}>
-          <Grid item xs={12}>
-            <Grid container spacing={8} wrap="nowrap">
-              <Grid item>
-                <Favorite recipe={recipe.Id} />
-              </Grid>
-              <Grid item>
-                <Typography variant="h3">{recipe.title}</Typography>
-              </Grid>
-            </Grid>
+    <Grid container spacing={8}>
+      <Grid item xs={12}>
+        <Grid container spacing={8} wrap="nowrap">
+          <Grid item>
+            <Favorite recipe={recipe.Id} />
           </Grid>
-          <Grid item xs={12}>
-            {
-              recipe.description
-              ? <Typography variant="h6" className={classes.description}>{recipe.description}</Typography>
-              : null
-            }
+          <Grid item>
+            <Typography variant="h4">{recipe.title}</Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} md={5}>
-        <RecipeSummary recipe={recipe} />
+      <Grid item xs={12}>
+        {
+          recipe.description
+          ? <Typography variant="h6" className={classes.description}>{recipe.description}</Typography>
+          : null
+        }
       </Grid>
     </Grid>
   )
@@ -94,14 +83,24 @@ function RecipeDetail({
   }
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={24}>
+    <React.Fragment>
+      <Grid container spacing={24} alignContent="stretch">
         <Grid item xs={12}>
           <RecipeDetailHeader classes={classes} recipe={recipe} />
         </Grid>
-        <Grid item xs={12} className={classes.ingredients}>
+        <Hidden smUp>
+          <Grid item xs={12}>
+            <RecipeSummary compact recipe={recipe} />
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={7} className={classes.ingredients}>
           <ItemizedList title="Ingredients" groups={recipe.ingredients} items="ingredients" />
         </Grid>
+        <Hidden only="xs">
+          <Grid item sm={5} className={classes.ingredients}>
+            <RecipeSummary recipe={recipe} />
+          </Grid>
+        </Hidden>
         <Grid item xs={12}>
           <ItemizedList title="Directions" groups={recipe.directions} items="steps" />
         </Grid>
@@ -117,7 +116,7 @@ function RecipeDetail({
           />
         : null
       }
-    </div>
+    </React.Fragment>
   )
 }
 

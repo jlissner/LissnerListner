@@ -8,12 +8,11 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
   useEffect(() => {
     const parsedQueryString = qs.parse(location.search);
     const filtersString = _get(parsedQueryString, 'filters');
+    const filterValue = filtersString
+      ? JSON.parse(filtersString)
+      : [];
 
-    if (filtersString) {
-      const filtersObj = JSON.parse(filtersString)
-
-      setFilters({ category: 'recipes', value: filtersObj})
-    }
+    setFilters({ category: 'recipes', value: filterValue})
   }, []);
 
   useEffect(() => {

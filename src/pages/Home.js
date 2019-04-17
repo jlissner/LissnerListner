@@ -13,12 +13,6 @@ import { sections } from '../data/recipeSections';
 
 
 const styles = (theme) => ({
-  root: {
-    position: 'relative',
-    width: '100%',
-    maxWidth: 1080,
-    margin: '0 auto',
-  },
   btn: {
     background: 'white',
     '&:hover': {
@@ -70,7 +64,7 @@ function Home({ classes, location, history }) {
   }
 
   return (
-    <div className={classes.root}>
+    <React.Fragment>
       <Grid
         container
         component="form"
@@ -127,7 +121,7 @@ function Home({ classes, location, history }) {
           color: 'primary',
         }}
       />
-    </div>
+    </React.Fragment>
   )
 }
 
