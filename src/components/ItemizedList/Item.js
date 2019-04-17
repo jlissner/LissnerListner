@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -7,7 +7,6 @@ import CheckIcon from '@material-ui/icons/Check';
 import green from '@material-ui/core/colors/green';
 import _map from 'lodash/map';
 
-const regex = new RegExp(/([0-9]\/[0-9])/)
 const styles = (theme) => ({
   checked: {
     color: green[500],
@@ -42,52 +41,58 @@ const styles = (theme) => ({
     top: '-.35rem',
     background: theme.palette.grey[500],
   },
+  underline: {
+    textDecoration: 'underline'
+  },
 });
 
-class RecipeDirections extends React.Component {
-  constructor(props) {
-    super(props)
+const fractionMatcher = new RegExp(/([0-9]\/[0-9])/gi);
+const boldMatcher = new RegExp(/(^|\n| |\0)(\*.*?\*)(\0| |\.|$)/gi);
+const underlineMatcher = new RegExp(/(^|\n| |\0)(_.*?_)(\0| |\.|$)/gi);
 
-    this.state = {
-      checked: false,
-    };
+function setUnderlineFormatting({ classes, text }) {
+  return _map(text.split(underlineMatcher).filter(Boolean), textPart => (
+    textPart.match(underlineMatcher)
+      ? <span key={textPart} className={classes.underline}>{textPart.replace(/_/gi, '')}</span>
+      : <span key={textPart}>{textPart}</span>
+  ));
+}
 
-    this.renderText = this.renderText.bind(this);
-  }
+function setBoldFormatting({ classes, text }) {
+  return _map(text.split(boldMatcher).filter(Boolean), textPart => (
+    textPart.match(boldMatcher)
+      ? <strong key={textPart}>{textPart.replace(/\*/gi, '')}</strong>
+      : setUnderlineFormatting({ classes, text: textPart })
+  ));
+}
 
-  toggleChecked = () => {
-    this.setState({
-      checked: !this.state.checked,
-    });
-  }
+function setFractionFormatting({ classes, text }) {
+  return _map(text.split(fractionMatcher).filter(Boolean), textPart => (
+    textPart.match(fractionMatcher)
+      ? <span key={textPart} className={classes.fraction}>
+          <span className={classes.numerator}>{textPart[0]}</span>
+          <span className={classes.dash}></span>
+          <span className={classes.denominator}>{textPart[2]}</span>
+        </span>
+      : setBoldFormatting({ classes, text: textPart })
+    ));
+}
 
-  renderText() {
-    const { classes, item } = this.props;
+function FormattedText({ classes, text }) {
+  return setFractionFormatting({ classes, text })
+}
 
-    return _map(item.split(regex), text => (
-      text.match(regex)
-        ? <span key={text} className={classes.fraction}>
-            <span className={classes.numerator}>{text[0]}</span>
-            <span className={classes.dash}></span>
-            <span className={classes.denominator}>{text[2]}</span>
-          </span>
-        : <span key={text}>{text}</span>
-    ))
-  }
+function RecipeDirections({ classes, item }) {
+  const [checked, setChecked] = useState(false)
 
-  render() {
-    const { classes } = this.props;
-    const { checked } = this.state;
-
-    return (
-      <ListItem button onClick={this.toggleChecked}>
-        <ListItemIcon>
-          <CheckIcon className={checked ? classes.checked : ''} />
-        </ListItemIcon>
-        <ListItemText className={checked ? classes.lineThrough : ''} inset primary={this.renderText()} />
-      </ListItem>
-    );
-  }
+  return (
+    <ListItem button onClick={() => setChecked(!checked)}>
+      <ListItemIcon>
+        <CheckIcon className={checked ? classes.checked : ''} />
+      </ListItemIcon>
+      <ListItemText className={checked ? classes.lineThrough : ''} inset primary={<FormattedText classes={classes} text={item} />} />
+    </ListItem>
+  );
 };
 
 export default withStyles(styles)(RecipeDirections);
