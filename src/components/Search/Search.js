@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import _debounce from 'lodash/debounce';
 import qs from 'query-string';
 
 const styles = theme => ({
@@ -16,7 +17,7 @@ const styles = theme => ({
 
 function Search({ classes, setSearch, category, search, variant, history, location }) {
   const [ val, setVal ] = useState('');
-  const [ valTimeout, setValTimeout ] = useState(0);
+  const debouncedSetSearch = useMemo(() => _debounce(setSearch, 500), [])
 
   function updateSearchUrl(value) {
     const parsedQueryString = qs.parse(location.search);
@@ -36,12 +37,9 @@ function Search({ classes, setSearch, category, search, variant, history, locati
   }, [])
 
   useEffect(() => {
-    clearTimeout(valTimeout);
-    updateSearchUrl(val)
+    updateSearchUrl(val);
 
-    setValTimeout(setTimeout(() => {
-      setSearch({ category, value: val })
-    }, 500))
+    debouncedSetSearch({ category, value: val })
   }, [val])
 
   return (

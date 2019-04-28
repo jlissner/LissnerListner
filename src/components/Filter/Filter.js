@@ -1,10 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import qs from 'query-string';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import _get from 'lodash/get';
-import qs from 'query-string';
+import _debounce from 'lodash/debounce';
 import FilterSection from './FilterSection';
 
+function updateHistory(history, search) {
+  history.push({ search })
+}
+
 function Filter({ filters, tags, category, history, location, setFilters, appliedFilters }) {
+  const updateHistoryDebounced = useMemo(() => _debounce(updateHistory, 100), []);
+
   useEffect(() => {
     const parsedQueryString = qs.parse(location.search);
     const filtersString = _get(parsedQueryString, 'filters');
@@ -22,9 +29,7 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
       ? JSON.stringify(appliedFilters[category])
       : undefined;
 
-    history.push({
-      search: qs.stringify(curSearch)
-    })
+    updateHistoryDebounced(history, qs.stringify(curSearch))
   }, [appliedFilters])
 
   if (tags.length === 0) {

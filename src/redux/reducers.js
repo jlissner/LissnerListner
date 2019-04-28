@@ -3,6 +3,7 @@ import appReducer from '../components/App/AppActions';
 import recipesReducer from '../components/Recipe/RecipeActions';
 import recipeFormReducer from '../components/Recipe/RecipeForm/RecipeFormActions';
 import filtersReducer from '../components/Filter/FilterActions';
+import quotesReducer from '../components/Quotes/QuotesActions';
 import searchReducer from '../components/Search/SearchActions';
 import tagsReducer from '../components/Tags/TagsActions';
 import userReducer from '../components/User/UserActions';
@@ -12,6 +13,7 @@ const reducers = (asyncReducers) => combineReducers({
   recipes: recipesReducer,
   recipeForm: recipeFormReducer,
   filters: filtersReducer,
+  quotes: quotesReducer,
   search: searchReducer,
   tags: tagsReducer,
   user: userReducer,

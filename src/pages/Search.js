@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SearchBar from '../components/Search/SearchContainer';
 import Filter from '../components/Filter/FilterContainer';
+import Quotes from '../components/Quotes/QuotesContainer';
 import RecipeList from '../components/Recipe/RecipeListContainer';
 
 function Search() {
@@ -19,8 +20,8 @@ function Search() {
 		<Grid container spacing={24}>
 			<Grid item xs={12}>
 				<Grid container spacing={24} justify="space-between" alignItems="center">
-					<Grid item><Typography variant="h4">Find A Recipe</Typography></Grid>
-					{/*<Grid item><Typography>Some flavor...</Typography></Grid>*/}
+					<Grid item xs={12} sm={6}><Typography variant="h4">Find A Recipe</Typography></Grid>
+					<Grid item xs={12} sm><Quotes /></Grid>
 				</Grid>
 			</Grid>
 			<Hidden smUp>

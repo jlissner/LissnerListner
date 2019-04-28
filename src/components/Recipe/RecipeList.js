@@ -31,7 +31,9 @@ function SectionItem({ classes, recipe }) {
   const [className, setClassName] = useState('');
 
   useEffect(() => {
-    process.nextTick(() => setClassName('loaded'));
+    const loadedTimeout = setTimeout(() => setClassName('loaded'), 100);
+
+    return () => clearTimeout(loadedTimeout)
   }, [])
 
   return (
@@ -84,9 +86,13 @@ function RecipeList({
 
   useEffect(() => {
     if (numOfRecipesToLoad !== searchedRecipes.length) {
-      setLoadRecipesTimeout(setTimeout(() => {
+      const loadedTimeout = setTimeout(() => {
         setNumOfRecipesToLoad(numOfRecipesToLoad + 1)
-      }))
+      }, 100)
+
+      setLoadRecipesTimeout(loadedTimeout)
+
+      return () => clearTimeout(loadedTimeout);
     }
   }, [numOfRecipesToLoad])
 
