@@ -21,6 +21,16 @@ const theme = createMuiTheme({
       light: '#d096a2',
       dark: '#3e171f',
     },
+    accent1: {
+      main: '#edae49',
+      light: '#f5d29b',
+      dark: '#57401b',
+    },
+    accent2: {
+      main: '#30638e',
+      light: '#8ea9c1',
+      dark: '#122434',
+    },
   },
   typography: {
     useNextVariants: true,

@@ -4,14 +4,15 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import _random from 'lodash/random';
 
-const styles = {
+const styles = theme => ({
 	quote: {
 		float: 'left',
 	},
 	author: {
 		float: 'right',
+		marginTop: theme.spacing.unit / 2
 	}
-}
+})
 
 function getNewRandomNumber(max, current) {
 	const num = _random(0, max);
@@ -48,7 +49,7 @@ function Quotes({ classes, quotes, getQuotes }) {
 
 	return (
 		<React.Fragment>
-			<Typography className={classes.quote} variant="body2">
+			<Typography className={classes.quote} variant="body1">
 				"{quote.quote}"
 			</Typography>
 			<Typography className={classes.author} variant="caption">

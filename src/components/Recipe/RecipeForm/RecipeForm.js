@@ -70,13 +70,13 @@ class RecipeForm extends React.Component {
   render() {
     const { open } = this.state;
     const {
-      buttonProps,
       classes,
       recipes,
       recipeForm,
       saveForm,
       text,
       Component,
+      ...props
     } = this.props;
     const {
       Id,
@@ -102,7 +102,7 @@ class RecipeForm extends React.Component {
 
     return (
       <React.Fragment>
-        <Component onClick={this.handleOpen} {...buttonProps}>{text}</Component>
+        <Component onClick={this.handleOpen} {...props}>{text}</Component>
         <Dialog onClose={this.handleClose} open={open} maxWidth="lg">
           <DialogTitle>{Id ? 'Edit' : 'New'} Recipe</DialogTitle>
           <DialogContent className={classes.form}>

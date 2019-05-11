@@ -19,7 +19,7 @@ function FilterItem({ classes, checked, numberOfRecipes, toggleFilter, category,
   }
 
   return (
-    <ListItem button onClick={handleCheck} disabled={!numberOfRecipes}>
+    <ListItem button onClick={handleCheck} disabled={!numberOfRecipes && !checked}>
       <ListItemIcon>
         {
           checked

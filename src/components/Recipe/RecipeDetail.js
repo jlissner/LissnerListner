@@ -109,10 +109,8 @@ function RecipeDetail({
       { recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
         ? <RecipeForm
             text={<EditIcon />}
-            buttonProps={{
-              className: classes.editButton,
-              color: 'primary',
-            }}
+            className={classes.editButton}
+            color="primary"
           />
         : null
       }

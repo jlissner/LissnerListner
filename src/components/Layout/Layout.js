@@ -14,6 +14,7 @@ import About from '../../pages/About';
 import Search from '../../pages/Search';
 import NoPage from '../../pages/NoPage';
 import NavBar from './NavBar'
+import Footer from './Footer'
 
 const styles = (theme) => ({
   app: {
@@ -32,7 +33,13 @@ const styles = (theme) => ({
     height: '100%',
     overflow: 'auto',
     marginRight: 0,
-    transition: `margin-right ${theme.transitions.duration.leavingScreen}ms ${theme.transitions.easing.easeInOut}`
+    transition: `margin-right ${theme.transitions.duration.leavingScreen}ms ${theme.transitions.easing.easeInOut}`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  footerContainer: {
+    width: '100%',
   },
   contentContainerOpen: {
     marginRight: 319,
@@ -120,9 +127,14 @@ class Layout extends React.Component {
 
         <div className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
           {this.renderContent()}
+
+          <div className={classes.footerContainer}>
+            <Footer />
+          </div>
         </div>
 
         <ToastContainer autoClose={3000} />
+
       </div>
     )
   }
