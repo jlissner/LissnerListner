@@ -27,6 +27,29 @@ const styles = {
   }
 }
 
+function sortRecipesBySection(recipe) {
+  const section = _find(recipe.tags, tag => tag.category === 'Section').label;
+
+  switch (section) {
+    case 'Appetizer': return 1
+    case 'Soup': return 2
+    case 'Salad': return 3
+    case 'Bread': return 4
+    case 'Lunch & Brunch': return 5
+    case 'Vegetable': return 6
+    case 'Poultry': return 7
+    case 'Meat & Fish': return 8
+    case 'Desserts': return 9
+    case 'Cookies & Bars': return 10
+    case 'Cakes': return 11
+    case 'Pies': return 12
+    case 'Candies & Sweets': return 13
+    case 'Bits & Pieces': return 14
+    default: return 15
+  }
+
+}
+
 function SectionItem({ classes, recipe }) {
   const [className, setClassName] = useState('');
 
@@ -69,7 +92,7 @@ function RecipeList({
   recipes,
   searchedRecipes,
 }) {
-  const sortedRecipes = useMemo(() => _sortBy(searchedRecipes, 'title'), [ searchedRecipes ]);
+  const sortedRecipes = useMemo(() => _sortBy(searchedRecipes, [sortRecipesBySection, 'title']), [ searchedRecipes ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [loadRecipedTimeout, setLoadRecipesTimeout] = useState(0);
   const groupedRecipes = useMemo(() => _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label), [searchedRecipes, numOfRecipesToLoad]);
@@ -85,9 +108,10 @@ function RecipeList({
   )
 
   useEffect(() => {
-    if (numOfRecipesToLoad !== searchedRecipes.length) {
+    if (numOfRecipesToLoad < searchedRecipes.length) {
+      const incrementBy = numOfRecipesToLoad < 10 ? 1 : 20
       const loadedTimeout = setTimeout(() => {
-        setNumOfRecipesToLoad(numOfRecipesToLoad + 1)
+        setNumOfRecipesToLoad(numOfRecipesToLoad + incrementBy)
       }, 100)
 
       setLoadRecipesTimeout(loadedTimeout)
