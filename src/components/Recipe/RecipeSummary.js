@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import _filter from 'lodash/filter';
+import FormattedText from '../utils/FormattedText';
 
 const styles = (theme) => ({
   wrapper: {
@@ -73,7 +74,7 @@ function RecipeSummary({ classes, compact, recipe }) {
         }
         {
           recipe.note
-            ? <ListItem><ListItemText primary={`Note: ${recipe.note}`}/></ListItem>
+            ? <ListItem><ListItemText primary={<FormattedText text={`Note: ${recipe.note}`}/>}/></ListItem>
             : null
         }
       </List>
