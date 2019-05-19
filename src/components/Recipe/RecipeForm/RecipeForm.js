@@ -58,6 +58,10 @@ function RecipeForm ({ classes, resetForm, recipes, recipeForm, closeForm, saveF
   useEffect(() => {
     if (!saving) {
       closeForm();
+
+      if (!Id) {
+        resetForm();
+      }
     }
   }, [ saving ]);
 
