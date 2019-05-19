@@ -5,6 +5,7 @@ import _omit from 'lodash/omit';
 import _cloneDeep from 'lodash/cloneDeep';
 
 const initialState = {
+  open: false,
   saving: false,
   author: '',
   description: '',
@@ -17,14 +18,25 @@ const initialState = {
   tags: [],
 }
 
+export const OPEN_FORM = 'RECIPE_FORM::OPEN_FORM';
+export const CLOSE_FORM = 'RECIPE_FORM::CLOSE_FORM';
 export const SET_FORM = 'RECIPE_FORM::SET_FORM';
 export const RESET_FORM = 'RECIPE_FORM::RESET_FORM';
 export const SET_VALUE = 'RECIPE_FORM::SET_VALUE';
 export const SAVE_FORM = 'RECIPE_FORM::SAVE_FORM';
 export const SAVE_FORM_SUCCESSFUL = 'RECIPE_FORM::SAVE_FORM_SUCCESSFUL';
 
+export function openForm() {
+  return { type: OPEN_FORM };
+}
+export function closeForm() {
+  return { type: CLOSE_FORM };
+}
+
 export function setForm(_recipeForm) {
-  const recipeForm = _cloneDeep(_recipeForm)
+  const recipeForm = _cloneDeep(_recipeForm);
+
+  recipeForm.open = recipeForm.open || false;
   recipeForm.directions = recipeForm.directions || [{ title: '', steps: []}]
   recipeForm.ingredients = recipeForm.ingredients || [{ title: '', ingredients: []}]
   recipeForm.author = recipeForm.author || '';
@@ -73,6 +85,8 @@ export function saveForm(){
 }
 
 export const actions = {
+  openForm,
+  closeForm,
   setForm,
   setValue,
   saveForm,
@@ -80,6 +94,12 @@ export const actions = {
 }
 
 const ACTION_HANDLERS = {
+  [OPEN_FORM]: (state) => {
+    return { ...state, open: true };
+  },
+  [CLOSE_FORM]: (state) => {
+    return { ...state, open: false };
+  },
   [SET_FORM]: (state, action) => {
     return { ...action.payload };
   },

@@ -5,9 +5,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
 import _map from 'lodash/map';
-import RecipeForm from '../components/Recipe/RecipeForm/RecipeFormContainer';
 import Search from '../components/Search/SearchContainer';
 import { sections } from '../data/recipeSections';
 
@@ -19,16 +17,6 @@ const styles = (theme) => ({
       background: theme.palette.grey[200],
     },
   },
-  // addRecipe: {
-  //   position: 'fixed',
-  //   bottom: theme.spacing.unit * 4,
-  //   right: theme.spacing.unit * 4,
-  //   zIndex: 1,
-  //   background: theme.palette.accent1.main,
-  //   '&:hover': {
-  //     background: theme.palette.accent1.light,
-  //   }
-  // },
   drawer: {
     width: 320,
     top: 64,

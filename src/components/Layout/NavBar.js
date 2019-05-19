@@ -20,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import LoginButton from '../Login/LoginButton';
 import RecipeForm from '../Recipe/RecipeForm/RecipeFormContainer';
+import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButtonContainer';
 
 const styles = (theme) => ({
   root: {
@@ -99,8 +100,9 @@ class NavBar extends React.PureComponent {
           onClose={this.closeMenu}
         >
           <MenuItem onClick={this.closeMenu} component={Link} to="/profile">My Profile</MenuItem>
-          <RecipeForm
+          <RecipeFormButton
             text="Add Recipe"
+            onClick={this.closeMenu}
             Component={MenuItem}
           />
           <Divider />
@@ -159,6 +161,7 @@ class NavBar extends React.PureComponent {
             </ListItem>
           </List>
         </Drawer>
+        <RecipeForm />
       </nav>
     )
   }

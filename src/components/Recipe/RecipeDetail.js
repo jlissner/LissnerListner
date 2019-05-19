@@ -10,7 +10,7 @@ import _find from 'lodash/find';
 import _includes from 'lodash/includes';
 import ItemizedList from '../ItemizedList/ItemizedList';
 import RecipeSummary from './RecipeSummary';
-import RecipeForm from './RecipeForm/RecipeFormContainer';
+import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
 import Favorite from '../Favorite/FavoriteContainer';
 
 const styles = (theme) => ({
@@ -107,7 +107,7 @@ function RecipeDetail({
       </Grid>
 
       { recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
-        ? <RecipeForm
+        ? <RecipeFormButton
             text={<EditIcon />}
             className={classes.editButton}
             color="primary"
