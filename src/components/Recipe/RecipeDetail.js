@@ -12,6 +12,7 @@ import ItemizedList from '../ItemizedList/ItemizedList';
 import RecipeSummary from './RecipeSummary';
 import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
 import Favorite from '../Favorite/FavoriteContainer';
+import FormattedText from '../utils/FormattedText';
 
 const styles = (theme) => ({
   description: {
@@ -47,7 +48,9 @@ function RecipeDetailHeader({ classes, recipe }) {
       <Grid item xs={12}>
         {
           recipe.description
-          ? <Typography variant="h6" className={classes.description}>{recipe.description}</Typography>
+          ? <Typography variant="h6" className={classes.description}>
+              <FormattedText text={recipe.description} />
+            </Typography>
           : null
         }
       </Grid>

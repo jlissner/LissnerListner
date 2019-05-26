@@ -35,12 +35,23 @@ const styles = (theme) => ({
   },
 });
 
+function regexForFindingCharacter(char) {
+  const start = '(^|\\n| |\\0|")(\\';
+  const middle = '.*?\\';
+  const end = ')(\\0| |"|\\.|$)';
+  const regex = start + char + middle + char + end;
+
+  return new RegExp(regex, 'gi');
+}
+
 const fractionMatcher = new RegExp(/([0-9]\/[0-9])/gi);
-const boldMatcher = new RegExp(/(^|\n| |\0)(\*.*?\*)(\0| |\.|$)/gi);
-const underlineMatcher = new RegExp(/(^|\n| |\0)(_.*?_)(\0| |\.|$)/gi);
+const boldMatcher = regexForFindingCharacter('*');
+const underlineMatcher = regexForFindingCharacter('_');
 
 function setUnderlineFormatting({ classes, text }) {
-  return _map(text.split(underlineMatcher).filter(Boolean), textPart => (
+  const wordArray = text.split(underlineMatcher).filter(Boolean);
+
+  return _map(wordArray, textPart => (
     textPart.match(underlineMatcher)
       ? <span key={textPart} className={classes.underline}>{textPart.replace(/_/gi, '')}</span>
       : <span key={textPart}>{textPart}</span>
@@ -48,7 +59,9 @@ function setUnderlineFormatting({ classes, text }) {
 }
 
 function setBoldFormatting({ classes, text }) {
-  return _map(text.split(boldMatcher).filter(Boolean), textPart => (
+  const wordArray = text.split(boldMatcher).filter(Boolean);
+
+  return _map(wordArray, textPart => (
     textPart.match(boldMatcher)
       ? <strong key={textPart}>{textPart.replace(/\*/gi, '')}</strong>
       : setUnderlineFormatting({ classes, text: textPart })
@@ -56,7 +69,9 @@ function setBoldFormatting({ classes, text }) {
 }
 
 function setFractionFormatting({ classes, text }) {
-  return _map(text.split(fractionMatcher).filter(Boolean), textPart => (
+  const wordArray = text.split(fractionMatcher).filter(Boolean);
+
+  return _map(wordArray, textPart => (
     textPart.match(fractionMatcher)
       ? <span key={textPart} className={classes.fraction}>
           <span className={classes.numerator}>{textPart[0]}</span>
