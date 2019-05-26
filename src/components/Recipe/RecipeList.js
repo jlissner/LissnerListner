@@ -121,10 +121,10 @@ function RecipeList({
   }, [numOfRecipesToLoad])
 
   useEffect(() => {
-    if (numOfRecipesToLoad > 10) {
-      clearTimeout(loadRecipedTimeout);
-      setNumOfRecipesToLoad(10)
-    }
+    const newNumberOfRecipesToLoad = numOfRecipesToLoad > 10 ? 10 : numOfRecipesToLoad + 1;
+    clearTimeout(loadRecipedTimeout);
+
+    setNumOfRecipesToLoad(newNumberOfRecipesToLoad)
   }, [sortedRecipes])
 
   if (recipes.length === 0) {
