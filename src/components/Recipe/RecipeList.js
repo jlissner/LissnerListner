@@ -15,7 +15,7 @@ import _sortBy from 'lodash/sortBy';
 import { sections } from '../../data/recipeSections';
 import Favorite from '../Favorite/FavoriteContainer';
 
-const styles = {
+const sectionItemStyles = {
   listItem: {
     transition: 'all .2s ease-out',
     transform: 'translateX(-16px)',
@@ -26,6 +26,12 @@ const styles = {
     }
   }
 }
+
+const sectionStyles = theme => ({
+  section: {
+    marginBottom: theme.spacing.unit * 3,
+  }
+})
 
 function sortRecipesBySection(recipe) {
   const section = _find(recipe.tags, tag => tag.category === 'Section').label;
@@ -69,15 +75,15 @@ function SectionItem({ classes, recipe }) {
   )
 }
 
-const StyledSectionItem = withStyles(styles)(SectionItem)
+const StyledSectionItem = withStyles(sectionItemStyles)(SectionItem)
 
-function Section({ recipes, section }) {
+function Section({ classes, recipes, section }) {
   if (!recipes) {
     return null;
   }
 
   return (
-    <Card>
+    <Card className={classes.section}>
       <CardHeader
         title={section}
       />
@@ -87,6 +93,8 @@ function Section({ recipes, section }) {
     </Card>
   )
 }
+
+const StyledSection = withStyles(sectionStyles)(Section)
 
 function RecipeList({
   recipes,
@@ -98,7 +106,7 @@ function RecipeList({
   const groupedRecipes = useMemo(() => _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label), [searchedRecipes, numOfRecipesToLoad]);
   const MemoizedSections = useCallback(
     _map(sections, ({ label, value }) => (
-      <Section
+      <StyledSection
         key={value}
         recipes={groupedRecipes[value]}
         section={label}
