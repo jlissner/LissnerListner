@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import { actions as tagsActions } from '../Tags/TagsActions';
 import { actions as recipeActions } from '../Recipe/RecipeActions'
 import { actions as userActions } from '../User/UserActions'
-import App from './App'
+import SecuredApp from './SecuredApp'
 
 const mapStateToProps = (state) => ({
   recipes: state.recipes,
@@ -17,4 +17,4 @@ const mapDispatchToProps = {
   ...userActions,
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SecuredApp))

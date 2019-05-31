@@ -1,70 +1,50 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import _get from 'lodash/get';
-import Layout from '../Layout/LayoutContainer';
+import store from '../../redux/store';
+import SecuredApp from './SecuredAppContainer';
 
-function App({ login, logout, user, recipes, getRecipes, tags, getTags }) {
-  const [ authenticated, setAuthenticated ] = useState(false);
-  const [ hasFetched, setHasFetched ] = useState(false);
-  const { activeUser = {}, authenticating } = user;
-  const { Id } = activeUser;
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#5b8266',
+      light: '#a5baab',
+      dark: '#223026',
+    },
+    secondary: {
+      main: '#a93f55',
+      light: '#d096a2',
+      dark: '#3e171f',
+    },
+    accent1: {
+      main: '#edae49',
+      light: '#f5d29b',
+      dark: '#57401b',
+    },
+    accent2: {
+      main: '#30638e',
+      light: '#8ea9c1',
+      dark: '#122434',
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+})
 
-  useEffect(() => {
-    if (!authenticated && authenticating) {
-      login();
-    } else if (!authenticated && Id) {
-      setAuthenticated(true);
-    }
-  });
-
-  useEffect(() => {
-    if (authenticated && !hasFetched) {
-      getRecipes();
-      getTags();
-      setHasFetched(true);
-    }
-  })
-
+function App({ login, logout, user, recipes, getRecipes, getTags }) {
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Layout user={Id} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
-    </React.Fragment>
+    <Provider store={store(window.__INITIAL_STATE__)}>
+      <MuiThemeProvider theme={theme}>    
+        <BrowserRouter>
+          <SecuredApp />
+        </BrowserRouter>
+      </MuiThemeProvider>
+    </Provider>
   )
 }
 
-/*
-class App extends PureComponent {
-  componentDidMount() {
-    const { login } = this.props;
-
-    login();
-  }
-
-  componentDidUpdate() {
-    const { user, recipes, getRecipes, tags, getTags } = this.props;
-    const Id = _get(user, 'activeUser.Id')
-
-    if (Id && recipes.length === 0) {
-      getRecipes();      
-    }
-
-    if (Id && tags.length === 0) {
-      getTags();      
-    }
-  }
-
-  render() {
-    const { user, logout, recipes } = this.props;
-    const Id = _get(user, 'activeUser.Id')
-
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <Layout user={Id} logout={logout} isAuthenticating={user.authenticating} isLoading={Boolean(!recipes.length)} />
-      </React.Fragment>
-    );
-  }
-}
-*/
 export default App;
