@@ -70,7 +70,7 @@ Favorite.propTypes = {
   disabled: PropTypes.bool.isRequired,
   isFavorite: PropTypes.bool.isRequired,
   activeUser: PropTypes.shape().isRequired,
-  recipe: PropTypes.number.isRequired,
+  recipe: PropTypes.string.isRequired,
   updateUser: PropTypes.func.isRequired,
   className: PropTypes.string,
 }

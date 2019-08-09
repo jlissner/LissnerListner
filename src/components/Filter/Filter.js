@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import qs from 'query-string';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import _get from 'lodash/get';
@@ -72,5 +73,15 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
       </React.Fragment>
   );
 };
+
+Filter.propTypes = {
+  filters: PropTypes.shape().isRequired,
+  tags: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  category: PropTypes.string.isRequired,
+  history: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+  setFilters: PropTypes.func.isRequired,
+  appliedFilters: PropTypes.shape().isRequired,
+}
 
 export default Filter;

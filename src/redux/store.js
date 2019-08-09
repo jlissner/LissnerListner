@@ -21,7 +21,8 @@ const store = (initialState = {}) => {
 
   const store = createStore(
     makeReducers(),
-    applyMiddleware(...middleware)
+    initialState,
+    applyMiddleware(...middleware),
   )
 
   store.asyncReducers = {};
