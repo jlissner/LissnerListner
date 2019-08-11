@@ -54,12 +54,7 @@ function RecipeSummary({ classes, compact, recipe }) {
       <List className={[classes.list, compact ? classes.compact : ''].join(' ')}>
         {
           recipe.serves
-            ? <ListItem><ListItemText primary={`${recipe.serves}`} /></ListItem>
-            : null
-        }
-        {
-          recipe.time
-            ? <ListItem><ListItemText primary={recipe.time} /></ListItem>
+            ? <ListItem><ListItemText primary={<FormattedText text={recipe.serves}/>} /></ListItem>
             : null
         }
         {
