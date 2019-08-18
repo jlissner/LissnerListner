@@ -68,7 +68,7 @@ function SectionItem({ classes, recipe }) {
   }, [])
 
   return (
-    <ListItem className={[classes.listItem, className].join(' ')} button component={Link} to={recipe.recipeUrl}>
+    <ListItem className={[classes.listItem, className].join(' ')} button component={Link} to={`/cookbook${recipe.recipeUrl}`}>
       <ListItemText primary={recipe.title} secondary={recipe.author} />
       <ListItemSecondaryAction>
         <Favorite recipe={recipe.Id} />

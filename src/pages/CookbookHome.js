@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import {
+  Button,
+  Divider,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import _map from 'lodash/map';
 import Search from '../components/Search/SearchContainer';
 import { sections } from '../data/recipeSections';
@@ -16,6 +18,14 @@ const styles = (theme) => ({
     '&:hover': {
       background: theme.palette.grey[200],
     },
+    '& span': {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      display: 'block',
+      width: '100%',
+      textOverflow: 'ellipsis',
+      textAlign: 'center',
+    }
   },
   drawer: {
     width: 320,
@@ -51,7 +61,7 @@ function Home({ classes, location, history }) {
   function submitSearch(evt) {
     evt.preventDefault();
 
-    history.push(searchPageUrl)
+    history.push(`/cookbook/${searchPageUrl}`)
   }
 
   return (
@@ -78,7 +88,7 @@ function Home({ classes, location, history }) {
           color="secondary"
           size="large"
           variant="contained"
-          to={searchPageUrl}
+          to={`/cookbook/${searchPageUrl}`}
           component={Link}
         >
           Search
@@ -96,7 +106,8 @@ function Home({ classes, location, history }) {
               variant="contained"
               className={classes.btn}
               component={Link}
-              to={`search?filters=[{"category": "Section", "label": "${encodeURIComponent(value)}"}]`}
+              to={`/cookbook/search?filters=[{"category": "Section", "label": "${encodeURIComponent(value)}"}]`}
+              title={label}
             >
               {label}
             </Button>

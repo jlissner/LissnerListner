@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -9,10 +9,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import Login from '../Login/Login';
-import Home from '../../pages/Home';
+import CookbookHome from '../../pages/CookbookHome';
 import RecipeDetail from '../../pages/RecipeDetail';
 import UserProfile from '../../pages/UserProfile';
 import About from '../../pages/About';
+import Articles from '../../pages/Articles';
 import Search from '../../pages/Search';
 import NoPage from '../../pages/NoPage';
 import NavBar from './NavBar'
@@ -73,12 +74,16 @@ class Layout extends React.Component {
     return (
       <div className={classes.content}>
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route exact path='/' render={() => <Redirect to="/cookbook" />} />
+          <Route exact path='/cookbook' component={CookbookHome} />
           <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
-          <Route path='/about' component={About} />
-          <Route path='/search' component={Search} />
-          <Route path='/:recipe' component={RecipeDetail} />
+          <Route path='/cookbook/about' component={About} />
+          <Route path='/cookbook/articles' component={Articles} />
+          <Route path='/cookbook/search' component={Search} />
+          <Route path='/cookbook/:recipe' component={RecipeDetail} />
+
+          <Route render={({ location }) => <Redirect to={`/404?missingPage=${location.pathname}`} />} />
         </Switch>
       </div>
     );

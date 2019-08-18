@@ -20,6 +20,9 @@ const styles = theme => ({
 	},
 	listText: {
 		color: 'inherit',
+	},
+	nested: {
+		paddingLeft: theme.spacing(4),
 	}
 })
 
@@ -32,11 +35,14 @@ function Footer({ classes }) {
 						Lissner Family Website
 					</Typography>
 					<List dense disablePadding>
-						<ListItem button component={Link} to="/">
-							<ListItemText classes={{ primary: classes.listText }} primary="Home" />
+						<ListItem button component={Link} to="/cookbook">
+							<ListItemText classes={{ primary: classes.listText }} primary="Cookbook" />
 						</ListItem>
-						<ListItem button component={Link} to="/about">
-							<ListItemText classes={{ primary: classes.listText }} primary="About" />
+						<ListItem button className={classes.nested} component={Link} to="/cookbook/about">
+							<ListItemText classes={{ primary: classes.listText }} primary="- About" />
+						</ListItem>
+						<ListItem button className={classes.nested} component={Link} to="/cookbook/articles">
+							<ListItemText classes={{ primary: classes.listText }} primary="- Articles" />
 						</ListItem>
 					</List>
 				</Grid>

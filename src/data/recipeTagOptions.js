@@ -18,7 +18,7 @@ export const section = [
   {category: 'Section', label: 'Cakes'},
   {category: 'Section', label: 'Pies'},
   {category: 'Section', label: 'Candies & Sweets'},
-  {category: 'Section', label: 'Bits & Pieces'},
+  {category: 'Section', label: 'Sauces, Drinks, Dressings, & More'},
 ];
 
 export const ethnicity = [

@@ -12,5 +12,5 @@ export const sections = [
   { value: 'Cakes', label: 'Cakes' },
   { value: 'Pies', label: 'Pies' },
   { value: 'Candies & Sweets', label: 'Candies & Sweets' },
-  { value: 'Bits & Pieces', label: 'Bits & Pieces' },
+  { value: 'Sauces, Drinks, Dressings, & More', label: 'Sauces, Drinks, Dressings, & More' },
 ]
