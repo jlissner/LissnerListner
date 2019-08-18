@@ -1,16 +1,15 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 const styles = (theme) => ({
-  divider: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 2,
-  },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+    '&:last-child': {
+      marginBottom: 0,
+    }
   },
 })
 
@@ -50,9 +49,9 @@ class About extends React.PureComponent {
           <Typography paragraph variant="body1">
             -Love, Connie
           </Typography>
+        </Paper>
 
-          <Divider className={classes.divider} />
-
+        <Paper elevation={1} className={classes.paper}>
           <Typography variant='h6' paragraph>Editor's (Connie's) Notes</Typography>
 
           <Typography paragraph variant="body1" component="div">

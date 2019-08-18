@@ -9,7 +9,7 @@ const styles = (theme) => ({
   root: {
     background: '#fff',
     '& + $root': {
-      paddingTop: theme.spacing.unit * 2,
+      paddingTop: theme.spacing(2),
     },
   },
   list: {

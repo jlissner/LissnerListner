@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Layout from '../Layout/LayoutContainer';
 
 function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
@@ -15,7 +14,7 @@ function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
     } else if (!authenticated && Id) {
       setAuthenticated(true);
     }
-  });
+  }, [authenticated, authenticating, login, Id]);
 
   useEffect(() => {
     if (authenticated && !hasFetched) {
@@ -23,11 +22,10 @@ function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
       getTags();
       setHasFetched(true);
     }
-  })
+  }, [authenticated, hasFetched, getRecipes, getTags])
 
   return (
     <React.Fragment>
-      <CssBaseline />
       <Layout user={Id} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
     </React.Fragment>
   )

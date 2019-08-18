@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
+import {
+  TextField,
+  IconButton,
+  ListItem,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import VertMoveIcon from '@material-ui/icons/UnfoldMore';
 
@@ -12,7 +14,7 @@ const styles = (theme) => ({
     // alignItems: 'flex-start',
   },
   removeIcon: {
-    // marginTop: theme.spacing.unit / 2,
+    // marginTop: theme.spacing(.5),
   },  
 });
 

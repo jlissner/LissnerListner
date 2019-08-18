@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Hidden from '@material-ui/core/Hidden';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import {
+  Hidden,
+  CircularProgress,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
 import _includes from 'lodash/includes';
@@ -19,24 +21,24 @@ const styles = (theme) => ({
     color: theme.palette.grey[700],
   },
   ingredients: {
-    marginBottom: theme.spacing.unit * 5,
+    marginBottom: theme.spacing(5),
   },
   editButton: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 4,
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
   },
   progress: {
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
   },
 })
 
 function RecipeDetailHeader({ classes, recipe }) {
   return (
-    <Grid container spacing={8}>
+    <Grid container spacing={1}>
       <Grid item xs={12}>
-        <Grid container spacing={8} wrap="nowrap">
+        <Grid container spacing={1} wrap="nowrap">
           <Grid item>
             <Favorite recipe={recipe.Id} />
           </Grid>
@@ -74,7 +76,7 @@ function RecipeDetail({
     return () => {
       resetForm()
     }
-  }, [recipe])
+  }, [recipe, setForm, resetForm])
 
 
   if (recipes.length === 0) {
@@ -87,7 +89,7 @@ function RecipeDetail({
 
   return (
     <React.Fragment>
-      <Grid container spacing={24} alignContent="stretch">
+      <Grid container spacing={3} alignContent="stretch">
         <Grid item xs={12}>
           <RecipeDetailHeader classes={classes} recipe={recipe} />
         </Grid>

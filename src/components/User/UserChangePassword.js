@@ -2,12 +2,14 @@ import React from 'react';
 import { changeUserPassword } from '../../lib/awsLib';
 import { withStyles } from '@material-ui/core/styles';
 import { toast } from 'react-toastify'
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import TextField from '@material-ui/core/TextField';
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  TextField,
+} from '@material-ui/core';
 
 const styles = (theme) => ({
 

@@ -1,8 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  List,
+  ListItem,
+  ListItemText,
+} from '@material-ui/core';
 import _filter from 'lodash/filter';
 import FormattedText from '../utils/FormattedText';
 
@@ -17,7 +19,7 @@ const styles = (theme) => ({
   accent: {
     display: 'block',
     position: 'absolute',
-    margin: `${theme.spacing.unit * 10}px auto`,
+    margin: `${theme.spacing(10)}px auto`,
     width: 0,
     left: 0,
     right: 0,
@@ -30,7 +32,7 @@ const styles = (theme) => ({
     width: '100%',
     maxWidth: 320,
     borderColor: theme.palette.grey[300],
-    borderWidth: `${theme.spacing.unit * 2}px 0`,
+    borderWidth: `${theme.spacing(2)}px 0`,
     borderStyle: 'solid',
 
     "& span": {

@@ -1,5 +1,5 @@
 import React from 'react';
-import Fab from '@material-ui/core/Fab';
+import { Fab } from '@material-ui/core';
 
 function RecipeFormButton({ onClick, openForm, text, Component, ...props }) {
   function handleClick() {

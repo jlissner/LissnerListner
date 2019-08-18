@@ -13,10 +13,10 @@ const styles = (theme) => ({
     width: '100%',
     maxWidth: 400,
     margin: '0 auto', 
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   submit: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
   },
 });
 

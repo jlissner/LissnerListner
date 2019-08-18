@@ -1,11 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import green from '@material-ui/core/colors/green';
+import { green } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
   checked: {

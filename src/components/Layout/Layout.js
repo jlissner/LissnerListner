@@ -2,10 +2,12 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import {
+  CircularProgress,
+  Divider,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import Login from '../Login/Login';
 import Home from '../../pages/Home';
 import RecipeDetail from '../../pages/RecipeDetail';
@@ -23,7 +25,7 @@ const styles = (theme) => ({
     paddingTop: 64,
   },
   authenticating: {
-    margin: `${theme.spacing.unit * 3}px auto 0`,
+    margin: `${theme.spacing(3)}px auto 0`,
     width: 200,
     display: 'flex',
     justifyContent: 'space-between',
@@ -48,12 +50,12 @@ const styles = (theme) => ({
   content: {
     maxWidth: 1080,
     margin: '0 auto',
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
   },
   lander: {
     maxWidth: 400,
-    padding: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
     marginLeft: 'auto',
     marginRight: 'auto',
   },

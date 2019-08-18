@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import green from '@material-ui/core/colors/green';
+import {
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  RadioGroup,
+  Radio,
+} from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
 import _get from 'lodash/get';
 import _map from 'lodash/map';
 import _find from 'lodash/find';
@@ -23,7 +25,7 @@ const styles = (theme) => ({
     },
   },
   formGroup: {
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
   },
 })
 

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  CircularProgress,
+  IconButton,
+} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import _without from 'lodash/without';
-
 
 const styles = (theme) => ({
   isFavorite: {
@@ -67,7 +68,7 @@ function Favorite({
 
 Favorite.propTypes = {
   classes: PropTypes.shape().isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   isFavorite: PropTypes.bool.isRequired,
   activeUser: PropTypes.shape().isRequired,
   recipe: PropTypes.string.isRequired,
@@ -77,6 +78,7 @@ Favorite.propTypes = {
 
 Favorite.defaultProps = {
   className: '',
+  disabled: false,
 }
 
 export default withStyles(styles)(Favorite);

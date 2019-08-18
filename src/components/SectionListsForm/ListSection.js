@@ -1,11 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import TextField from '@material-ui/core/TextField';
+import {
+  IconButton,
+  List,
+  ListSubheader,
+  ListItem,
+  ListItemText,
+  TextField,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/Cancel';
 import _map from 'lodash/map';
@@ -23,9 +25,9 @@ const styles = (theme) => ({
   },
   section: {
     background: theme.palette.grey[200],
-    marginBottom: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(3),
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
   },
   addIcon: {
   },

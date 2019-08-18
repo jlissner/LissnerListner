@@ -1,11 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Button, CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
   progress: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   }
 })
 

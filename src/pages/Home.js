@@ -31,11 +31,11 @@ const styles = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
 
   },
   searchContainer: {
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
   },
   filtersContainer: {
     background: 'white',
@@ -61,7 +61,7 @@ function Home({ classes, location, history }) {
       onSubmit={submitSearch}
       alignItems="center"
       justify="center"
-      spacing={16}
+      spacing={2}
       className={classes.contentContainer}
     >
       <Grid item xs={12}>

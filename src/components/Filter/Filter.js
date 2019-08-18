@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import qs from 'query-string';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { CircularProgress } from '@material-ui/core';
 import _get from 'lodash/get';
 import _debounce from 'lodash/debounce';
 import FilterSection from './FilterSection';
@@ -21,7 +21,7 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
       : [];
 
     setFilters({ category: 'recipes', value: filterValue})
-  }, []);
+  }, [location.search, setFilters]);
 
   useEffect(() => {
     const curSearch = qs.parse(location.search);
@@ -31,7 +31,7 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
       : undefined;
 
     updateHistoryDebounced(history, qs.stringify(curSearch))
-  }, [appliedFilters])
+  }, [appliedFilters, location.search, category, history, updateHistoryDebounced])
 
   if (tags.length === 0) {
     return (

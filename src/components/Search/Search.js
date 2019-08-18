@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import { TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import _debounce from 'lodash/debounce';
 import qs from 'query-string';
@@ -17,30 +16,35 @@ const styles = theme => ({
 
 function Search({ classes, setSearch, category, search, variant, history, location }) {
   const [ val, setVal ] = useState('');
-  const debouncedSetSearch = useMemo(() => _debounce(setSearch, 500), [])
-
-  function updateSearchUrl(value) {
-    const parsedQueryString = qs.parse(location.search);
-
-    parsedQueryString.search = value || undefined;
-
-    history.push({search: qs.stringify(parsedQueryString)})
-  }
+  const [ initialLoad, setInitialLoad ] = useState(true);
+  const debouncedSetSearch = useMemo(() => _debounce(setSearch, 500), [setSearch])
 
   useEffect(() => {
+    setInitialLoad(false)
+  }, [initialLoad, setInitialLoad])
+
+  useEffect(() => {
+    if (!initialLoad) {
+      return
+    }
+
     const urlParams = new URLSearchParams(location.search);
     const encodedParam = urlParams.get('search');
     const decodedParam = encodedParam ? decodeURIComponent(encodedParam) : '';
 
     setVal(decodedParam)
     setSearch({ category, value: decodedParam })
-  }, [])
+  }, [category, setSearch, setVal, location.search, initialLoad])
 
   useEffect(() => {
-    updateSearchUrl(val);
+    const parsedQueryString = qs.parse(location.search);
+
+    parsedQueryString.search = val || undefined;
+
+    history.push({search: qs.stringify(parsedQueryString)})
 
     debouncedSetSearch({ category, value: val })
-  }, [val])
+  }, [debouncedSetSearch, val, category, history, location.search])
 
   return (
     <TextField

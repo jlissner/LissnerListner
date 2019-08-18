@@ -3,8 +3,6 @@ import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import makeReducers from './reducers'
 
-
-
 const store = (initialState = {}) => {
   const middleware = [
     thunk,

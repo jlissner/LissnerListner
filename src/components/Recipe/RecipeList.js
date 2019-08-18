@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { withStyles }from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+  Card,
+  CardHeader,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  CircularProgress,
+} from '@material-ui/core';
 import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _groupBy from 'lodash/groupBy';
@@ -29,7 +31,7 @@ const sectionItemStyles = {
 
 const sectionStyles = theme => ({
   section: {
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing(3),
   }
 })
 
@@ -102,8 +104,10 @@ function RecipeList({
 }) {
   const sortedRecipes = useMemo(() => _sortBy(searchedRecipes, [sortRecipesBySection, 'title']), [ searchedRecipes ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
-  const [loadRecipedTimeout, setLoadRecipesTimeout] = useState(0);
-  const groupedRecipes = useMemo(() => _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label), [searchedRecipes, numOfRecipesToLoad]);
+  const [, setLoadRecipesTimeout] = useState(0);
+  const groupedRecipes = useMemo(() => (
+      _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label)
+    ), [numOfRecipesToLoad, sortedRecipes]);
   const MemoizedSections = useCallback(
     _map(sections, ({ label, value }) => (
       <StyledSection
@@ -126,13 +130,11 @@ function RecipeList({
 
       return () => clearTimeout(loadedTimeout);
     }
-  }, [numOfRecipesToLoad])
+  }, [numOfRecipesToLoad, searchedRecipes.length])
 
   useEffect(() => {
-    const newNumberOfRecipesToLoad = numOfRecipesToLoad > 10 ? 10 : numOfRecipesToLoad + 1;
-    clearTimeout(loadRecipedTimeout);
-
-    setNumOfRecipesToLoad(newNumberOfRecipesToLoad)
+    setLoadRecipesTimeout(prevLoadRecipedTimeout => clearTimeout(prevLoadRecipedTimeout));
+    setNumOfRecipesToLoad(prevNumOfRecipesToLoad => prevNumOfRecipesToLoad > 10 ? 10 : prevNumOfRecipesToLoad + 1)
   }, [sortedRecipes])
 
   if (recipes.length === 0) {

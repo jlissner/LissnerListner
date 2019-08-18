@@ -1,20 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+	Grid,
+	Typography,
+	List,
+	ListItem,
+	ListItemText,
+} from '@material-ui/core';
 
 const styles = theme => ({
 	footer: {
-		marginTop: theme.spacing.unit * 2,
+		marginTop: theme.spacing(2),
 		background: theme.palette.accent2.dark,
 		color: theme.palette.accent2.light,
-		padding: theme.spacing.unit * 5,
-		paddingBottom: theme.spacing.unit * 2,
-		paddingTop: theme.spacing.unit * 2,
+		padding: theme.spacing(5),
+		paddingBottom: theme.spacing(2),
+		paddingTop: theme.spacing(2),
 	},
 	listText: {
 		color: 'inherit',

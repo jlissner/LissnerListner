@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import {
+  Button,
+  ListItemIcon,
+  ListItemText,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Chip,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import Favorite from '../Favorite/FavoriteContainer';
@@ -23,13 +25,13 @@ const styles = (theme) => ({
     transition: 'background .18s ease-in-out',
   },
   easy: {
-    borderLeft: `${theme.spacing.unit}px solid ${green[500]}`,
+    borderLeft: `${theme.spacing(1)}px solid ${green[500]}`,
   },
   medium: {
-    borderLeft: `${theme.spacing.unit}px solid ${yellow[500]}`,
+    borderLeft: `${theme.spacing(1)}px solid ${yellow[500]}`,
   },
   hard: {
-    borderLeft: `${theme.spacing.unit}px solid ${red[500]}`,
+    borderLeft: `${theme.spacing(1)}px solid ${red[500]}`,
   },
   isFavorite: {
     color: theme.palette.secondary.main,
@@ -42,7 +44,7 @@ const styles = (theme) => ({
     marginLeft: 'auto',
   },
   tags: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
   },
 })
 

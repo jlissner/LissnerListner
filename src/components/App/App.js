@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React  from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { CssBaseline } from '@material-ui/core';
 import store from '../../redux/store';
 import SecuredApp from './SecuredAppContainer';
 
@@ -35,15 +34,18 @@ const theme = createMuiTheme({
   },
 })
 
-function App({ login, logout, user, recipes, getRecipes, getTags }) {
+function App() {
   return (
-    <Provider store={store(window.__INITIAL_STATE__)}>
-      <MuiThemeProvider theme={theme}>    
-        <BrowserRouter>
-          <SecuredApp />
-        </BrowserRouter>
-      </MuiThemeProvider>
-    </Provider>
+    <React.Fragment>
+      <CssBaseline />
+      <Provider store={store(window.__INITIAL_STATE__)}>
+        <MuiThemeProvider theme={theme}>    
+          <BrowserRouter>
+            <SecuredApp />
+          </BrowserRouter>
+        </MuiThemeProvider>
+      </Provider>
+    </React.Fragment>
   )
 }
 

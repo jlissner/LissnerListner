@@ -2,25 +2,27 @@ import React, { Component } from 'react'
 import { toast } from 'react-toastify'
 import { getAuthenticatedUser } from '../../lib/awsLib'
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button'
-import Modal from '@material-ui/core/Modal';
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import TextField from '@material-ui/core/TextField'
+import {
+  Button,
+  Modal,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+  TextField,
+} from '@material-ui/core';
 import LoaderButton from '../LoaderButton/LoaderButton'
 
 const styles = theme => ({
   actions: {
     display: 'flex',
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
   title: {
     textAlign: 'center',
     fontWeight: 700,
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   submitButton: {
   },

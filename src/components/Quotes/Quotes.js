@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { Typography } from '@material-ui/core';
 import _random from 'lodash/random';
 
 const styles = theme => ({
@@ -10,7 +10,7 @@ const styles = theme => ({
 	},
 	author: {
 		float: 'right',
-		marginTop: theme.spacing.unit / 2
+		marginTop: theme.spacing(.5),
 	}
 })
 
@@ -25,23 +25,23 @@ function getNewRandomNumber(max, current) {
 function Quotes({ classes, quotes, getQuotes }) {
 	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(null)
 	const getQuoteIndex = useCallback(() => getNewRandomNumber(quotes.length - 1, activeQuoteIndex), [ quotes, activeQuoteIndex ]);
-	const quote = useMemo(() => quotes[activeQuoteIndex], [activeQuoteIndex])
+	const quote = useMemo(() => quotes[activeQuoteIndex], [activeQuoteIndex, quotes])
 
 	useEffect(() => {
 		if (quotes.length === 0) {
 			getQuotes();
 		}
-	}, []);
+	}, [getQuotes, quotes.length]);
 
 	useEffect(() => {
-		if (!quotes.length) {
+		if (!quotes.length || activeQuoteIndex) {
 			return
 		}
 
 		const newActiveQuoteIndex = getQuoteIndex();
 
 		setActiveQuoteIndex(newActiveQuoteIndex);
-	}, [quotes])
+	}, [quotes, getQuoteIndex, activeQuoteIndex]);
 
 	if (activeQuoteIndex === null) {
 		return ''

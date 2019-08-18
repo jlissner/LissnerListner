@@ -1,15 +1,17 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Paper from '@material-ui/core/Paper';
+import {
+  List,
+  ListSubheader,
+  Paper,
+} from '@material-ui/core';
 import _map from 'lodash/map';
 import Item from './Item';
 
 const styles = (theme) => ({
   root: {
     '& + $root': {
-      marginTop: theme.spacing.unit * 2,
+      marginTop: theme.spacing(2),
     },
   },
 });

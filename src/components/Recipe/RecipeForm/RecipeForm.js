@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import Divider from '@material-ui/core/Divider';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import {
+  Button,
+  Fab,
+  Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+}  from '@material-ui/core';
 import _find from 'lodash/find';
 import _get from 'lodash/get';
 import LoaderButton from '../../LoaderButton/LoaderButton';
@@ -18,11 +20,11 @@ import * as tags from  '../../../data/recipeTagOptions';
 
 const styles = (theme) => ({
   form: {
-    paddingTop: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
   },
   divider: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -63,19 +65,13 @@ function RecipeForm ({ classes, resetForm, recipes, recipeForm, closeForm, saveF
         resetForm();
       }
     }
-  }, [ saving ]);
-
-  useEffect(() => {
-    if (!Id) {
-      resetForm();
-    }
-  }, [ Id ]);
+  }, [ saving, closeForm, Id, resetForm ]);
 
   return (
     <Dialog onClose={closeForm} open={open} maxWidth="lg">
       <DialogTitle>{Id ? 'Edit' : 'New'} Recipe</DialogTitle>
       <DialogContent className={classes.form}>
-        <Grid container spacing={24}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               error={hasError}
