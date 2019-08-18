@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { CssBaseline } from '@material-ui/core';
 import Layout from '../Layout/LayoutContainer';
 
 function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
@@ -26,6 +27,7 @@ function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
 
   return (
     <React.Fragment>
+      <CssBaseline />
       <Layout user={Id} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
     </React.Fragment>
   )

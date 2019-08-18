@@ -2,7 +2,6 @@ import React  from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
 import store from '../../redux/store';
 import SecuredApp from './SecuredAppContainer';
 
@@ -37,7 +36,6 @@ const theme = createMuiTheme({
 function App() {
   return (
     <React.Fragment>
-      <CssBaseline />
       <Provider store={store(window.__INITIAL_STATE__)}>
         <MuiThemeProvider theme={theme}>    
           <BrowserRouter>
