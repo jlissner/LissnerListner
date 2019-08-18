@@ -71,10 +71,12 @@ function RecipeDetail({
   const recipe = useMemo(() => _find(recipes, {recipeUrl: `/${match.params.recipe}`}), [recipes, match]);
 
   useEffect(() => {
-    setForm(recipe)
+    if (recipe) {
+      setForm(recipe)
 
-    return () => {
-      resetForm()
+      return () => {
+        resetForm()
+      }
     }
   }, [recipe, setForm, resetForm])
 
