@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import RecipeList from './RecipeList';
-import getSearchedFilteredRecipes from './getSearchedFilteredRecipes';
+import getRecipeList from './getRecipeList';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, props) => ({
   recipes: state.recipes,
-  searchedRecipes: getSearchedFilteredRecipes(state),
+  recipeList: getRecipeList(state, props),
 });
 
 const mapActionsToProps = {
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(RecipeList);
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(RecipeList));

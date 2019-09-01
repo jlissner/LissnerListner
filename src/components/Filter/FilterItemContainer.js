@@ -6,8 +6,12 @@ import FilterItem from './FilterItem';
 const mapStateTopProps = (state) => ({
 });
 
-const mapActionsToProps = {
-  ...filterActions,
-}
+const mapActionsToProps = (dispatch, ownProps) => ({
+  handleClick: () => {
+  	const { category, label, subCategory } = ownProps;
+
+  	dispatch(filterActions.toggleFilter({category, value: {label, category: subCategory}}));
+  }
+})
 
 export default withRouter(connect(mapStateTopProps, mapActionsToProps)(FilterItem))

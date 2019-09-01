@@ -5,12 +5,22 @@ import { CircularProgress } from '@material-ui/core';
 import _get from 'lodash/get';
 import _debounce from 'lodash/debounce';
 import FilterSection from './FilterSection';
+import FavoriteFilter from './FavoriteFilter';
 
 function updateHistory(history, search) {
   history.push({ search })
 }
 
-function Filter({ filters, tags, category, history, location, setFilters, appliedFilters }) {
+function Filter({
+  appliedFilters,
+  category,
+  filters,
+  history,
+  location,
+  numberOfFavoriteRecipes,
+  setFilters,
+  tags,
+}) {
   const updateHistoryDebounced = useMemo(() => _debounce(updateHistory, 100), []);
 
   useEffect(() => {
@@ -41,6 +51,10 @@ function Filter({ filters, tags, category, history, location, setFilters, applie
 
   return (
       <React.Fragment>
+        <FavoriteFilter
+          numberOfRecipes={numberOfFavoriteRecipes}
+        />
+
         <FilterSection
           filters={filters.Section}
           category={category}

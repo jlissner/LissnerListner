@@ -100,9 +100,9 @@ const StyledSection = withStyles(sectionStyles)(Section)
 
 function RecipeList({
   recipes,
-  searchedRecipes,
+  recipeList,
 }) {
-  const sortedRecipes = useMemo(() => _sortBy(searchedRecipes, [sortRecipesBySection, 'title']), [ searchedRecipes ]);
+  const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'title']), [ recipeList ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [, setLoadRecipesTimeout] = useState(0);
   const groupedRecipes = useMemo(() => (
@@ -120,7 +120,7 @@ function RecipeList({
   )
 
   useEffect(() => {
-    if (numOfRecipesToLoad < searchedRecipes.length) {
+    if (numOfRecipesToLoad < recipeList.length) {
       const incrementBy = numOfRecipesToLoad < 10 ? 1 : 20
       const loadedTimeout = setTimeout(() => {
         setNumOfRecipesToLoad(numOfRecipesToLoad + incrementBy)
@@ -130,7 +130,7 @@ function RecipeList({
 
       return () => clearTimeout(loadedTimeout);
     }
-  }, [numOfRecipesToLoad, searchedRecipes.length])
+  }, [numOfRecipesToLoad, recipeList.length])
 
   useEffect(() => {
     setLoadRecipesTimeout(prevLoadRecipedTimeout => clearTimeout(prevLoadRecipedTimeout));

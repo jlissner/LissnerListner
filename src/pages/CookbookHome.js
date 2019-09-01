@@ -7,6 +7,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import _map from 'lodash/map';
 import Search from '../components/Search/SearchContainer';
 import { sections } from '../data/recipeSections';
@@ -53,6 +54,10 @@ const styles = (theme) => ({
   filterButton: {
     color: 'white',
   },
+  iconWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  }
 })
 
 function Home({ classes, location, history }) {
@@ -114,6 +119,22 @@ function Home({ classes, location, history }) {
           </Grid>
         ))
       }
+      <Grid item xs={12} sm={6} md={4}>
+        <Button
+          fullWidth
+          size="large"
+          variant="contained"
+          className={classes.btn}
+          component={Link}
+          to="/cookbook/search?favorite=true"
+          title="Favorites"
+        >
+          <Grid container spacing={2} justify="center" alignContent="center">
+            <Grid item className={classes.iconWrapper}><FavoriteIcon color="secondary" /></Grid>
+            <Grid item>Favorites</Grid>
+          </Grid>
+        </Button>
+      </Grid>
     </Grid>
   )
 }

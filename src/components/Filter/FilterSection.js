@@ -1,7 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import {
+  List,
+  ListSubheader,
+} from '@material-ui/core';
 import _map from 'lodash/map';
 import FilterItem from './FilterItemContainer';
 

@@ -6,6 +6,7 @@ import _filter from 'lodash/filter';
 import _intersectionBy from 'lodash/intersectionBy';
 import _pick from 'lodash/pick';
 import getSearchedRecipes from '../Search/getSearchedRecipes';
+import getFavoriteRecipes from '../Favorite/getFavoriteRecipes';
 import { filterRecipes } from './getFilteredRecipes';
 
 const getAvailableFilters = createSelector(
@@ -13,11 +14,12 @@ const getAvailableFilters = createSelector(
   state => state.tags,
   (state, props) => state[props.category],
   getSearchedRecipes,
-  (filters, tags, allRecipes, searchedRecipes) => {
+  getFavoriteRecipes,
+  (filters, tags, allRecipes, searchedRecipes, favoriteRecipes) => {
     return _transform(tags, (memo, tag) => {
         const filter = _pick(tag, ['category', 'label']);
         const filteredRecipes = filterRecipes(allRecipes, [...filters, filter])
-        const searchedFilteredRecipes = _intersectionBy(filteredRecipes, searchedRecipes, 'Id')
+        const searchedFilteredRecipes = _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'Id')
         const availableRecipes = _filter(searchedFilteredRecipes, (recipe) => _find(recipe.tags, filter));
 
         tag.checked = Boolean(_find(filters, filter));

@@ -7,21 +7,16 @@ import {
 } from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import { green } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
   checked: {
-    color: green[500],
+    color: theme.palette.primary.main,
   },
 });
 
-function FilterItem({ classes, checked, numberOfRecipes, toggleFilter, category, label, subCategory }) {
-  const handleCheck = () => {
-    toggleFilter({category, value: {label, category: subCategory}});
-  }
-
+function FilterItem({ classes, checked, numberOfRecipes, handleClick, label }) {
   return (
-    <ListItem button onClick={handleCheck} disabled={!numberOfRecipes && !checked}>
+    <ListItem button onClick={handleClick} disabled={!numberOfRecipes && !checked}>
       <ListItemIcon>
         {
           checked
