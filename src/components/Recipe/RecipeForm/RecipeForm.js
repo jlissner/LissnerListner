@@ -28,7 +28,7 @@ const styles = (theme) => ({
   },
 });
 
-function RecipeForm ({ classes, resetForm, recipes, recipeForm, closeForm, saveForm, setValue }) {
+function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setValue }) {
   const {
     Id,
     author,
@@ -60,12 +60,8 @@ function RecipeForm ({ classes, resetForm, recipes, recipeForm, closeForm, saveF
   useEffect(() => {
     if (!saving) {
       closeForm();
-
-      if (!Id) {
-        resetForm();
-      }
     }
-  }, [ saving, closeForm, Id, resetForm ]);
+  }, [ saving, closeForm ]);
 
   return (
     <Dialog onClose={closeForm} open={open} maxWidth="lg">

@@ -87,7 +87,7 @@ class NavBar extends React.PureComponent {
     return <LoginButton color="inherit" className={classes.actions} />
   }
   renderUserActions() {
-    const { classes, logout } = this.props;
+    const { classes, logout, resetForm } = this.props;
     const { menuAnchor } = this.state;
 
     return (
@@ -104,7 +104,10 @@ class NavBar extends React.PureComponent {
           <MenuItem onClick={this.closeMenu} component={Link} to="/profile">My Profile</MenuItem>
           <RecipeFormButton
             text="Add Recipe"
-            onClick={this.closeMenu}
+            onClick={() => {
+              this.closeMenu();
+              resetForm();
+            }}
             Component={MenuItem}
           />
           <Divider />

@@ -70,17 +70,6 @@ function RecipeDetail({
 }) {
   const recipe = useMemo(() => _find(recipes, {recipeUrl: `/${match.params.recipe}`}), [recipes, match]);
 
-  useEffect(() => {
-    if (recipe) {
-      setForm(recipe)
-
-      return () => {
-        resetForm()
-      }
-    }
-  }, [recipe, setForm, resetForm])
-
-
   if (recipes.length === 0) {
     return <div className={classes.progress}><CircularProgress /></div>
   }
@@ -118,6 +107,9 @@ function RecipeDetail({
             text={<EditIcon />}
             className={classes.editButton}
             color="primary"
+            onClick={() => {
+              setForm(recipe)
+            }}
           />
         : null
       }
