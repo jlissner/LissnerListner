@@ -4,8 +4,10 @@ import {
   List,
   ListItem,
   ListItemText,
+  Typography,
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
+import _find from 'lodash/find';
 import FormattedText from '../utils/FormattedText';
 
 const styles = (theme) => ({
@@ -15,6 +17,7 @@ const styles = (theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    flexDirection: 'column',
   },
   accent: {
     display: 'block',
@@ -29,15 +32,29 @@ const styles = (theme) => ({
   },
   list: {
     background: theme.palette.secondary.main,
-    width: '100%',
-    maxWidth: 320,
     borderColor: theme.palette.grey[300],
     borderWidth: `${theme.spacing(2)}px 0`,
     borderStyle: 'solid',
+    maxWidth: 320,
+    width: '100%',
 
     "& span": {
       color: 'white',
     }
+  },
+  makeAhead: {
+    background: theme.palette.accent2.main,
+    borderColor: theme.palette.grey[300],
+    borderWidth: `${theme.spacing(2)}px 0`,
+    borderStyle: 'solid',
+    color: 'white',
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    maxWidth: 320,
+    width: '100%',
+    zIndex: 1,
+
   },
   compact: {
     padding: 0,
@@ -50,9 +67,12 @@ function RecipeSummary({ classes, compact, recipe }) {
     return _filter(recipe.tags, { category })
   }
 
+  const isMakeAhead = _find(getTags('Cooking Style'), { label: 'Make Ahead'});
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.accent}></div>
+      {isMakeAhead ? <Typography className={classes.makeAhead}>Make Ahead</Typography> : false}
       <List className={[classes.list, compact ? classes.compact : ''].join(' ')}>
         {
           recipe.serves

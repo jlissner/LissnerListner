@@ -32,6 +32,14 @@ const styles = (theme) => ({
     textAlign: 'center',
     marginTop: theme.spacing(4),
   },
+  title: {
+    marginRight: theme.spacing(1.5),
+  },
+  subtitle: {
+    color: '#808080',
+    fontSize: '1.5em',
+    lineHeight: '1.5em',
+  },
 })
 
 function RecipeDetailHeader({ classes, recipe }) {
@@ -43,7 +51,14 @@ function RecipeDetailHeader({ classes, recipe }) {
             <Favorite recipe={recipe.Id} />
           </Grid>
           <Grid item>
-            <Typography variant="h4">{recipe.title}</Typography>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <Typography className={classes.title} variant="h4">{recipe.title}</Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.subtitle} variant="subtitle1">{recipe.author}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
