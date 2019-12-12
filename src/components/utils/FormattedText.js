@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import _map from 'lodash/map';
+import { v4 } from 'uuid';
 
 const styles = (theme) => ({
   fraction: {
@@ -36,10 +37,7 @@ const styles = (theme) => ({
 });
 
 function regexForFindingCharacter(char) {
-  const start = '(^|\\n| |\\0|")(\\';
-  const middle = '.*?\\';
-  const end = ')(\\0| |"|\\.|$)';
-  const regex = start + char + middle + char + end;
+  const regex = `(^|\\n| |\\0|")(\\${char}.*?\\${char})(\\0| |"|\\.|$)`;
 
   return new RegExp(regex, 'gi');
 }
@@ -48,38 +46,43 @@ const fractionMatcher = new RegExp(/([0-9]\/[0-9])/gi);
 const boldMatcher = regexForFindingCharacter('*');
 const underlineMatcher = regexForFindingCharacter('_');
 
-function setUnderlineFormatting({ classes, text }) {
-  const wordArray = text.split(underlineMatcher).filter(Boolean);
+function format({ classes, text }, matcher, Match, NoMatch) {
+  const wordArray = text.split(matcher).filter(Boolean);
 
-  return _map(wordArray, textPart => (
-    textPart.match(underlineMatcher)
-      ? <span key={textPart} className={classes.underline}>{textPart.replace(/_/gi, '')}</span>
-      : <span key={textPart}>{textPart}</span>
-  ));
+  return _map(wordArray, (textPart, i) => { 
+    const key = useMemo(() => v4(), []);
+
+    return textPart.match(matcher)
+      ? <Match classes={classes} text={textPart} key={key} />
+      : <NoMatch classes={classes} text={textPart} key={key} />
+  })
 }
 
-function setBoldFormatting({ classes, text }) {
-  const wordArray = text.split(boldMatcher).filter(Boolean);
-
-  return _map(wordArray, textPart => (
-    textPart.match(boldMatcher)
-      ? <strong key={textPart}>{textPart.replace(/\*/gi, '')}</strong>
-      : setUnderlineFormatting({ classes, text: textPart })
-  ));
+function setUnderlineFormatting(props) {
+  const onMatch = ({ classes, text }) => <span className={classes.underline}>{text.replace(/_/gi, '')}</span>;
+  const onNoMatch = ({ classes, text }) => <span>{text}</span>;
+  
+  return format(props, underlineMatcher, onMatch, onNoMatch);
 }
 
-function setFractionFormatting({ classes, text }) {
-  const wordArray = text.split(fractionMatcher).filter(Boolean);
+function setBoldFormatting(props) {
+  const onMatch = ({ classes, text }) => <strong>{text.replace(/\*/gi, '')}</strong>;
+  const onNoMatch = ({ classes, text }) => setUnderlineFormatting({ classes, text });
 
-  return _map(wordArray, textPart => (
-    textPart.match(fractionMatcher)
-      ? <span key={textPart} className={classes.fraction}>
-          <span className={classes.numerator}>{textPart[0]}</span>
-          <span className={classes.dash}></span>
-          <span className={classes.denominator}>{textPart[2]}</span>
-        </span>
-      : setBoldFormatting({ classes, text: textPart })
-    ));
+  return format(props, boldMatcher, onMatch, onNoMatch);
+}
+
+function setFractionFormatting(props) {
+  const onMatch = ({ classes, text }) => (
+    <span className={classes.fraction}>
+      <span className={classes.numerator}>{text[0]}</span>
+      <span className={classes.dash}></span>
+      <span className={classes.denominator}>{text[2]}</span>
+    </span>
+  );
+  const onNoMatch = ({ classes, text }) => setBoldFormatting({ classes, text });
+
+  return format(props, fractionMatcher, onMatch, onNoMatch);
 }
 
 function FormattedText({ classes, text }) {
