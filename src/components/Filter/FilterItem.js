@@ -16,7 +16,7 @@ const styles = (theme) => ({
 
 function FilterItem({ classes, checked, numberOfRecipes, handleClick, label }) {
   return (
-    <ListItem button onClick={handleClick} disabled={!numberOfRecipes && !checked}>
+    <ListItem button onClick={handleClick}>
       <ListItemIcon>
         {
           checked

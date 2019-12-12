@@ -24,13 +24,18 @@ const styles = (theme) => ({
 
 function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 	const parsedQueryString = qs.parse(location.search)
-	const favorite = getIsFavorite(location);
+	const checked = getIsFavorite(location);
+  const hide = !checked && !numberOfRecipes
 
 	function handleClick() {
-		parsedQueryString.favorite = !favorite;
+		parsedQueryString.favorite = !checked;
 
 		history.push({search: qs.stringify(parsedQueryString)})
 	}
+
+  if (hide) {
+    return false;
+  }
 
 	return (
 		<div className={classes.root}>
@@ -38,7 +43,7 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 				<ListSubheader>Favorites</ListSubheader>
 
 				<FilterItem
-					checked={favorite}
+					checked={checked}
 					numberOfRecipes={numberOfRecipes}
 					handleClick={handleClick}
 					label="My Favorites"

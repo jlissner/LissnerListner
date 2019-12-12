@@ -132,7 +132,7 @@ class Layout extends React.Component {
       <div className={classes.app}>
         <NavBar user={user} logout={logout} resetForm={resetForm} />
 
-        <div className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
+        <div id="content-wrapper" className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
           {this.renderContent()}
 
           <div className={classes.footerContainer}>

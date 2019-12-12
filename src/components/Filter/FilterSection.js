@@ -4,6 +4,7 @@ import {
   List,
   ListSubheader,
 } from '@material-ui/core';
+import _filter from 'lodash/filter';
 import _map from 'lodash/map';
 import FilterItem from './FilterItemContainer';
 
@@ -22,6 +23,11 @@ const styles = (theme) => ({
 class FilterSection extends React.Component {
   render() {
     const { classes, filters, category, subCategory } = this.props;
+    const filtersToShow = _filter(filters, ({ checked, numberOfRecipes }) => numberOfRecipes || checked)
+
+    if (filtersToShow.length === 0) {
+      return false;
+    } 
 
     return (
       <div className={classes.root}>
@@ -30,7 +36,7 @@ class FilterSection extends React.Component {
           subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
         >
           {
-            _map(filters, ({label, checked, numberOfRecipes}) => (
+            _map(filtersToShow, ({label, checked, numberOfRecipes}) => (
                 <FilterItem
                   key={label}
                   label={label}

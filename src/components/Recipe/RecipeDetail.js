@@ -85,6 +85,12 @@ function RecipeDetail({
 }) {
   const recipe = useMemo(() => _find(recipes, {recipeUrl: `/${match.params.recipe}`}), [recipes, match]);
 
+  useEffect(() => {
+    const wrapper = document.getElementById('content-wrapper');
+
+    wrapper.scrollTo({top: 0, behavior: 'smooth'})
+  }, []);
+
   if (recipes.length === 0) {
     return <div className={classes.progress}><CircularProgress /></div>
   }

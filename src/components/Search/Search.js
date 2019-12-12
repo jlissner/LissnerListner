@@ -21,7 +21,7 @@ function Search({ classes, setSearch, category, search, variant, history, locati
 
   useEffect(() => {
     setInitialLoad(false)
-  }, [initialLoad, setInitialLoad])
+  }, [])
 
   useEffect(() => {
     if (!initialLoad) {
