@@ -34,7 +34,7 @@ class About extends React.PureComponent {
           </Typography>
 
           <Typography paragraph variant="body1">
-            It won't be as comfortable at first as the old book because, for one thing, all the pages will be clean! (I'm including a plastic sheet protector, which you can slip over the page you are currently using, to KEEP THOSE PAGES CLEAN!) Alos, the format is different and recipes aren't where they used to be. I have tried to group similar subject together to make it easier to find what you want. There is now a Table of Contents, which was badly needed in the old book. Now I realize how much more helpful it would have been to create an Index. Oh Well! But I do hope it will be fun to use, that you will find new favorites and enjoy seeing the old ones again.
+            It won't be as comfortable at first as the old book because, for one thing, all the pages will be clean! (I'm including a plastic sheet protector, which you can slip over the page you are currently using, to KEEP THOSE PAGES CLEAN!) Also, the format is different and recipes aren't where they used to be. I have tried to group similar subjects together to make it easier to find what you want. There is now a Table of Contents, which was badly needed in the old book. Now I realize how much more helpful it would have been to create an Index. Oh Well! But I do hope it will be fun to use, that you will find new favorites and enjoy seeing the old ones again.
           </Typography>
 
           <Typography paragraph variant="body1">
@@ -42,7 +42,7 @@ class About extends React.PureComponent {
           </Typography>
 
           <Typography paragraph variant="body1">
-            I hope each of you will enjou the new book!
+            I hope each of you will enjoy the new book!
           </Typography>
 
           <Typography paragraph variant="body1">
