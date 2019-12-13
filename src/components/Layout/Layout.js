@@ -8,11 +8,13 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import Secured from '../utils/Secured';
 import Login from '../Login/Login';
+import About from '../../pages/About';
+import Admin from '../../pages/Admin';
 import CookbookHome from '../../pages/CookbookHome';
 import RecipeDetail from '../../pages/RecipeDetail';
 import UserProfile from '../../pages/UserProfile';
-import About from '../../pages/About';
 import Articles from '../../pages/Articles';
 import Search from '../../pages/Search';
 import NoPage from '../../pages/NoPage';
@@ -75,6 +77,7 @@ class Layout extends React.Component {
       <div className={classes.content}>
         <Switch>
           <Route exact path='/' render={() => <Redirect to="/cookbook" />} />
+          <Route exact path='/admin' render={() => <Secured component={<Admin />} roles={['Admin']} />} />
           <Route exact path='/cookbook' component={CookbookHome} />
           <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
