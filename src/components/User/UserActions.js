@@ -1,6 +1,8 @@
 import _find from 'lodash/find';
+import _map from 'lodash/map';
 import _pick from 'lodash/pick';
 import { authUser, invokeApig, signOutUser } from '../../lib/awsLib';
+import { listUsers } from '../../lib/aws/cognito';
 
 export const LOGIN = 'USER::LOGIN';
 export const LOGIN_SUCCESS = 'USER::LOGIN_SUCCESS';
@@ -12,6 +14,7 @@ export function login() {
   return async (dispatch) => {
     try {
       const cognitoUser = await authUser();
+
       if (!cognitoUser) {
         return dispatch({type: LOGIN_FAILURE});
       }
@@ -28,25 +31,36 @@ export function login() {
       })
 
       const activeUser = { Id: cognitoUser.username, attributes }    
-      const users = await invokeApig({ path: '/users'});
+      const cognitoUsersPromise = listUsers();
+      const dynamoUsersPromise = invokeApig({ path: '/users'});
+      const [cognitoUsers, dynamoUsers] = await Promise.all([cognitoUsersPromise, dynamoUsersPromise]);
+      const userExists = Boolean(_find(dynamoUsers, { Id: activeUser.Id }));
 
+      if (!userExists) {
+        const newUser = await invokeApig({ path: '/users', method: 'post', body: activeUser });
 
-      let user = _find(users, { Id: activeUser.Id })
-
-      if (!user) {
-        user = await invokeApig({ path: '/users', method: 'post', body: activeUser });
-        users.push(user);
+        dynamoUsers.push(newUser);
       }
-      
+
+      const formattedUsers = _map(cognitoUsers, u1 => {
+        const u2 = _find(dynamoUsers, { Id: u1.id });
+
+        return {
+          ...u1,
+          ...u2,
+        };
+      });
+      const formattedActiveUser = _find(formattedUsers, { id: activeUser.Id });
+
       dispatch({
         type: LOGIN_SUCCESS,
         payload: {
           activeUser: {
             favoriteRecipes: [],
             ...cognitoUser,
-            ...user,
+            ...formattedActiveUser,
           },
-          users,
+          users: formattedUsers,
         }
       })
     } catch (err) {

@@ -1,5 +1,8 @@
 import AWS from 'aws-sdk';
 import config from '../../config';
+import _find from 'lodash/find';
+import _get from 'lodash/get';
+import _map from 'lodash/map';
 
 const {
   REGION,
@@ -56,6 +59,35 @@ export function updateUserAttributes(id, attributes) {
   });
 }
 
+function getAttributeValue(attributes, name) {
+  const attribute = _find(attributes, { Name: name });
+
+  return _get(attribute, 'Value');
+}
+
+function formatUserData({
+  Attributes,
+  UserCreatedDate,
+  Username,
+  UserStatus,
+}) {
+  const firstName = getAttributeValue(Attributes, 'preferred_username') ||
+    getAttributeValue(Attributes, 'given_name');
+  const lastName = getAttributeValue(Attributes, 'family_name');
+  const email = getAttributeValue(Attributes, 'email');
+  const name = firstName && lastName
+    ? `${firstName} ${lastName}`
+    : email;
+
+  return {
+    id: Username,
+    active: UserStatus === 'CONFIRMED',
+    created: UserCreatedDate,
+    attributes: Attributes,
+    name
+  }
+}
+
 export function listUsers() {
   const params = {
     UserPoolId: USER_POOL_ID,
@@ -67,7 +99,9 @@ export function listUsers() {
         return rej(err);
       }
 
-      res(data.Users);
+      const formattedUsers = _map(data.Users, formatUserData);
+      
+      res(formattedUsers);
     });
   });
 }

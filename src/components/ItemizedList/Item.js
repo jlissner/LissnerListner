@@ -27,7 +27,7 @@ function RecipeDirections({ classes, item }) {
       <ListItemIcon>
         <CheckIcon className={checked ? classes.checked : ''} />
       </ListItemIcon>
-      <ListItemText className={checked ? classes.lineThrough : ''} inset primary={<FormattedText text={item} />} />
+      <ListItemText className={checked ? classes.lineThrough : ''} primary={<FormattedText text={item} />} />
     </ListItem>
   );
 };

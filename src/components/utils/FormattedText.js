@@ -37,7 +37,7 @@ const styles = (theme) => ({
 });
 
 function regexForFindingCharacter(char) {
-  const regex = `(^|\\n| |\\0|")(\\${char}.*?\\${char})(\\0| |"|\\.|$)`;
+  const regex = `(^|\\n| |\\0|")(\\${char}.*?\\${char})(\\0| |"|\\.|!|\\?|$)`;
 
   return new RegExp(regex, 'gi');
 }

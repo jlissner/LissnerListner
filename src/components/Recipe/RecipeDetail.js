@@ -1,20 +1,25 @@
 import React, { useEffect, useMemo } from 'react';
+import { invokeApig } from '../../lib/awsLib';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Hidden,
   CircularProgress,
+  Hidden,
   Grid,
   Typography,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
+import _findIndex from 'lodash/findIndex';
+import _get from 'lodash/get';
 import _includes from 'lodash/includes';
+import Comments from '../Comments/Comments';
 import ItemizedList from '../ItemizedList/ItemizedList';
 import RecipeSummary from './RecipeSummary';
 import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
 import Favorite from '../Favorite/FavoriteContainer';
 import FormattedText from '../utils/FormattedText';
+import Spacing from '../utils/Spacing';
 
 const styles = (theme) => ({
   description: {
@@ -79,6 +84,7 @@ function RecipeDetail({
   classes,
   recipes,
   match,
+  getRecipes,
   setForm,
   resetForm,
   user,
@@ -91,6 +97,73 @@ function RecipeDetail({
     wrapper.scrollTo({top: 0, behavior: 'smooth'})
   }, []);
 
+  async function submitComment(comment) {
+    const currentComments = _get(recipe, 'comments', []);
+    const newComment = {
+      author: user.activeUser.Id,
+      text: comment,
+      created: new Date(),
+    };
+    const updatedComments = [
+      ...currentComments,
+      newComment,
+    ];
+    const updatedRecipe = {
+      ...recipe,
+      comments: updatedComments,
+    }
+
+    await invokeApig({
+      path: '/recipes',
+      method: 'put',
+      body: updatedRecipe,
+    });
+
+    getRecipes();
+  }
+
+  function deleteComment(comment) {
+    return async () => {
+      const updatedComments = recipe.comments.filter(({ created }) => created !== comment.created);
+      const updatedRecipe = {
+        ...recipe,
+        comments: updatedComments,
+      }
+
+      await invokeApig({
+        path: '/recipes',
+        method: 'put',
+        body: updatedRecipe,
+      });
+
+      getRecipes();
+    }
+  }
+
+  async function editComment(comment) {
+    const commentIndex = _findIndex(recipe.comments, { created: comment.created });
+    const updatedComments = [
+      ...recipe.comments
+    ];
+
+    console.log({commentIndex, updatedComments, comment})
+
+    updatedComments[commentIndex] = comment;
+
+    const updatedRecipe = {
+      ...recipe,
+      comments: updatedComments,
+    }
+
+    await invokeApig({
+      path: '/recipes',
+      method: 'put',
+      body: updatedRecipe,
+    });
+
+    getRecipes();
+  }
+
   if (recipes.length === 0) {
     return <div className={classes.progress}><CircularProgress /></div>
   }
@@ -100,7 +173,7 @@ function RecipeDetail({
   }
 
   return (
-    <React.Fragment>
+    <>
       <Grid container spacing={3} alignContent="stretch">
         <Grid item xs={12}>
           <RecipeDetailHeader classes={classes} recipe={recipe} />
@@ -121,6 +194,15 @@ function RecipeDetail({
         <Grid item xs={12}>
           <ItemizedList title="Directions" groups={recipe.directions} items="steps" />
         </Grid>
+        <Grid item xs={12}>
+          <Spacing space={5} />
+          <Comments
+            comments={recipe.comments}
+            onDelete={deleteComment}
+            onSubmit={submitComment}
+            onEdit={editComment}
+          />
+        </Grid>
       </Grid>
 
       { recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
@@ -134,7 +216,7 @@ function RecipeDetail({
           />
         : null
       }
-    </React.Fragment>
+    </>
   )
 }
 
