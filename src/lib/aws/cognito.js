@@ -31,7 +31,7 @@ export function createUser(username, attributes) {
   };
 
   return new Promise((res, rej) => {
-    cognitoIdentityServiceProvider.adminCreateUser(params, function(err, data) {
+    cognitoIdentityServiceProvider.adminCreateUser(params, (err, data) => {
       if (err) {
         return rej(err);
       }
@@ -41,7 +41,24 @@ export function createUser(username, attributes) {
   })
 }
 
-export function updateUserAttributes(id, attributes) {
+export function updateUserAttributes(token, attributes) {
+  const params = {
+    AccessToken: token, /* required */
+    UserAttributes: attributes,
+  };
+
+  return new Promise((res, rej) => {
+    cognitoIdentityServiceProvider.updateUserAttributes(params, (err, data) => {
+      if (err) {
+        return rej(err)
+      }
+      
+      res(data);
+    });
+  });
+}
+
+export function adminUpdateUserAttributes(id, attributes) {
   var params = {
     UserAttributes: attributes,
     UserPoolId: USER_POOL_ID, /* required */

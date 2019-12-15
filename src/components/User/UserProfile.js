@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -7,68 +7,52 @@ import {
   Tab,
 } from '@material-ui/core';
 import UserChangePassword from './UserChangePassword';
-import UserFavorites from './UserFavoritesContainer';
+import UserDetails from './UserDetails';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    width: '100%',
+    maxWidth: 1440,
   },
   activeTab: {
     background: theme.palette.secondary.dark,
   }
 });
 
-class UserProfile extends React.Component {
-  constructor(props) {
-    super(props);
+function UserProfile({ classes }) {
+  const [value, setValue] = useState(0);
 
-    this.state = {
-      value: 0,
-    };
-  }
-
-  handleChange = (event, value) => {
-    this.setState({ value });
+  function handleChange(event, value) {
+    setValue(value);
   };
 
-  renderTab = () => {
-    const { value } = this.state;
-
-    switch (value) {
-      case 1: {
-        return <UserChangePassword />
-      }
-      case 0:
-      default: {
-        return <UserFavorites />
-      }
-
+  function renderTab() {
+    if (value) {
+      return <UserChangePassword />;
     }
+
+    return <UserDetails />;
   }
 
-  render() {
-    const { classes } = this.props;
-    const { value } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="static" color="secondary">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            TabIndicatorProps={{
-              className: classes.activeTab
-            }}
-          >
-            <Tab label="Favorites" />
-            <Tab label="Change Password" />
-          </Tabs>
-        </AppBar>
-        {this.renderTab()}
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="secondary">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          TabIndicatorProps={{
+            className: classes.activeTab
+          }}
+        >
+          <Tab label="Details" />
+          <Tab label="Change Password" />
+        </Tabs>
+      </AppBar>
+      {renderTab()}
+    </div>
+  );
 }
 
 UserProfile.propTypes = {
