@@ -20,6 +20,7 @@ import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import InfoIcon from '@material-ui/icons/Info';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
+import _get from 'lodash/get';
 import LoginButton from '../Login/LoginButton';
 import RecipeForm from '../Recipe/RecipeForm/RecipeFormContainer';
 import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButtonContainer';
@@ -87,8 +88,9 @@ class NavBar extends React.PureComponent {
     return <LoginButton color="inherit" className={classes.actions} />
   }
   renderUserActions() {
-    const { classes, logout, resetForm } = this.props;
+    const { activeUser, classes, logout, resetForm } = this.props;
     const { menuAnchor } = this.state;
+    const isAdmin = _get(activeUser, 'roles', []).indexOf('Admin') > -1;
 
     return (
       <div className={classes.actions}>
@@ -111,6 +113,12 @@ class NavBar extends React.PureComponent {
             Component={MenuItem}
           />
           <Divider />
+          {isAdmin && (
+            [ // as an array instead of a fragment because material-ui menu doesnt like fragemnts
+              <MenuItem key="admin" onClick={this.closeMenu} component={Link} to="/admin">Admin</MenuItem>,
+              <Divider key="divider" />
+            ]
+          )}
           <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       </div>

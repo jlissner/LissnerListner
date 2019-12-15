@@ -129,11 +129,11 @@ class Layout extends React.Component {
   }
 
   render() {
-    const { classes, drawer, user, logout, resetForm } = this.props
+    const { activeUser, classes, drawer, user, logout, resetForm } = this.props
 
     return (
       <div className={classes.app}>
-        <NavBar user={user} logout={logout} resetForm={resetForm} />
+        <NavBar user={user} activeUser={activeUser} logout={logout} resetForm={resetForm} />
 
         <div id="content-wrapper" className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
           {this.renderContent()}

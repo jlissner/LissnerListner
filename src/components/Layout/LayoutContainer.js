@@ -5,6 +5,7 @@ import Layout from './Layout';
 
 const mapStateToProps = (state) => ({
   drawer: state.app.drawer,
+  activeUser: state.user.activeUser,
 });
 
 const mapActionsToProps = {
