@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, InputAdornment } from '@material-ui/core';
+import {
+  InputAdornment,
+  Paper,
+  TextField,
+} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import _debounce from 'lodash/debounce';
 import qs from 'query-string';
@@ -47,26 +51,28 @@ function Search({ classes, setSearch, category, search, variant, history, locati
   }, [debouncedSetSearch, val, category, history, location.search])
 
   return (
-    <TextField
-      className={classes.search}
-      placeholder="Search..."
-      fullWidth
-      id="search-input"
-      value={val}
-      onChange={evt => setVal(evt.target.value)}
-      variant={variant}
-      InputProps={{
-        classes: {
-          root: classes.search,
-          input: classes.search,
-        },
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        )
-      }}
-    />
+    <Paper>
+      <TextField
+        className={classes.search}
+        placeholder="Search..."
+        fullWidth
+        id="search-input"
+        value={val}
+        onChange={evt => setVal(evt.target.value)}
+        variant={variant}
+        InputProps={{
+          classes: {
+            root: classes.search,
+            input: classes.search,
+          },
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          )
+        }}
+      />
+    </Paper>
   )
 }
 
