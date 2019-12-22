@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -8,6 +8,7 @@ import {
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import _without from 'lodash/without';
+import UserContext, { saveUser } from '../../context/UserContext';
 
 const styles = (theme) => ({
   isFavorite: {
@@ -20,24 +21,24 @@ function Favorite({
   className,
   disabled,
   recipe,
-  activeUser,
-  updateUser,
-  isFavorite,
 }) {
+  const [user, setUser] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
+  const { favorites = [] } = user;
+  const isFavorite = favorites.indexOf(recipe) > -1;
 
   async function toggleFavorite() {
-    const favorites = activeUser.favoriteRecipes;
     const newFavorites = isFavorite
       ? _without(favorites, recipe)
       : [...favorites, recipe];
 
     setLoading(true);
 
-    await updateUser({
-      Id: activeUser.Id,
-      favoriteRecipes: newFavorites,
+    await saveUser({
+      favorites: newFavorites,
     });
+
+    setUser({ favorites: newFavorites });
 
     setLoading(false);
   }
@@ -69,10 +70,7 @@ function Favorite({
 Favorite.propTypes = {
   classes: PropTypes.shape().isRequired,
   disabled: PropTypes.bool,
-  isFavorite: PropTypes.bool.isRequired,
-  activeUser: PropTypes.shape().isRequired,
   recipe: PropTypes.string.isRequired,
-  updateUser: PropTypes.func.isRequired,
   className: PropTypes.string,
 }
 

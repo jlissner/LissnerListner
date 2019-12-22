@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import {
   InputAdornment,
@@ -8,6 +9,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import _debounce from 'lodash/debounce';
 import qs from 'query-string';
+import CookbookContext from '../../context/CookbookContext';
 
 const styles = theme => ({
   search: {
@@ -16,12 +18,20 @@ const styles = theme => ({
       borderColor: 'inherit !important',
     }
   },
-})
+});
 
-function Search({ classes, setSearch, category, search, variant, history, location }) {
+function Search({ classes, variant, history, location }) {
+  const [ cookbook, setCookbook ] = useContext(CookbookContext);
+  const { search } = cookbook;
   const [ val, setVal ] = useState('');
   const [ initialLoad, setInitialLoad ] = useState(true);
-  const debouncedSetSearch = useMemo(() => _debounce(setSearch, 500), [setSearch])
+  const setSearch = useCallback((val) => {
+    setCookbook({ search: val });
+  }, [setCookbook])
+  const debouncedSetSearch = useMemo(() => (
+    _debounce(updatedSearch => setSearch(updatedSearch), 500)
+  ), [setSearch])
+
 
   useEffect(() => {
     setInitialLoad(false)
@@ -37,8 +47,8 @@ function Search({ classes, setSearch, category, search, variant, history, locati
     const decodedParam = encodedParam ? decodeURIComponent(encodedParam) : '';
 
     setVal(decodedParam)
-    setSearch({ category, value: decodedParam })
-  }, [category, setSearch, setVal, location.search, initialLoad])
+    setSearch(decodedParam)
+  }, [setSearch, setVal, location.search, initialLoad])
 
   useEffect(() => {
     const parsedQueryString = qs.parse(location.search);
@@ -47,8 +57,8 @@ function Search({ classes, setSearch, category, search, variant, history, locati
 
     history.push({search: qs.stringify(parsedQueryString)})
 
-    debouncedSetSearch({ category, value: val })
-  }, [debouncedSetSearch, val, category, history, location.search])
+    debouncedSetSearch(val)
+  }, [debouncedSetSearch, val, history, location.search])
 
   return (
     <Paper>
@@ -80,4 +90,4 @@ Search.defaultProps = {
   category: 'recipes',
 }
 
-export default withStyles(styles)(Search);
+export default withRouter(withStyles(styles)(Search));

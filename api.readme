@@ -1,0 +1,115 @@
+# ECR
+  ## Craete Image
+    1. Make Repository
+    2. On your docker client
+      a. if aws is not yet configured: `aws config`
+      b. login to aws: `$(aws ecr get-login --no-include-email --region us-west-2)`
+      c.
+        i. if using a custom Dockerfile: `docker build -t [what_you_name_your_image] .`
+        ii. if using a template: `docker pull [image_name]` // image_name = graphile/postgraphile
+      d. tag the image: `docker tag [image_name]:latest [repository_uri]:latest`
+      e. push image to repository: `docker push [repository_uri]:latest`
+
+
+# ECS
+  ## Creating a task definition container
+    Image: URI from `ECR -> [repo] -> [image_URI]`
+    Port mappings: 80/443 for public access
+    Environment -> Command: comma delimited, example for postgraphile server:
+      ```
+      "-- connection",
+      "postgres://postgres:[password_here]SQL@family-website.cyezkkwugcvv.us-west-2.rds.amazonaws.com:5432/postgres",
+      "--schema",
+      "public",
+      "--watch",
+      "--jwt-token-identifier",
+      "public.jwt_token",
+      "--jwt-secret",
+      "[secret_here]",
+      "-p",
+      "80"
+      ```
+
+# EC2
+  ## login
+    `ssh -i c:\Users\Joe\.ssh\family-postgraphile-server.pem ec2-user@44.225.30.50`
+  
+  ## start with npx
+    `npx postgraphile --connection postgres://postgres:[password_here]SQL@family-website.cyezkkwugcvv.us-west-2.rds.amazonaws.com:5432/postgres --schema public --watch --jwt-token-identifier public.jwt_token --jwt-secret [secret_here] -p 80`
+  
+  ## docker commands that matter right now
+    ### start server
+      `docker run --init -p 80:80 graphile/postgraphile --connection postgres://postgres:$PASS\@family-website.cyezkkwugcvv.us-west-2.rds.amazonaws.com:5432/postgres --schema public --watch --jwt-token-identifier public.jwt_token --jwt-secret $SECRET -p 80`
+    ### see running containers
+      `docker container ls`
+    ### stop container/server
+      `docker kill [container_name, which you get from seeing running containers]`
+
+  ## how to add an EC2 instance to an existing ECS cluster
+    1. Select "Launch Instance"
+    2. Search for `ecs-optimized` in `Community AMIs`
+    3. In Step 3: Configure Details
+      a. Set IAM role to: ecsInstanceRole
+      b. Advanced Details > User data:
+        ```
+        #!/bin/bash
+        echo ECS_CLUSTER=[cluster_name] >> /etc/ecs/ecs.config
+        ```
+
+# Other AWS Services Used
+  1. AWS Certificate Manager - Create a valid certificate to use for ssl
+  2. ELB
+    a. Create an application load balancer and set all ports to 443 to ensure security
+    b. have target instance be the ec2 instance created for the ECS cluster
+  3. Route 53 - create alias record and point to ELB
+
+
+# PostgreSQL
+  default role: `unauthorized`
+  auth role `person_role`
+
+  ## JWT Token Schema
+    role -- person_role
+    expires -- 7 days from login
+    person_fk -- id_pk of the authenticated user
+    is_admin -- true/false
+
+  ## Steps to make a table work
+    ### Grant Schema Usage
+      `GRANT USAGE ON SCHEMA [schema] TO [role]`
+
+    ### Grant Table Permissions
+      ```
+      GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA [schema] TO [role]; // should only need to happen once per schema
+      GRANT SELECT ON [table_name] TO [role]; // user can see everything in a row
+      GRANT INSERT (col1, col2) ON [table_name] TO [role]; // user can only define col1 & col2 when inserting
+        // other columns that need to be there when created will have to be defined via default values, such as NOW() or a function like current_user_id()
+      GRANT UPDATE (col1) ON [table_name] TO [role]; // user can only update col1
+      GRANT DELETE ON [table_name] TO [role]; // user can delete a row
+      ```
+
+    ### Set Policies
+      ```
+      CREATE POLICY [policy_name] on [table_name]
+      FOR SELECT
+      USING (true); // user can select any row
+      // note, no WITH CHECK, as it is not allowed
+
+      CREATE POLICY [policy_name] on [table_name]
+      FOR INSERT
+      // note, no using statement here as it is not allowed
+      with CHECK (true); // all users can insert any row
+
+      CREATE POLICY [policy_name] on [table_name]
+      FOR UPDATE
+      USING ("author_fk" = current_user_id()) -- rows to be considered are those where the user is the author
+      WITH CHECK (last_edited - NOW() < '14 Days'); -- user can only update if it's not too old, psuedo code used obv
+
+      CREATE POLICY [policy_name] on [table_name]
+      FOR DELETE
+      USING ("author_fk" = current_user_id()); // user can only delete their own stuff
+      // note, no WITH CHECK, as it is not allowed
+      ```
+
+    #### Reference
+      https://www.graphile.org/postgraphile/postgresql-schema-design

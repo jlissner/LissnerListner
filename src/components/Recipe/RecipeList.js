@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { withStyles }from '@material-ui/core/styles';
 import {
@@ -14,8 +14,10 @@ import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _groupBy from 'lodash/groupBy';
 import _sortBy from 'lodash/sortBy';
+import CookbookContext from '../../context/CookbookContext';
+import useRecipeList from '../../hooks/useRecipeList';
 import { sections } from '../../data/recipeSections';
-import Favorite from '../Favorite/FavoriteContainer';
+import Favorite from '../Favorite/Favorite';
 
 const sectionItemStyles = {
   listItem: {
@@ -60,6 +62,8 @@ function sortRecipesBySection(recipe) {
 
 function SectionItem({ classes, recipe }) {
   const [className, setClassName] = useState('');
+  const { additionalAttributes, idPk, name } = recipe;
+  const { author, recipeUrl } = additionalAttributes;
 
   useEffect(() => {
     const loadedTimeout = setTimeout(() => setClassName('loaded'), 100);
@@ -68,10 +72,10 @@ function SectionItem({ classes, recipe }) {
   }, [])
 
   return (
-    <ListItem className={[classes.listItem, className].join(' ')} button component={Link} to={`/cookbook${recipe.recipeUrl}`}>
-      <ListItemText primary={recipe.title} secondary={recipe.author} />
+    <ListItem className={[classes.listItem, className].join(' ')} button component={Link} to={`/cookbook${recipeUrl}`}>
+      <ListItemText primary={name} secondary={author} />
       <ListItemSecondaryAction>
-        <Favorite recipe={recipe.Id} />
+        <Favorite recipe={idPk} />
       </ListItemSecondaryAction>
     </ListItem>
   )
@@ -90,7 +94,7 @@ function Section({ classes, recipes, section }) {
         title={section}
       />
       <List>
-        {_map(recipes, (recipe) => <StyledSectionItem key={recipe.Id} recipe={recipe} />)}
+        {_map(recipes, (recipe) => <StyledSectionItem key={recipe.idPk} recipe={recipe} />)}
       </List>
     </Card>
   )
@@ -98,10 +102,10 @@ function Section({ classes, recipes, section }) {
 
 const StyledSection = withStyles(sectionStyles)(Section)
 
-function RecipeList({
-  recipes,
-  recipeList,
-}) {
+function RecipeList({ location }) {
+  const [ cookbook, setCookbook ] = useContext(CookbookContext);
+  const { recipes } = cookbook;
+  const recipeList = useRecipeList(location);
   const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'title']), [ recipeList ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [, setLoadRecipesTimeout] = useState(0);

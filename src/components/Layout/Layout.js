@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 import { withStyles } from '@material-ui/core/styles';
@@ -8,6 +9,11 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import UserContext, {
+  getCurrentUser,
+} from '../../context/UserContext';
+import NavContext from '../../context/NavContext';
+import CookbookContext, { fetchCookbook } from '../../context/CookbookContext';
 import Secured from '../utils/Secured';
 import Login from '../Login/Login';
 import About from '../../pages/About';
@@ -69,9 +75,34 @@ const styles = (theme) => ({
   },
 })
 
-class Layout extends React.Component {
-  renderApp = () => {
-    const { classes } = this.props;
+function Layout({
+  classes,
+}) {
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [user, setUser] = useContext(UserContext);
+  const [{ name }, setCookbook] = useContext(CookbookContext);
+  const nav = useContext(NavContext);
+
+  useEffect(() => {
+    getCurrentUser().then((res) => {
+      setUser(res);
+      setInitialLoad(false);
+    });
+  }, [])
+
+  useEffect(() => {
+    fetchCookbook().then(cookbook => setCookbook(cookbook))
+  }, [])
+
+  function renderApp() {
+    if (!name) {
+      return (
+        <div className={classes.authenticating}>
+          Loading Cookbook...
+          <CircularProgress />
+        </div>
+      )
+    }
 
     return (
       <div className={classes.content}>
@@ -92,9 +123,7 @@ class Layout extends React.Component {
     );
   }
 
-  renderLander = () => {
-    const { classes } = this.props;
-
+  function renderLander() {
     return (
       <div className={classes.content}>
         <Paper elevation={1} className={classes.lander}>
@@ -108,46 +137,40 @@ class Layout extends React.Component {
     )
   }
 
-  renderContent = () => {
-    const { classes, isLoading, user, isAuthenticating } = this.props
-    const showLoader = user
-      ? isLoading
-      : isAuthenticating;
-
-    if (showLoader) {
-      return (
-        <div className={classes.authenticating}>
-          Authenticating...
-          <CircularProgress />
-        </div>
-      )
-    }
-
-    return user
-      ? this.renderApp()
-      : this.renderLander()
+  function renderContent() {
+    return user.idPk
+      ? renderApp()
+      : renderLander()
   }
 
-  render() {
-    const { activeUser, classes, drawer, user, logout, resetForm } = this.props
-
+  if (initialLoad) {
     return (
-      <div className={classes.app}>
-        <NavBar user={user} activeUser={activeUser} logout={logout} resetForm={resetForm} />
-
-        <div id="content-wrapper" className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
-          {this.renderContent()}
-
-          <div className={classes.footerContainer}>
-            <Footer />
-          </div>
-        </div>
-
-        <ToastContainer autoClose={3000} />
-
+      <div className={classes.authenticating}>
+        Authenticating...
+        <CircularProgress />
       </div>
     )
   }
+
+  return (
+    <div className={classes.app}>
+      <NavBar />
+
+      <div id="content-wrapper" className={`${classes.contentContainer} ${nav.open ? classes.contentContainerOpen : ''}`}>
+        {renderContent()}
+
+        <div className={classes.footerContainer}>
+          <Footer />
+        </div>
+      </div>
+
+      <ToastContainer autoClose={3000} />
+    </div>
+  )
+}
+
+Layout.propTypes = {
+  classes: PropTypes.shape().isRequired,
 }
 
 export default withStyles(styles)(Layout);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
   ListItem,
@@ -7,6 +7,9 @@ import {
 } from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import _concat from 'lodash/concat';
+import _filter from 'lodash/filter';
+import CookbookContext from '../../context/CookbookContext';
 
 const styles = (theme) => ({
   checked: {
@@ -14,7 +17,28 @@ const styles = (theme) => ({
   },
 });
 
-function FilterItem({ classes, checked, numberOfRecipes, handleClick, label }) {
+function FilterItem({
+  classes,
+  checked,
+  numberOfRecipes,
+  label,
+  subCategory,
+}) {
+  const [cookbook, setCookbook] = useContext(CookbookContext);
+  const { filters } = cookbook;
+
+  function handleClick() {
+    const newFilters = checked
+      ? _filter(filters, f => f.category !== subCategory && f.label !== label)
+      : _concat(filters, { label, category: subCategory });
+
+    console.log({ newFilters });
+
+    setCookbook({
+      filters: newFilters,
+    });
+  }
+
   return (
     <ListItem button onClick={handleClick}>
       <ListItemIcon>

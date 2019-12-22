@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import _map from 'lodash/map';
-import Search from '../components/Search/SearchContainer';
+import Search from '../components/Search/Search';
 import { sections } from '../data/recipeSections';
 
 

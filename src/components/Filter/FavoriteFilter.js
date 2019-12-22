@@ -7,7 +7,7 @@ import {
   ListSubheader,
 } from '@material-ui/core';
 import qs from 'query-string';
-import { getIsFavorite } from '../Favorite/getFavoriteRecipes';
+import { getIsFavorite } from '../../hooks/useFavoriteRecipes';
 import FilterItem from './FilterItem';
 
 const styles = (theme) => ({

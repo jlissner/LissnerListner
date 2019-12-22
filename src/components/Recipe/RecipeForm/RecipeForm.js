@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
-  Fab,
   Divider,
   Dialog,
   DialogActions,
@@ -13,9 +13,10 @@ import {
 }  from '@material-ui/core';
 import _find from 'lodash/find';
 import _get from 'lodash/get';
+import CookbookContext, { fetchCookbook, saveForm } from '../../../context/CookbookContext';
 import LoaderButton from '../../LoaderButton/LoaderButton';
-import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
-import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
+import SectionListsForm from '../../SectionListsForm/SectionListsForm';
+import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsForm';
 import * as tags from  '../../../data/recipeTagOptions';
 
 const styles = (theme) => ({
@@ -28,7 +29,9 @@ const styles = (theme) => ({
   },
 });
 
-function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setValue }) {
+function RecipeForm ({ classes }) {
+  const [ cookbook, setCookbook ] = useContext(CookbookContext);
+  const { form, recipes } = cookbook;
   const {
     Id,
     author,
@@ -42,7 +45,7 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     saving,
     title,
     tags: recipeTags,
-  } = recipeForm;
+  } = form;
   const currentRecipe = _find(recipes, { Id });
   const hasError = Boolean((_find(recipes, { title }) && _get(currentRecipe, 'title') !== title));
   const disabled = Boolean(
@@ -50,18 +53,60 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     || !title // recipe must have a title
     || !_find(recipeTags, { category: 'Section' }) // recipe must have a Section tag
   );
-  const handleFieldChange = (evt) => {
-    setValue({
-      key: evt.target.name,
-      value: evt.target.value,
-    })
+
+  function handleFieldChange(evt) {
+    setCookbook({ cookbook: {
+      ...cookbook,
+      form: {
+        ...form,
+        [evt.target.name]: evt.target.value
+      }
+    }});
   }
+
+  function closeForm() {
+    setCookbook({ cookbook: {
+      ...cookbook,
+      form: {
+        ...form,
+        open: false,
+      }
+    }});
+  }
+
+  async function saveNewRecipe() {
+    setCookbook({ cookbook: {
+      ...cookbook,
+      form: {
+        ...form,
+        saving: true,
+      }
+    }});
+
+    try {
+      await saveForm(form);
+
+      const updatedCookbook = await fetchCookbook();
+
+    } catch (err) {
+      console.error(err);
+    }
+
+    setCookbook({ cookbook: {
+      ...cookbook,
+      form: {
+        ...form,
+        saving: false,
+      }
+    }});
+  }
+
 
   useEffect(() => {
     if (!saving) {
       closeForm();
     }
-  }, [ saving, closeForm ]);
+  }, [ saving ]);
 
   return (
     <Dialog onClose={closeForm} open={open} maxWidth="lg">
@@ -197,7 +242,7 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
         <LoaderButton
           variant="contained"
           color="primary"
-          onClick={saveForm}
+          onClick={saveNewRecipe}
           disabled={disabled}
           text="Save"
           loadingText="Saving..."
@@ -208,9 +253,8 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
   )
 };
 
-RecipeForm.defaultProps = {
-  text: 'Add New Recipe',
-  Component: Fab,
+RecipeForm.propTypes = {
+  classes: PropTypes.shape().isRequired,
 }
 
 export default withStyles(styles)(RecipeForm);

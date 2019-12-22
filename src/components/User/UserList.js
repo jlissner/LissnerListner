@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import _map from 'lodash/map';
 import _sortBy from 'lodash/sortBy'
-import { listUsers } from '../../lib/aws/cognito';
 
 const styles = (theme) => ({
   loadingContainer: {
@@ -23,9 +22,7 @@ function UserList({ classes }) {
   const sortedUsers = useMemo(() => _sortBy(users, ['name']), [users]);
 
   useEffect(() => {
-    listUsers()
-      .then(data => setUsers(data))
-      .catch(err => console.error(err));
+    // TODO: fetch user list
   }, []);
 
   if (users.length === 0) {

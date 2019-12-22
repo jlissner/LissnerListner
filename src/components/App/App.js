@@ -1,9 +1,11 @@
-import React  from 'react';
-import { Provider } from 'react-redux';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { CssBaseline  } from '@material-ui/core';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import store from '../../redux/store';
-import SecuredApp from './SecuredAppContainer';
+import { UserProvider } from '../../context/UserContext';
+import { CookbookProvider } from '../../context/CookbookContext';
+import { NavProvider } from '../../context/NavContext';
+import Layout from '../Layout/Layout';
 
 const theme = createMuiTheme({
   palette: {
@@ -34,16 +36,22 @@ const theme = createMuiTheme({
 })
 
 function App() {
+
   return (
-    <React.Fragment>
-      <Provider store={store(window.__INITIAL_STATE__)}>
-        <MuiThemeProvider theme={theme}>    
-          <BrowserRouter>
-            <SecuredApp />
-          </BrowserRouter>
-        </MuiThemeProvider>
-      </Provider>
-    </React.Fragment>
+    <>
+      <CssBaseline />
+      <MuiThemeProvider theme={theme}>
+        <UserProvider>
+          <NavProvider>
+            <CookbookProvider>
+              <BrowserRouter>
+                <Layout />
+              </BrowserRouter>
+            </CookbookProvider>
+          </NavProvider>
+        </UserProvider>   
+      </MuiThemeProvider>
+    </>
   )
 }
 

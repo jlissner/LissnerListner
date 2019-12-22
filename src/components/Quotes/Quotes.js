@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import _random from 'lodash/random';
+import CookbookContext from '../../context/CookbookContext';
 
 const styles = theme => ({
 	quote: {
@@ -22,19 +23,15 @@ function getNewRandomNumber(max, current) {
 		: num;
 }
 
-function Quotes({ classes, quotes, getQuotes }) {
-	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(null)
+function Quotes({ classes }) {
+	const [ cookbook ] = useContext(CookbookContext);
+	const { quotes } = cookbook;
+	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(0)
 	const getQuoteIndex = useCallback(() => getNewRandomNumber(quotes.length - 1, activeQuoteIndex), [ quotes, activeQuoteIndex ]);
 	const quote = useMemo(() => quotes[activeQuoteIndex], [activeQuoteIndex, quotes])
 
 	useEffect(() => {
-		if (quotes.length === 0) {
-			getQuotes();
-		}
-	}, [getQuotes, quotes.length]);
-
-	useEffect(() => {
-		if (!quotes.length || activeQuoteIndex) {
+		if (quotes.length < 2 || activeQuoteIndex) {
 			return
 		}
 
@@ -43,7 +40,7 @@ function Quotes({ classes, quotes, getQuotes }) {
 		setActiveQuoteIndex(newActiveQuoteIndex);
 	}, [quotes, getQuoteIndex, activeQuoteIndex]);
 
-	if (activeQuoteIndex === null) {
+	if (quotes.length === 0) {
 		return ''
 	}
 
@@ -61,8 +58,6 @@ function Quotes({ classes, quotes, getQuotes }) {
 
 Quotes.propTypes = {
 	classes: PropTypes.shape().isRequired,
-	quotes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-	getQuotes: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Quotes);

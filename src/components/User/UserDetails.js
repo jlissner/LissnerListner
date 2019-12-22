@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import {
   Box,
   Button,
@@ -11,9 +10,6 @@ import _map from 'lodash/map';
 import _pick from 'lodash/pick';
 import _transform from 'lodash/transform';
 import LoaderButton from '../LoaderButton/LoaderButton';
-import { updateUserAttributes } from '../../lib/aws/cognito';
-
-const mapStateToProps = ({ user }) => ({ user });
 
 const ATTRIBUTES_TO_UPDATE = [
   'given_name',
@@ -52,7 +48,7 @@ function UserDetails({ user }) {
     setLoading(true);
     
     try {
-      await updateUserAttributes(token, updatedAttributes);
+      // TODO: save updated user attributes
     } catch (err) {
       console.error(err);
     }
@@ -172,4 +168,4 @@ function UserDetails({ user }) {
   )
 }
 
-export default connect(mapStateToProps)(UserDetails);
+export default UserDetails;

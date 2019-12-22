@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import Hidden from '@material-ui/core/Hidden';
-import withWidth from '@material-ui/core/withWidth';
-import Grid from '@material-ui/core/Grid';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import {
+	Hidden,
+	withWidth,
+	Grid,
+	useMediaQuery,
+	Collapse,
+	IconButton,
+	Typography
+} from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
-import SearchBar from '../components/Search/SearchContainer';
-import Filter from '../components/Filter/FilterContainer';
-import Quotes from '../components/Quotes/QuotesContainer';
-import RecipeList from '../components/Recipe/RecipeListContainer';
+import SearchBar from '../components/Search/Search';
+import Filter from '../components/Filter/Filter';
+import Quotes from '../components/Quotes/Quotes';
+import RecipeList from '../components/Recipe/RecipeList';
 
-function Search() {
+function Search({ location }) {
 	const matches = useMediaQuery('(min-width:600px)');
 	const [ showFilter, setShowFilters ] = useState(false);
 
@@ -49,7 +51,7 @@ function Search() {
 						</Grid>
 					</Hidden>
 					<Grid item xs={12}>
-						<RecipeList />
+						<RecipeList location={location} />
 					</Grid>
 				</Grid>
 			</Grid>

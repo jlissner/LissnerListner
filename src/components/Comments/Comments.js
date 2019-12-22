@@ -1,12 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import _map from 'lodash/map';
 import Header from '../utils/Header';
 import Comment from './Comment';
 import CommentBox from './CommentBox';
-
-const mapStateToProps = ({ user }) => ({ user });
 
 function Comments({
   comments,
@@ -46,4 +43,4 @@ function Comments({
   );
 };
 
-export default connect(mapStateToProps)(Comments);
+export default Comments;

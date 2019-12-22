@@ -1,5 +1,4 @@
 import React from 'react';
-import { changeUserPassword } from '../../lib/awsLib';
 import { withStyles } from '@material-ui/core/styles';
 import { toast } from 'react-toastify'
 import {
@@ -44,7 +43,8 @@ class UserChangePassword extends React.Component {
     }
 
     try {
-      await changeUserPassword(currentPassword, newPassword);
+      // await changeUserPassword(currentPassword, newPassword);
+      alert('update this functionality to make it work');
 
       this.setState({
         currentPassword: '',

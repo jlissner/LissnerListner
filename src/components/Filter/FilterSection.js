@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
 import _map from 'lodash/map';
-import FilterItem from './FilterItemContainer';
+import FilterItem from './FilterItem';
 
 const styles = (theme) => ({
   root: {
@@ -22,7 +22,7 @@ const styles = (theme) => ({
 
 class FilterSection extends React.Component {
   render() {
-    const { classes, filters, category, subCategory } = this.props;
+    const { classes, filters, subCategory } = this.props;
     const filtersToShow = _filter(filters, ({ checked, numberOfRecipes }) => numberOfRecipes || checked)
 
     if (filtersToShow.length === 0) {
@@ -43,7 +43,6 @@ class FilterSection extends React.Component {
                   checked={checked}
                   numberOfRecipes={numberOfRecipes}
                   subCategory={subCategory}
-                  category={category}
                 />
               )
             )

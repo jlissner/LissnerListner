@@ -6,7 +6,6 @@ import {
   Paper,
   TextField,
 } from '@material-ui/core';
-import { createUser } from '../../lib/aws/cognito';
 
 function CreateUser() {
   const [email, setEmail] = useState('');
@@ -35,9 +34,7 @@ function CreateUser() {
 
     setLoading(true);
     
-    createUser(email, attributes)
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    // TODO: make create user work
   }
 
   return (
