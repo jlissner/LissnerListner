@@ -4,16 +4,18 @@ import { v4 } from 'uuid';
 import {
   Box,
   Button,
+  IconButton,
   Grid,
   Paper,
   TextField,
 } from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { createUser } from './UserActions';
 
 function CreateUser() {
   const { users } = useSelector(state => state.user);
   const dispatch = useDispatch();
-  const [password] = useState(v4());
+  const [password, setPassword] = useState(v4());
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -97,12 +99,22 @@ function CreateUser() {
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Temp Password"
-              name="tempPassword"
-              value={password}
-            />
+            <Grid container wrap="nowrap" spacing={1} alignItems="center">
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Temp Password"
+                  name="tempPassword"
+                  value={password}
+                  onChange={evt => setPassword(evt.target.value)}
+                />
+              </Grid>
+              <Grid item>
+                <IconButton onClick={() => setPassword(v4())} color="primary" size="small">
+                  <RefreshIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item xs={12}>

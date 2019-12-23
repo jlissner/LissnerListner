@@ -75,8 +75,8 @@ function RecipeSummary({ classes, compact, recipe }) {
       {isMakeAhead ? <Typography className={classes.makeAhead}>Make Ahead</Typography> : false}
       <List className={[classes.list, compact ? classes.compact : ''].join(' ')}>
         {
-          recipe.serves
-            ? <ListItem><ListItemText primary={<FormattedText text={recipe.serves}/>} /></ListItem>
+          recipe.additionalAttributes.serves
+            ? <ListItem><ListItemText primary={<FormattedText text={recipe.additionalAttributes.serves}/>} /></ListItem>
             : null
         }
         {
@@ -90,8 +90,8 @@ function RecipeSummary({ classes, compact, recipe }) {
             : null
         }
         {
-          recipe.note
-            ? <ListItem><ListItemText primary={<FormattedText text={`Note: ${recipe.note}`}/>}/></ListItem>
+          recipe.additionalAttributes.note
+            ? <ListItem><ListItemText primary={<FormattedText text={`Note: ${recipe.additionalAttributes.note}`}/>}/></ListItem>
             : null
         }
       </List>
