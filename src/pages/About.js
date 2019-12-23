@@ -10,6 +10,16 @@ const styles = (theme) => ({
       marginBottom: 0,
     }
   },
+  link: {
+    color: theme.palette.secondary.main,
+    cursor: 'pointer',
+    padding: 0,
+    textTransform: 'none',
+    textDecoration: 'none',
+    '&:hover': {
+      color: theme.palette.secondary.dark,
+    },
+  },
 })
 
 class About extends React.PureComponent {
@@ -26,11 +36,31 @@ class About extends React.PureComponent {
           </Typography>
 
           <Typography paragraph variant="body1">
-            TODO: Write this
+            For the past 5 years or so Ellie and I have been working on a website for the family, <a href="https://lissner.io" className={classes.link}>lissner.io</a>. Today, I am happy to announce that the <strong>Family Cookbook</strong> portion of the website has been released! Connie released the latest edition of the family cookbook 21 years ago (find the recipe for Addie's Bourbon Slush to celebrate), then 4 years ago Patrick created a digital version of it which allowed many my generation to get their own version of it for the first time. Since then, everyone's version has different recipes with different notes. For people like my mom, the Colorado edition has different recipes in it than the Missouri one which is still different from the Florida one. Each and every cookbook has notes scrawled around and recipes stuffed in them.
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            It may take some time to get used to the new format, but I hope that the search and filters will provide some help. Additionally, there are some new fields added to make it easier for our ever-growing user base in order to help people with dietary restrictions. I hope each and everyone who has recipes that they love will contribute and add those recipes!
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            Just like all Family Cookbooks, this one is not perfect. Every recipe had to be manually entered, so if there is a typo or mistake, please let me know! The good news is only one person has to identify the mistake for ALL users to get the fix :). As each recipe had to be entered in a normalized fashion, some of the recipes have been purposefully changed, but I tried to keep the verbiage as close to the original as possible. Ellie and I had also spotted some errors in certain recipes, and I added what I believe to be the correct measurements in those places. 
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            While the family website is launching with only a Cookbook, this will be a project that continues to grow. There are lots of features that I want to create eventually, including but not limited to: family archives, Lissner list, picture sharing, document backups, family tree, and more!
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            In order to access the site, you will need to send me an email FROM THE EMAIL YOU WANT TO LOG IN WITH. I will then create your account and send you your temporary credentials.
           </Typography>
 
           <Typography paragraph variant="body1">
             -Love, Joe
+          </Typography>
+
+          <Typography paragraph variant="body2">
+            p.s. If you have features you would like added, feedback, find bugs, want to talk about it, or want to help feel free to contact me.
           </Typography>
         </Paper>
 
