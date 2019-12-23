@@ -23,7 +23,7 @@ function getNewRandomNumber(max, current) {
 }
 
 function Quotes({ classes, quotes, getQuotes }) {
-	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(null)
+	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(0)
 	const getQuoteIndex = useCallback(() => getNewRandomNumber(quotes.length - 1, activeQuoteIndex), [ quotes, activeQuoteIndex ]);
 	const quote = useMemo(() => quotes[activeQuoteIndex], [activeQuoteIndex, quotes])
 
@@ -34,7 +34,7 @@ function Quotes({ classes, quotes, getQuotes }) {
 	}, [getQuotes, quotes.length]);
 
 	useEffect(() => {
-		if (!quotes.length || activeQuoteIndex) {
+		if (quotes.length < 2 || activeQuoteIndex) {
 			return
 		}
 
@@ -43,7 +43,7 @@ function Quotes({ classes, quotes, getQuotes }) {
 		setActiveQuoteIndex(newActiveQuoteIndex);
 	}, [quotes, getQuoteIndex, activeQuoteIndex]);
 
-	if (activeQuoteIndex === null) {
+	if (!quotes.length) {
 		return ''
 	}
 

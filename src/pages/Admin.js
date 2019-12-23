@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar,
+  Box,
   Tab,
   Tabs,
 } from '@material-ui/core';
@@ -26,7 +27,7 @@ function Admin({ classes }) {
   }
 
   return (
-    <>
+    <Box width={420}>
       <AppBar color="secondary" position="static">
         <Tabs
           onChange={(evt, newTab) => setActiveTab(newTab)}
@@ -41,7 +42,7 @@ function Admin({ classes }) {
       </AppBar>
 
       {showTab()}
-    </>
+    </Box>
   );
 }
 

@@ -1,4 +1,5 @@
-import { invokeApig } from '../../lib/awsLib';
+import _get from 'lodash/get';
+import graphql from '../../lib/graphql';
 
 export const GET_QUOTES = 'QUOTES::GET';
 export const GET_QUOTES_SUCCESS = 'QUOTES::GET_SUCCESS';
@@ -9,7 +10,21 @@ function getQuotes() {
 		dispatch({ type: GET_QUOTES });
 
 		try {
-    	const payload = await invokeApig({ path: '/quotes' });
+    	const res = await graphql({
+        query: `
+          query {
+            cookbookByIdPk(idPk: "1") {
+              cookbookQuotesByCookbookFk {
+                nodes {
+                  author
+                  quote
+                }
+              }
+            }
+          }
+        `,
+      });
+      const payload = _get(res, 'cookbookByIdPk.cookbookQuotesByCookbookFk.nodes');
 
     	dispatch({
     		type: GET_QUOTES_SUCCESS,

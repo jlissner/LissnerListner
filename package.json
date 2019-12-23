@@ -32,8 +32,10 @@
   },
   "devDependencies": {
     "@testing-library/react": "^8.0.9",
+    "axios": "^0.19.0",
     "moment": "^2.24.0",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "uuid": "^3.3.3"
   },
   "browserslist": [
     ">0.2%",

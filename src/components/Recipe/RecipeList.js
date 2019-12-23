@@ -10,9 +10,10 @@ import {
   ListItemText,
   CircularProgress,
 } from '@material-ui/core';
-import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _groupBy from 'lodash/groupBy';
+import _kebabCase from 'lodash/kebabCase';
+import _map from 'lodash/map';
 import _sortBy from 'lodash/sortBy';
 import { sections } from '../../data/recipeSections';
 import Favorite from '../Favorite/FavoriteContainer';
@@ -60,6 +61,8 @@ function sortRecipesBySection(recipe) {
 
 function SectionItem({ classes, recipe }) {
   const [className, setClassName] = useState('');
+  const { additionalAttributes, idPk, name } = recipe;
+  const { author } = additionalAttributes;
 
   useEffect(() => {
     const loadedTimeout = setTimeout(() => setClassName('loaded'), 100);
@@ -68,10 +71,15 @@ function SectionItem({ classes, recipe }) {
   }, [])
 
   return (
-    <ListItem className={[classes.listItem, className].join(' ')} button component={Link} to={`/cookbook${recipe.recipeUrl}`}>
-      <ListItemText primary={recipe.title} secondary={recipe.author} />
+    <ListItem
+      button
+      className={[classes.listItem, className].join(' ')}
+      component={Link}
+      to={`/cookbook/${_kebabCase(name)}`}
+    >
+      <ListItemText primary={name} secondary={author} />
       <ListItemSecondaryAction>
-        <Favorite recipe={recipe.Id} />
+        <Favorite recipe={idPk} />
       </ListItemSecondaryAction>
     </ListItem>
   )
@@ -90,7 +98,7 @@ function Section({ classes, recipes, section }) {
         title={section}
       />
       <List>
-        {_map(recipes, (recipe) => <StyledSectionItem key={recipe.Id} recipe={recipe} />)}
+        {_map(recipes, (recipe) => <StyledSectionItem key={recipe.idPk} recipe={recipe} />)}
       </List>
     </Card>
   )
@@ -102,7 +110,7 @@ function RecipeList({
   recipes,
   recipeList,
 }) {
-  const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'title']), [ recipeList ]);
+  const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'name']), [ recipeList ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [, setLoadRecipesTimeout] = useState(0);
   const groupedRecipes = useMemo(() => (

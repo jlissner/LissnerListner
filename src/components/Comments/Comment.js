@@ -12,6 +12,7 @@ import {
 import _find from 'lodash/find';
 import ConfirmDialog from '../utils/ConfirmDialog';
 import FormattedText from '../utils/FormattedText';
+import makeName from '../utils/makeName';
 
 const timeFormat = 'MM/DD/YYYY h:mma';
 
@@ -21,12 +22,13 @@ function Comment({
   onDelete,
   onEdit,
 }) {
-  const { author, text, created, edited } = comment;
+  const { authorId, text, created, edited } = comment;
   const [editting, setEditting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updatedComment, setUpdatedComment] = useState(text);
   const { activeUser, users } = user;
-  const authorName = _find(users, { Id: author }).name;
+  const author = _find(users, { idPk: authorId });
+  const authorName = makeName(author);
   const deleteButton = (
     <ConfirmDialog
       size="small"
@@ -83,7 +85,7 @@ function Comment({
       )
     }
 
-    if (activeUser.Id === author) {
+    if (activeUser.idPk === author) {
       return (
         <CardActions>
           <Button size="small" color="primary" onClick={() => setEditting(true)}>Edit</Button>
@@ -92,7 +94,7 @@ function Comment({
       )
     }
 
-    if (activeUser.roles.indexOf('Admin') > -1) {
+    if (activeUser.isAdmin) {
       return (
         <CardActions>
           {deleteButton}

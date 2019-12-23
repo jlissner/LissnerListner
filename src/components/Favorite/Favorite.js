@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import _without from 'lodash/without';
 
 const styles = (theme) => ({
   isFavorite: {
@@ -21,26 +20,21 @@ function Favorite({
   disabled,
   recipe,
   activeUser,
-  updateUser,
+  toggleFavorite,
   isFavorite,
 }) {
   const [loading, setLoading] = useState(false);
 
-  async function toggleFavorite() {
-    const favorites = activeUser.favoriteRecipes;
-    const newFavorites = isFavorite
-      ? _without(favorites, recipe)
-      : [...favorites, recipe];
 
+  async function clickHandler() {
     setLoading(true);
 
-    await updateUser({
-      Id: activeUser.Id,
-      favoriteRecipes: newFavorites,
-    });
-
-    setLoading(false);
+    toggleFavorite(recipe);
   }
+
+  useEffect(() => {
+    setLoading(false);
+  }, [activeUser]);
 
   if (loading) {
     return (
@@ -53,7 +47,7 @@ function Favorite({
   return (
     <IconButton
       className={className}
-      onClick={toggleFavorite}
+      onClick={clickHandler}
       disabled={disabled}
       data-testid="loaded"
     >
@@ -72,7 +66,7 @@ Favorite.propTypes = {
   isFavorite: PropTypes.bool.isRequired,
   activeUser: PropTypes.shape().isRequired,
   recipe: PropTypes.string.isRequired,
-  updateUser: PropTypes.func.isRequired,
+  toggleFavorite: PropTypes.func.isRequired,
   className: PropTypes.string,
 }
 

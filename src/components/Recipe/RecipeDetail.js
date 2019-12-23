@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from 'react';
-import { invokeApig } from '../../lib/awsLib';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -10,16 +9,15 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
-import _findIndex from 'lodash/findIndex';
-import _get from 'lodash/get';
-import _includes from 'lodash/includes';
+import _kebabCase from 'lodash/kebabCase';
+import graphql from '../../lib/graphql';
 import Comments from '../Comments/Comments';
 import ItemizedList from '../ItemizedList/ItemizedList';
-import RecipeSummary from './RecipeSummary';
-import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
 import Favorite from '../Favorite/FavoriteContainer';
 import FormattedText from '../utils/FormattedText';
 import Spacing from '../utils/Spacing';
+import RecipeSummary from './RecipeSummary';
+import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
 
 const styles = (theme) => ({
   description: {
@@ -53,15 +51,15 @@ function RecipeDetailHeader({ classes, recipe }) {
       <Grid item xs={12}>
         <Grid container spacing={1} wrap="nowrap">
           <Grid item>
-            <Favorite recipe={recipe.Id} />
+            <Favorite recipe={recipe.idPk} />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <Typography className={classes.title} variant="h4">{recipe.title}</Typography>
+                <Typography className={classes.title} variant="h4">{recipe.name}</Typography>
               </Grid>
               <Grid item>
-                <Typography className={classes.subtitle} variant="subtitle1">{recipe.author}</Typography>
+                <Typography className={classes.subtitle} variant="subtitle1">{recipe.additionalAttributes.author}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -69,9 +67,9 @@ function RecipeDetailHeader({ classes, recipe }) {
       </Grid>
       <Grid item xs={12}>
         {
-          recipe.description
+          recipe.additionalAttributes.description
           ? <Typography variant="h6" className={classes.description}>
-              <FormattedText text={recipe.description} />
+              <FormattedText text={recipe.additionalAttributes.description} />
             </Typography>
           : null
         }
@@ -89,7 +87,9 @@ function RecipeDetail({
   resetForm,
   user,
 }) {
-  const recipe = useMemo(() => _find(recipes, {recipeUrl: `/${match.params.recipe}`}), [recipes, match]);
+  const recipe = useMemo(() => _find(recipes, ({ name }) => (
+    _kebabCase(name) === match.params.recipe
+  )), [recipes, match]);
 
   useEffect(() => {
     const wrapper = document.getElementById('content-wrapper');
@@ -98,68 +98,51 @@ function RecipeDetail({
   }, []);
 
   async function submitComment(comment) {
-    const currentComments = _get(recipe, 'comments', []);
-    const newComment = {
-      author: user.activeUser.Id,
-      text: comment,
-      created: new Date(),
+    const body = {
+      query: `
+        mutation {
+          createRecipeComment(input: {recipeId: "${recipe.idPk}", commentText: "${comment}"}) {
+            clientMutationId
+          }
+        }
+      `
     };
-    const updatedComments = [
-      ...currentComments,
-      newComment,
-    ];
-    const updatedRecipe = {
-      ...recipe,
-      comments: updatedComments,
-    }
 
-    await invokeApig({
-      path: '/recipes',
-      method: 'put',
-      body: updatedRecipe,
-    });
+    await graphql(body);
 
     getRecipes();
   }
 
-  function deleteComment(comment) {
+  function deleteComment({ idPk }) {
     return async () => {
-      const updatedComments = recipe.comments.filter(({ created }) => created !== comment.created);
-      const updatedRecipe = {
-        ...recipe,
-        comments: updatedComments,
-      }
+      const body = {
+        query: `
+          mutation {
+            deleteUserCommentByIdPk(input: {idPk: "${idPk}"}) {
+              clientMutationId
+            }
+          }
+        `
+      };
 
-      await invokeApig({
-        path: '/recipes',
-        method: 'put',
-        body: updatedRecipe,
-      });
+      await graphql(body);
 
       getRecipes();
     }
   }
 
-  async function editComment(comment) {
-    const commentIndex = _findIndex(recipe.comments, { created: comment.created });
-    const updatedComments = [
-      ...recipe.comments
-    ];
+  async function editComment({ idPk, text }) {
+    const body = {
+      query: `
+        mutation {
+          updateUserCommentByIdPk(input: {idPk: "${idPk}", userCommentPatch: {commentText: "${text}"}}) {
+            clientMutationId
+          }
+        }
+      `
+    };
 
-    console.log({commentIndex, updatedComments, comment})
-
-    updatedComments[commentIndex] = comment;
-
-    const updatedRecipe = {
-      ...recipe,
-      comments: updatedComments,
-    }
-
-    await invokeApig({
-      path: '/recipes',
-      method: 'put',
-      body: updatedRecipe,
-    });
+    await graphql(body);
 
     getRecipes();
   }
@@ -205,7 +188,7 @@ function RecipeDetail({
         </Grid>
       </Grid>
 
-      { recipe.createdBy === user.activeUser.Id || _includes(user.activeUser.roles, 'Admin')
+      { recipe.createdBy === user.activeUser.idPk || user.activeUser.isAdmin
         ? <RecipeFormButton
             text={<EditIcon />}
             className={classes.editButton}

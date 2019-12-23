@@ -1,4 +1,5 @@
-import { invokeApig } from '../../lib/awsLib';
+import _get from 'lodash/get';
+import graphql from '../../lib/graphql';
 
 export const GET_RECIPES = 'RECIPES::GET_RECIPES';
 export const SET_RECIPES = 'RECIPES::SET_RECIPES';
@@ -8,7 +9,27 @@ export function getRecipes() {
   return async (dispatch) => {
     dispatch({ type: GET_RECIPES })
 
-    const recipes = await invokeApig({ path: '/recipes' })
+    const body = {
+      query: `
+        query {
+          cookbookByIdPk(idPk: "1") {
+            recipes {
+              nodes {
+                idPk
+                name
+                directions
+                ingredients
+                tags
+                additionalAttributes
+                comments
+              }
+            }
+          }
+        }
+      `
+    }
+    const res = await graphql(body);
+    const recipes = _get(res, 'cookbookByIdPk.recipes.nodes', []);
 
     dispatch(setRecipes(recipes))
   }

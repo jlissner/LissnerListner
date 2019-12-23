@@ -1,7 +1,7 @@
-import React from 'react';
-import { changeUserPassword } from '../../lib/awsLib';
-import { withStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify'
+import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
   Card,
@@ -10,120 +10,105 @@ import {
   CardActions,
   TextField,
 } from '@material-ui/core';
+import { updateUserPassword } from './UserActions';
 
 const styles = (theme) => ({
 
 })
 
-class UserChangePassword extends React.Component {
-  constructor(props) {
-    super(props)
+function UserChangePassword({
+  classes,
+}) {
+  const { activeUser } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    this.state = {
-      currentPassword: '',
-      newPassword: '',
-      newPasswordConfirm: '',
-    };
+  useEffect(() => {
+    if (!loading) {
+      setCurrentPassword('');
+      setNewPassword('');
+      setNewPasswordConfirm('');
+    }
+  }, [loading]);
 
-    this.handleInput = this.handleInput.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-    this.handleEnter = this.handleEnter.bind(this);
-  }
+  useEffect(() => {
+    setLoading(false);
+  }, [activeUser])
 
-  handleInput(evt) {
-    this.setState({
-      [evt.target.name]: evt.target.value,
-    });
-  }
-
-  async changePassword() {
-    const { currentPassword, newPassword, newPasswordConfirm } = this.state;
-
+  async function changePassword() {
     if (newPassword !== newPasswordConfirm) {
       return toast.error('Your new passwords don\'t match.')
     }
 
-    try {
-      await changeUserPassword(currentPassword, newPassword);
+    setLoading(true);
 
-      this.setState({
-        currentPassword: '',
-        newPassword: '',
-        newPasswordConfirm: '',
-      })
-
-      toast.success('Password successfully changed');
-    } catch (err) {
-      toast.error('Something went wrong')
-    }
+    dispatch(updateUserPassword({ idPk: activeUser.idPk, currentPassword, newPassword }));
   }
 
-  handleEnter(evt) {
+  function handleEnter(evt) {
     if (evt.keyCode === 13) {
-      this.changePassword();
+      changePassword();
     }
   }
 
-  render() {
-    const { classes } = this.props;
-    const { currentPassword, newPassword, newPasswordConfirm } = this.state;
-    const submitDisabled = (
-      !currentPassword ||
-      newPassword.length < 8 ||
-      (newPassword !== newPasswordConfirm)
-    );
+  const submitDisabled = (
+    !currentPassword ||
+    (newPassword !== newPasswordConfirm)
+  );
 
-    return (
-      <Card className={classes.root}>
-        <CardHeader
-          title="Change Password"
-        />          
-        <CardContent>
-          <TextField
-            fullWidth
-            margin="normal"
-            onChange={this.handleInput}
-            type="password"
-            value={currentPassword}
-            name="currentPassword"
-            label="Current Password"
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            onChange={this.handleInput}
-            type="password"
-            value={newPassword}
-            name="newPassword"
-            label="New Password"
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            onChange={this.handleInput}
-            onKeyDown={this.handleEnter}
-            type="password"
-            value={newPasswordConfirm}
-            name="newPasswordConfirm"
-            label="Confirm New Password"
-            variant="outlined"
-          />
-        </CardContent>
-        <CardActions>
-          <Button
-            color="primary"
-            disabled={submitDisabled}
-            onClick={this.changePassword}
-            variant="contained"
-          >
-            Change Password
-          </Button>
-        </CardActions>
-      </Card>
-    )
-  }
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        title="Change Password"
+      />          
+      <CardContent>
+        <TextField
+          fullWidth
+          margin="normal"
+          onChange={evt => setCurrentPassword(evt.target.value)}
+          type="password"
+          value={currentPassword}
+          name="currentPassword"
+          label="Current Password"
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          onChange={evt => setNewPassword(evt.target.value)}
+          type="password"
+          value={newPassword}
+          name="newPassword"
+          label="New Password"
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          onChange={evt => setNewPasswordConfirm(evt.target.value)}
+          onKeyDown={handleEnter}
+          type="password"
+          value={newPasswordConfirm}
+          name="newPasswordConfirm"
+          label="Confirm New Password"
+          variant="outlined"
+        />
+      </CardContent>
+      <CardActions>
+        <Button
+          color="primary"
+          disabled={submitDisabled || loading}
+          onClick={changePassword}
+          variant="contained"
+        >
+          Change Password
+        </Button>
+      </CardActions>
+    </Card>
+  )
 }
 
 export default withStyles(styles)(UserChangePassword);

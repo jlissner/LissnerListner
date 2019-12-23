@@ -4,7 +4,7 @@ import Favorite from './Favorite';
 
 const mapStateToProps = (state, props) => ({
   activeUser: state.user.activeUser,
-  isFavorite: state.user.activeUser.favoriteRecipes.indexOf(props.recipe) > -1,
+  isFavorite: state.user.activeUser.favorites.indexOf(props.recipe) > -1,
   ...props,
 })
 

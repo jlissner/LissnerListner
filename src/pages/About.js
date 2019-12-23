@@ -17,8 +17,23 @@ class About extends React.PureComponent {
     const { classes } = this.props
 
     return (
-      <React.Fragment>
+      <>
         <Typography variant='h2' paragraph>About the Family Cookbook</Typography>
+        <Typography align="right" variant='h6' paragraph>December, 2019</Typography>
+        <Paper elevation={1} className={classes.paper}>
+          <Typography paragraph variant="body1">
+            Dear Family,
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            TODO: Write this
+          </Typography>
+
+          <Typography paragraph variant="body1">
+            -Love, Joe
+          </Typography>
+        </Paper>
+
         <Typography align="right" variant='h6' paragraph>July, 1998</Typography>
         <Paper elevation={1} className={classes.paper}>
           <Typography paragraph variant="body1">
@@ -67,7 +82,7 @@ class About extends React.PureComponent {
 
           </Typography>
         </Paper>
-      </React.Fragment>
+      </>
     )
   }
 }

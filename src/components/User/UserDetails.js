@@ -1,38 +1,26 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Button,
   Grid,
   MenuItem,
   TextField,
+  Typography,
 } from '@material-ui/core';
-import _map from 'lodash/map';
-import _pick from 'lodash/pick';
-import _transform from 'lodash/transform';
 import LoaderButton from '../LoaderButton/LoaderButton';
-import { updateUserAttributes } from '../../lib/aws/cognito';
+import makeName from '../utils/makeName';
+import { updateUser } from './UserActions';
 
-const mapStateToProps = ({ user }) => ({ user });
-
-const ATTRIBUTES_TO_UPDATE = [
-  'given_name',
-  'preferred_username',
-  'middle_name',
-  'family_name',
-  'birthdate',
-  'gender',
-  'phone_number',
-  'email',
-  'address',
-];
-
-function UserDetails({ user }) {
-  const { activeUser } = user;
-  const initialAttributes = _transform(activeUser.attributes, (cur, { Name, Value }) => (cur[Name] = Value), {});
-  const initialAttributesToUpdate = _pick(initialAttributes, ATTRIBUTES_TO_UPDATE);
-  const [attributes, setAttributes] = useState(initialAttributesToUpdate);
+function UserDetails() {
+  const { activeUser } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const [attributes, setAttributes] = useState(activeUser);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [activeUser]);
 
   function updateAttribute(name) {
     return (evt) => {
@@ -46,73 +34,116 @@ function UserDetails({ user }) {
   }
 
   async function saveAttribtues() {
-    const token = activeUser.signInUserSession.accessToken.jwtToken;
-    const updatedAttributes = _map(attributes, (val, key) => ({ Name: key, Value: val }));
-
     setLoading(true);
-    
-    try {
-      await updateUserAttributes(token, updatedAttributes);
-    } catch (err) {
-      console.error(err);
-    }
-    
-    setLoading(false);
+
+    dispatch(updateUser(attributes));
   }
 
   return (
     <Box p={2}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            onChange={updateAttribute('given_name')}
-            name="firstName"
-            fullWidth
-            label="First Name"
-            variant="outlined"
-            value={attributes.given_name}
-          />
+        <Grid item xs={12}>
+          <Typography>Display Name: {makeName(attributes)}</Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            onChange={updateAttribute('preferred_username')}
+            onChange={updateAttribute('preferredName')}
             name="preferredName"
             fullWidth
             label="Preferred Name"
             variant="outlined"
-            value={attributes.preferred_username}
+            value={attributes.preferredName || ''}
+            placeholder="Joe"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            onChange={updateAttribute('middle_name')}
-            value={attributes.middle_name || ''}
+            onChange={updateAttribute('nickname')}
+            name="nickname"
+            fullWidth
+            label="Nickname"
+            variant="outlined"
+            value={attributes.nickname || ''}
+            placeholder="&ldquo;Everyone's Favorite Cousin&rdquo;"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={updateAttribute('legalFirstName')}
+            name="firstName"
+            fullWidth
+            label="First Name"
+            variant="outlined"
+            value={attributes.legalFirstName || ''}
+            placeholder="Joseph"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={updateAttribute('birthFirstName')}
+            name="birthFirstName"
+            fullWidth
+            label="Birth First Name"
+            variant="outlined"
+            value={attributes.birthFirstName || ''}
+            placeholder="Joseph"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={updateAttribute('legalMiddleName')}
+            value={attributes.legalMiddleName || ''}
             fullWidth
             label="Middle Name"
             name="middleName"
             variant="outlined"
+            placeholder="Martin"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            onChange={updateAttribute('family_name')}
-            value={attributes.family_name || ''}
+            onChange={updateAttribute('birthMiddleName')}
+            value={attributes.birthMiddleName || ''}
+            fullWidth
+            label="Birth Middle Name"
+            name="birthMiddleName"
+            variant="outlined"
+            placeholder="Martin"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={updateAttribute('legalLastName')}
+            value={attributes.legalLastName || ''}
             fullWidth
             label="Last Name"
             name="lastName"
             variant="outlined"
+            placeholder="Lissner"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            onChange={updateAttribute('birthdate')}
-            value={attributes.birthdate || ''}
+            onChange={updateAttribute('birthLastName')}
+            value={attributes.birthLastName || ''}
+            fullWidth
+            label="Birth Last Name"
+            name="birthLastName"
+            variant="outlined"
+            placeholder="Lissner"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={updateAttribute('birthday')}
+            value={attributes.birthday || ''}
             fullWidth
             label="Birthday"
             name="birthday"
             variant="outlined"
             type="date"
             InputLabelProps={{ shrink: true }}
+            placeholder="08/04/1989"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -132,12 +163,13 @@ function UserDetails({ user }) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            onChange={updateAttribute('phone_number')}
-            value={attributes.phone_number || ''}
+            onChange={updateAttribute('phoneNumber')}
+            value={attributes.phoneNumber || ''}
             fullWidth
             label="Phone Number"
             name="phoneNumber"
             variant="outlined"
+            placeholder="+13144973313"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -151,25 +183,15 @@ function UserDetails({ user }) {
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            onChange={updateAttribute('address')}
-            value={attributes.address || ''}
-            fullWidth
-            label="Address"
-            name="address"
-            variant="outlined"
-          />
-        </Grid>
         <Grid item>
           <LoaderButton isLoading={loading} onClick={saveAttribtues} text="Save" loadingText="Save" />
         </Grid>
         <Grid item>
-          <Button onClick={() => setAttributes(initialAttributesToUpdate)}>Reset</Button>
+          <Button onClick={() => setAttributes(activeUser)}>Reset</Button>
         </Grid>
       </Grid>
     </Box>
   )
 }
 
-export default connect(mapStateToProps)(UserDetails);
+export default UserDetails;

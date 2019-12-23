@@ -1,4 +1,5 @@
-import { invokeApig } from '../../lib/awsLib';
+import _get from 'lodash/get';
+import graphql from '../../lib/graphql';
 
 export const GET_TAGS = 'TAGS::GET_TAGS';
 export const SET_TAGS = 'TAGS::SET_TAGS';
@@ -7,7 +8,24 @@ export function getTags() {
   return async (dispatch) => {
     dispatch({ type: GET_TAGS })
 
-    const tags = await invokeApig({ path: '/tags' })
+    const body = {
+      query: `
+        query {
+          cookbookByIdPk(idPk: "1") {
+            cookbookTagsByCookbookFk(orderBy: LIST_ORDER_ASC) {
+              nodes {
+                category
+                label
+                type
+              }
+            }
+          }
+        }
+      `
+    }
+
+    const res = await graphql(body);
+    const tags = _get(res, 'cookbookByIdPk.cookbookTagsByCookbookFk.nodes', []);
 
     dispatch(setTags(tags))
   }

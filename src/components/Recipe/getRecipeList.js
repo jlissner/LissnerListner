@@ -9,7 +9,7 @@ const getRecipeList = createSelector(
   getSearchedRecipes,
   getFavoriteRecipes,
   (filteredRecipes, searchedRecipes, favoriteRecipes) => {
-  	return _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'Id');
+  	return _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'idPk');
   });
 
 export default getRecipeList;

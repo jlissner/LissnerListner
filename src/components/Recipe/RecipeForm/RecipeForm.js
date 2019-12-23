@@ -30,7 +30,7 @@ const styles = (theme) => ({
 
 function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setValue }) {
   const {
-    Id,
+    idPk,
     author,
     cookTime,
     description,
@@ -40,14 +40,14 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     note,
     serves,
     saving,
-    title,
+    name,
     tags: recipeTags,
   } = recipeForm;
-  const currentRecipe = _find(recipes, { Id });
-  const hasError = Boolean((_find(recipes, { title }) && _get(currentRecipe, 'title') !== title));
+  const currentRecipe = _find(recipes, { idPk });
+  const hasError = Boolean((_find(recipes, { name }) && _get(currentRecipe, 'name') !== name));
   const disabled = Boolean(
     hasError
-    || !title // recipe must have a title
+    || !name // recipe must have a title
     || !_find(recipeTags, { category: 'Section' }) // recipe must have a Section tag
   );
   const handleFieldChange = (evt) => {
@@ -65,21 +65,21 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
 
   return (
     <Dialog onClose={closeForm} open={open} maxWidth="lg">
-      <DialogTitle>{Id ? 'Edit' : 'New'} Recipe</DialogTitle>
+      <DialogTitle>{idPk ? 'Edit' : 'New'} Recipe</DialogTitle>
       <DialogContent className={classes.form}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               error={hasError}
               variant="outlined"
-              name="title"
-              label="Title"
-              value={title}
+              name="name"
+              label="Name"
+              value={name}
               onChange={handleFieldChange}
               required
               fullWidth
               placeholder="Deep Fried Chicken"
-              helperText={hasError ? 'Title Must Be Unique' : ''}
+              helperText={hasError ? 'Name Must Be Unique' : ''}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

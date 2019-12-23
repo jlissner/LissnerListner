@@ -77,7 +77,7 @@ class Layout extends React.Component {
       <div className={classes.content}>
         <Switch>
           <Route exact path='/' render={() => <Redirect to="/cookbook" />} />
-          <Route exact path='/admin' render={() => <Secured component={<Admin />} roles={['Admin']} />} />
+          <Route exact path='/admin' render={() => <Secured component={<Admin />} />} />
           <Route exact path='/cookbook' component={CookbookHome} />
           <Route exact path='/profile' component={UserProfile} />
           <Route path='/404' component={NoPage} />
@@ -117,7 +117,7 @@ class Layout extends React.Component {
     if (showLoader) {
       return (
         <div className={classes.authenticating}>
-          Authenticating...
+          Loading...
           <CircularProgress />
         </div>
       )

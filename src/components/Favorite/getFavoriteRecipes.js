@@ -13,7 +13,7 @@ export function favoriteRecipes(recipes, user, favorite) {
     return recipes;
   }
 
-  return _intersectionWith(recipes, user.favoriteRecipes, (a, b) => a.Id === b)
+  return _intersectionWith(recipes, user.favorites, (a, b) => a.idPk === b)
 }
 
 const getFavoriteRecipes = createSelector(

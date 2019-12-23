@@ -1,20 +1,20 @@
-import _forEach from 'lodash/forEach';
-import { invokeApig } from '../../../lib/awsLib';
-import { getRecipes } from '../RecipeActions';
-import _omit from 'lodash/omit';
 import _cloneDeep from 'lodash/cloneDeep';
+import _forEach from 'lodash/forEach';
+import _get from 'lodash/get';
+import graphql, { objToGraphqlStr } from '../../../lib/graphql';
+import { getRecipes } from '../RecipeActions';
 
 const initialState = {
   open: false,
   saving: false,
+  name: '',
+  ingredients: [{ title: '', ingredients: []}],
+  directions: [{ title: '', steps: []}],
   author: '',
   description: '',
   note: '',
-  title: '',
   cookTime: '',
   serves: '',
-  ingredients: [{ title: '', ingredients: []}],
-  directions: [{ title: '', steps: []}],
   tags: [],
 }
 
@@ -39,12 +39,12 @@ export function setForm(_recipeForm) {
   recipeForm.open = recipeForm.open || false;
   recipeForm.directions = recipeForm.directions || [{ title: '', steps: []}]
   recipeForm.ingredients = recipeForm.ingredients || [{ title: '', ingredients: []}]
-  recipeForm.author = recipeForm.author || '';
-  recipeForm.cookTime = recipeForm.cookTime || '';
-  recipeForm.description = recipeForm.description || '';
-  recipeForm.image = recipeForm.image || '';
-  recipeForm.note = recipeForm.note || '';
-  recipeForm.serves = recipeForm.serves || '';
+  recipeForm.author = recipeForm.author || _get(recipeForm, 'additionalAttributes.author', '');
+  recipeForm.cookTime = recipeForm.cookTime || _get(recipeForm, 'additionalAttributes.cookTime', '');
+  recipeForm.description = recipeForm.description || _get(recipeForm, 'additionalAttributes.description', '');
+  recipeForm.image = recipeForm.image || _get(recipeForm, 'additionalAttributes.image', '');
+  recipeForm.note = recipeForm.note || _get(recipeForm, 'additionalAttributes.note', '');
+  recipeForm.serves = recipeForm.serves || _get(recipeForm, 'additionalAttributes.serves', '');
   recipeForm.tags = recipeForm.tags || [];
 
   _forEach(recipeForm.directions, (direction) => direction.title = direction.title || '');
@@ -67,17 +67,75 @@ export function resetForm() {
   return { type: RESET_FORM };
 }
 
+function newRecipe(params) {
+  const body = {
+    query: `
+      mutation {
+        createRecipe(input: {
+          ${objToGraphqlStr(params)}
+        }) {
+          clientMutationId
+        }
+      }
+    `
+  };
+
+  return graphql(body);
+}
+
+function updateRecipe(params) {
+  const body = {
+    query: `
+      mutation {
+        updateRecipe(input: {
+          ${objToGraphqlStr(params)}
+        }) {
+          clientMutationId
+        }
+      }
+    `
+  };
+
+  return graphql(body);
+}
+
 export function saveForm(){
   return async (dispatch, getState) => {
     dispatch({ type: SAVE_FORM })
 
-    const { recipeForm } = getState()
+    const { recipeForm } = getState();
+    const {
+      idPk,
+      name,
+      ingredients,
+      directions,
+      author,
+      description,
+      note,
+      cookTime,
+      serves,
+      tags,
+    } = recipeForm;
+    const params = {
+      cookbookId: '1',
+      name,
+      ingredients,
+      directions,
+      additionalAttributes: {
+        author,
+        description,
+        note,
+        cookTime,
+        serves,
+      },
+      tags,
+    };
 
-    await invokeApig({
-      path: '/recipes',
-      method: recipeForm.Id ? 'put' : 'post',
-      body: _omit(recipeForm, ['saving']),
-    })
+    if (idPk) {
+      await updateRecipe({recipeId: idPk, ...params});
+    } else {
+      await newRecipe(params);
+    }
 
     dispatch({ type: SAVE_FORM_SUCCESSFUL })
     dispatch(getRecipes())

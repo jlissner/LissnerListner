@@ -19,7 +19,7 @@ const getAvailableFilters = createSelector(
     return _transform(tags, (memo, tag) => {
         const filter = _pick(tag, ['category', 'label']);
         const filteredRecipes = filterRecipes(allRecipes, [...filters, filter])
-        const searchedFilteredRecipes = _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'Id')
+        const searchedFilteredRecipes = _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'idPk')
         const availableRecipes = _filter(searchedFilteredRecipes, (recipe) => _find(recipe.tags, filter));
 
         tag.checked = Boolean(_find(filters, filter));

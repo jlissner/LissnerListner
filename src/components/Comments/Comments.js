@@ -26,7 +26,7 @@ function Comments({
 
       {
         _map(comments, (comment) => (
-          <Grid item xs={12} key={comment.created}>
+          <Grid item xs={12} key={comment.idPk}>
             <Comment
               comment={comment}
               onDelete={onDelete(comment)}

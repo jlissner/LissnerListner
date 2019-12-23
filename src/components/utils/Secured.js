@@ -1,29 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Typography,
 } from '@material-ui/core';
-import _get from 'lodash/get';
-import _reduce from 'lodash/reduce';
-
-const mapStateToProps = (state) => ({
-  activeUser: state.user.activeUser,
-});
 
 function Secured({
   component,
   roles,
-  activeUser,
 }) {
-  const authorized = _reduce(roles, (res, role) => (
-    res || (_get(activeUser, 'roles', []).indexOf(role) > -1)
-  ), false);
+  const { activeUser } = useSelector(state => state.user);
 
-  if (authorized) {
+  if (activeUser.isAdmin) {
     return component
   }
 
   return <Typography>You are not authorized to view this content.</Typography>
 }
 
-export default connect(mapStateToProps)(Secured);
+export default Secured;

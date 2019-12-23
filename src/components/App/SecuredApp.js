@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { CssBaseline } from '@material-ui/core';
 import Layout from '../Layout/LayoutContainer';
 
-function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
+function SecuredApp({ getCurrentUser, logout, user, recipes, getRecipes, getTags }) {
   const [ authenticated, setAuthenticated ] = useState(false);
   const [ hasFetched, setHasFetched ] = useState(false);
   const { activeUser = {}, authenticating } = user;
-  const { Id } = activeUser;
+  const { idPk } = activeUser;
 
   useEffect(() => {
     if (!authenticated && authenticating) {
-      login();
-    } else if (!authenticated && Id) {
+      getCurrentUser();
+    } else if (!authenticated && idPk) {
       setAuthenticated(true);
     }
-  }, [authenticated, authenticating, login, Id]);
+  }, [authenticated, authenticating, getCurrentUser, idPk]);
 
   useEffect(() => {
     if (authenticated && !hasFetched) {
@@ -28,7 +28,7 @@ function SecuredApp({ login, logout, user, recipes, getRecipes, getTags }) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Layout user={Id} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
+      <Layout user={idPk} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
     </React.Fragment>
   )
 }

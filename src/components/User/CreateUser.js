@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { v4 } from 'uuid';
 import {
   Box,
   Button,
@@ -6,9 +8,12 @@ import {
   Paper,
   TextField,
 } from '@material-ui/core';
-import { createUser } from '../../lib/aws/cognito';
+import { createUser } from './UserActions';
 
 function CreateUser() {
+  const { users } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const [password] = useState(v4());
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -22,27 +27,29 @@ function CreateUser() {
       setLastName('');
       setPreferredName('');
     }
-  }, [loading])
+  }, [loading]);
+
+  useEffect(() => {
+    setLoading(false)
+  }, [users]);
 
   function onSubmit(e) {
     e.preventDefault();
 
-    const attributes = [
-      { Name: 'given_name', Value: firstName },
-      { Name: 'family_name', Value: lastName },
-      { Name: 'preferred_username', Value: preferredName },
-    ];
-
     setLoading(true);
-    
-    createUser(email, attributes)
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+
+    dispatch(createUser({
+      email: email,
+      legalFirstName: firstName,
+      legalLastName: lastName,
+      preferredName: preferredName,
+      passwordHash: password,
+    }))
   }
 
   return (
     <Paper>
-      <Box p={2} width={320}>
+      <Box p={2}>
         <Grid
           component="form"
           container
@@ -86,6 +93,15 @@ function CreateUser() {
               name="lastName"
               onChange={evt => setLastName(evt.target.value)}
               value={lastName}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Temp Password"
+              name="tempPassword"
+              value={password}
             />
           </Grid>
 

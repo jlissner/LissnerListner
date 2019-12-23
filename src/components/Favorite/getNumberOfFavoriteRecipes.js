@@ -8,11 +8,11 @@ import getSearchedRecipes from '../Search/getSearchedRecipes';
 const getNumberOfFavoriteRecipes = createSelector(
   getFilteredRecipes,
   getSearchedRecipes,
-  state => _get(state, 'user.activeUser.favoriteRecipes', []),
+  state => _get(state, 'user.activeUser.favorites', []),
   (filteredRecipes, searchedRecipes, favoriteRecipeIds) => {
-  	const favoriteRecipes = _map(favoriteRecipeIds, Id => ({ Id }));
+  	const favoriteRecipes = _map(favoriteRecipeIds, idPk => ({ idPk }));
 
-  	return _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'Id').length;
+  	return _intersectionBy(filteredRecipes, searchedRecipes, favoriteRecipes, 'idPk').length;
   });
 
 export default getNumberOfFavoriteRecipes;

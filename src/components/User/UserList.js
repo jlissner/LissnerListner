@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
@@ -9,8 +10,8 @@ import {
   Paper,
 } from '@material-ui/core';
 import _map from 'lodash/map';
-import _sortBy from 'lodash/sortBy'
-import { listUsers } from '../../lib/aws/cognito';
+import _sortBy from 'lodash/sortBy';
+import makeName from '../utils/makeName';
 
 const styles = (theme) => ({
   loadingContainer: {
@@ -19,14 +20,8 @@ const styles = (theme) => ({
 })
 
 function UserList({ classes }) {
-  const [users, setUsers] = useState([]);
+  const { users } = useSelector(state => state.user);
   const sortedUsers = useMemo(() => _sortBy(users, ['name']), [users]);
-
-  useEffect(() => {
-    listUsers()
-      .then(data => setUsers(data))
-      .catch(err => console.error(err));
-  }, []);
 
   if (users.length === 0) {
     return (
@@ -42,9 +37,9 @@ function UserList({ classes }) {
   return (
     <Paper>
       <List>
-        {_map(sortedUsers, ({ id, name, active }) => (
-          <ListItem key={id}>
-            <ListItemText primary={name} secondary={active ? 'Active' : 'Inactive'} />
+        {_map(sortedUsers, ({ idPk, ...user }) => (
+          <ListItem key={idPk}>
+            <ListItemText primary={makeName(user)} />
           </ListItem>
         ))}
       </List>
