@@ -85,7 +85,7 @@ function Comment({
       )
     }
 
-    if (activeUser.idPk === author) {
+    if (activeUser.idPk === author.idPk) {
       return (
         <CardActions>
           <Button size="small" color="primary" onClick={() => setEditting(true)}>Edit</Button>
