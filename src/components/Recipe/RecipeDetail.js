@@ -188,7 +188,7 @@ function RecipeDetail({
         </Grid>
       </Grid>
 
-      { recipe.createdBy === user.activeUser.idPk || user.activeUser.isAdmin
+      { recipe.authorFk === user.activeUser.idPk || user.activeUser.isAdmin
         ? <RecipeFormButton
             text={<EditIcon />}
             className={classes.editButton}
