@@ -29,12 +29,14 @@ function CreateUser() {
       setFirstName('');
       setLastName('');
       setPreferredName('');
-
-      if (resetPassword) {
-        setPassword('');
-      }
     }
-  }, [loading, resetPassword]);
+  }, [loading]);
+
+  useEffect(() => {
+    if (!loading && resetPassword) {
+        setPassword('');
+    }
+  }, [loading, resetPassword])
 
   useEffect(() => {
     setLoading(false)
