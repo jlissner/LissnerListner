@@ -16,6 +16,7 @@ export function getRecipes() {
             recipes {
               nodes {
                 idPk
+                authorFk
                 name
                 directions
                 ingredients

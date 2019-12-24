@@ -98,11 +98,11 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
             <TextField
               variant="outlined"
               name="serves"
-              label="Serves"
+              label="Portion Size"
               value={serves}
               onChange={handleFieldChange}
               fullWidth
-              placeholder="6-8"
+              placeholder="Makes 64 cookies"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
