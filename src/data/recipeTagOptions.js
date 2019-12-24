@@ -31,6 +31,7 @@ export const ethnicity = [
 ];
 
 export const diet = [
+  {category: 'Dietary Preference', label: 'Healthy'},
   {category: 'Dietary Preference', label: 'Dairy Free'},
   {category: 'Dietary Preference', label: 'Gluten Free'},
   {category: 'Dietary Preference', label: 'Vegetarian'},
