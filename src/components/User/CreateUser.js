@@ -16,6 +16,7 @@ function CreateUser() {
   const { users } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const [password, setPassword] = useState(v4());
+  const [resetPassword, setResetPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -28,8 +29,12 @@ function CreateUser() {
       setFirstName('');
       setLastName('');
       setPreferredName('');
+
+      if (resetPassword) {
+        setPassword('');
+      }
     }
-  }, [loading]);
+  }, [loading, resetPassword]);
 
   useEffect(() => {
     setLoading(false)
@@ -106,11 +111,21 @@ function CreateUser() {
                   label="Temp Password"
                   name="tempPassword"
                   value={password}
-                  onChange={evt => setPassword(evt.target.value)}
+                  onChange={evt => {
+                    setPassword(evt.target.value);
+                    setResetPassword(true);
+                  }}
                 />
               </Grid>
               <Grid item>
-                <IconButton onClick={() => setPassword(v4())} color="primary" size="small">
+                <IconButton
+                  onClick={() => {
+                    setPassword(v4());
+                    setResetPassword(false);
+                  }}
+                  color="primary"
+                  size="small"
+                >
                   <RefreshIcon />
                 </IconButton>
               </Grid>
