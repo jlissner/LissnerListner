@@ -69,6 +69,20 @@ function getUsers() {
   }
 }
 
+function setLastOnline() {
+  const body = {
+    query: `
+      mutation {
+        setLastLogin(input: {}) {
+          clientMutationId
+        }
+      }      
+    `
+  };
+
+  return graphql(body);
+}
+
 export function getCurrentUser() {
   return async (dispatch) => {
     dispatch({ type: GET_CURRENT_USER });
@@ -95,6 +109,8 @@ export function getCurrentUser() {
       const user = _get(res, 'getCurrentUser', {});
       const favorites = _get(res, 'getCurrentUser.favorites.nodes', {}).map(({ recipeFk }) => recipeFk);
 
+      setLastOnline();
+
       dispatch({
         type: GET_CURRENT_USER_SUCCESS,
         payload: {
@@ -109,6 +125,7 @@ export function getCurrentUser() {
     }
   }
 }
+
 
 export function login(email, pass) {
   return async (dispatch) => {
@@ -133,7 +150,9 @@ export function login(email, pass) {
 
       const sevenDays = 60 * 60 * 24 * 7;
 
-      setCookie('userJWT', token, sevenDays)
+      setCookie('userJWT', token, sevenDays);
+
+
 
       toast.success('Logged in');
 

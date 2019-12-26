@@ -7,6 +7,7 @@ import {
   Tab,
 } from '@material-ui/core';
 import UserChangePassword from './UserChangePassword';
+import UserRecipes from './UserRecipes';
 import UserDetails from './UserDetails';
 
 const styles = theme => ({
@@ -51,6 +52,7 @@ function UserProfile({ classes }) {
         </Tabs>
       </AppBar>
       {renderTab()}
+      <UserRecipes/>
     </div>
   );
 }

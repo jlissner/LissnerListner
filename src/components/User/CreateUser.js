@@ -56,6 +56,10 @@ function CreateUser() {
     }))
   }
 
+  function valid() {
+    return email && firstName && lastName && password;
+  }
+
   return (
     <Paper>
       <Box p={2}>
@@ -137,7 +141,7 @@ function CreateUser() {
           <Grid item xs={12}>
             <Button
               color="primary"
-              disabled={loading}
+              disabled={!valid() || loading}
               fullWidth
               type="submit"
               variant="contained"
