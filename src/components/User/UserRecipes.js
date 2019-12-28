@@ -1,11 +1,15 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  List,
-  ListItem,
-  ListItemText,
+  Box,
+  Button,
+  Grid,
+  Typography,
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
+import RecipeList from '../Recipe/RecipeList';
+import RecipeForm from '../Recipe/RecipeForm/RecipeFormContainer'
+import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButtonContainer'
 
 function UserRecipes() {
   const { activeUser } = useSelector(state => state.user);
@@ -13,15 +17,23 @@ function UserRecipes() {
   const recipes = useSelector(state => state.recipes);
   const userRecipes = useMemo(() => (
     _filter(recipes, ({ authorFk }) => authorFk === idPk)
-  ), [idPk]);
-
-  console.log({ userRecipes: userRecipes.length, recipes: recipes.length });
-
-  return (
-    <List>
-      hi
-    </List>
+  ), [idPk, recipes]);
+  
+  const noRecipesContent = (
+    <Box p={2}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item>
+          <Typography>You haven't created any recipes yet, start now!</Typography>
+        </Grid>
+        <Grid item>
+          <RecipeFormButton Component={Button} variant="contained" color="primary" />
+        </Grid>
+      </Grid>
+      <RecipeForm />
+    </Box>
   );
+
+  return <RecipeList noRecipesContent={noRecipesContent} recipeList={userRecipes}/>;
 }
 
 export default UserRecipes;

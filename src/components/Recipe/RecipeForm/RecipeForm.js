@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
-  Fab,
   Divider,
   Dialog,
   DialogActions,
@@ -207,10 +206,5 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     </Dialog>
   )
 };
-
-RecipeForm.defaultProps = {
-  text: 'Add New Recipe',
-  Component: Fab,
-}
 
 export default withStyles(styles)(RecipeForm);

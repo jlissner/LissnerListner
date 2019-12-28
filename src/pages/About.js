@@ -27,7 +27,7 @@ class About extends React.PureComponent {
     const { classes } = this.props
 
     return (
-      <>
+      <div>
         <Typography variant='h2' paragraph>About the Family Cookbook</Typography>
         <Typography align="right" variant='h6' paragraph>December, 2019</Typography>
         <Paper elevation={1} className={classes.paper}>
@@ -112,7 +112,7 @@ class About extends React.PureComponent {
 
           </Typography>
         </Paper>
-      </>
+      </div>
     )
   }
 }

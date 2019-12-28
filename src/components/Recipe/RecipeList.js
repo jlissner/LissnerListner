@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom'
 import { withStyles }from '@material-ui/core/styles';
 import {
   Card,
@@ -106,10 +113,8 @@ function Section({ classes, recipes, section }) {
 
 const StyledSection = withStyles(sectionStyles)(Section)
 
-function RecipeList({
-  recipes,
-  recipeList,
-}) {
+function RecipeList({ noRecipesContent, recipeList }) {
+  const recipes = useSelector(state => state.recipes);
   const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'name']), [ recipeList ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [, setLoadRecipesTimeout] = useState(0);
@@ -149,7 +154,16 @@ function RecipeList({
     return <CircularProgress />
   }
 
+  if (recipeList.length === 0) {
+    return noRecipesContent;
+  }
+
   return MemoizedSections;
 }
 
-export default RecipeList;
+RecipeList.propTypes = {
+  recipeList: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  noRecipesContent: PropTypes.node.isRequired,
+}
+
+export default withRouter(RecipeList);

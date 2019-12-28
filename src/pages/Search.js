@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import withWidth from '@material-ui/core/withWidth';
 import Grid from '@material-ui/core/Grid';
@@ -10,11 +12,14 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SearchBar from '../components/Search/SearchContainer';
 import Filter from '../components/Filter/FilterContainer';
 import Quotes from '../components/Quotes/QuotesContainer';
-import RecipeList from '../components/Recipe/RecipeListContainer';
+import RecipeList from '../components/Recipe/RecipeList';
+import getRecipeList from '../components/Recipe/getRecipeList';
 
-function Search() {
+function Search(props) {
 	const matches = useMediaQuery('(min-width:600px)');
 	const [ showFilter, setShowFilters ] = useState(false);
+  const recipeList = useSelector(state => getRecipeList(state, props));
+  const noRecipesContent = <Typography>No recipes found.</Typography>;
 
 	return (
 		<Grid container spacing={3}>
@@ -49,7 +54,7 @@ function Search() {
 						</Grid>
 					</Hidden>
 					<Grid item xs={12}>
-						<RecipeList />
+						<RecipeList noRecipesContent={noRecipesContent} recipeList={recipeList} />
 					</Grid>
 				</Grid>
 			</Grid>
@@ -57,4 +62,4 @@ function Search() {
 	)
 }
 
-export default withWidth()(Search)
+export default withWidth()(withRouter(Search))

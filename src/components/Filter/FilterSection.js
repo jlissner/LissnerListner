@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   List,
   ListSubheader,
+  Paper,
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
 import _map from 'lodash/map';
@@ -10,7 +11,6 @@ import FilterItem from './FilterItemContainer';
 
 const styles = (theme) => ({
   root: {
-    background: '#fff',
     '& + $root': {
       paddingTop: theme.spacing(2),
     },
@@ -30,7 +30,7 @@ class FilterSection extends React.Component {
     } 
 
     return (
-      <div className={classes.root}>
+      <Paper className={classes.root}>
         <List
           className={classes.list}
           subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
@@ -49,7 +49,7 @@ class FilterSection extends React.Component {
             )
           }
         </List>
-      </div>
+      </Paper>
     );
   }
 };

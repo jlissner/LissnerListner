@@ -20,7 +20,7 @@ class About extends React.PureComponent {
     const { classes } = this.props
 
     return (
-      <React.Fragment>
+      <div>
         <Typography variant='h4' paragraph>Articles From the Cookbook</Typography>
         
         <Paper elevation={1} className={classes.paper}>
@@ -109,7 +109,7 @@ class About extends React.PureComponent {
 
           </Typography>
         </Paper>
-      </React.Fragment>
+      </div>
     )
   }
 }

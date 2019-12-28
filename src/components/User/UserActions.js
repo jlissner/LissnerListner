@@ -41,6 +41,7 @@ const userQuery = `
   isAdmin
   gender
   phoneNumber
+  lastOnline
 `;
 
 

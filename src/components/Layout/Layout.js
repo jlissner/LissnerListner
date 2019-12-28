@@ -51,8 +51,11 @@ const styles = (theme) => ({
     transition: `margin-right ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeInOut}`,
   },
   content: {
+    width: '100%',
     maxWidth: 1080,
     margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing(4),
   },
   lander: {
