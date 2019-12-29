@@ -39,9 +39,10 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 
 	return (
 		<div className={classes.root}>
-			<List className={classes.list}>
-				<ListSubheader>Favorites</ListSubheader>
-
+			<List
+        className={classes.list}
+        subheader={<ListSubheader disableSticky>Favorites</ListSubheader>}
+      >
 				<FilterItem
 					checked={checked}
 					numberOfRecipes={numberOfRecipes}
@@ -56,6 +57,8 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 FavoriteFilter.propTypes = {
 	classes: PropTypes.shape().isRequired,
 	location: PropTypes.shape().isRequired,
+  history: PropTypes.shape().isRequired,
+  numberOfRecipes: PropTypes.number.isRequired,
 }
 
 export default withRouter(withStyles(styles)(FavoriteFilter));

@@ -1,5 +1,5 @@
 import React from 'react';
-import RecipeDetail from '../components/Recipe/RecipeDetailContainer';
+import RecipeDetail from '../components/Recipe/RecipeDetail';
 
 class RecipeDetailPage extends React.PureComponent {
   render() {

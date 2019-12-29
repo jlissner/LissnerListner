@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -16,39 +17,33 @@ const styles = (theme) => ({
   },
 });
 
-class ItemsGroup extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      checked: false,
-    }
-  }
-
-  toggleChecked = () => {
-    this.setState({
-      checked: !this.state.checked,
-    });
-  }
-
-  render() {
-    const { classes, items, title } = this.props;
-
-    return (
-      <Paper className={classes.root}>
-        <List
-          subheader={<ListSubheader disableSticky>{title}</ListSubheader>}
-        >
-          {
-            _map(items, (item) => (
-                <Item key={item} item={item}/>
-              )
+function ItemsGroup({ classes, items, ordered, title }) {
+  return (
+    <Paper className={classes.root}>
+      <List
+        subheader={<ListSubheader disableSticky>{title}</ListSubheader>}
+      >
+        {
+          _map(items, (item, i) => (
+              <Item key={item} item={item} order={i + 1} ordered={ordered}/>
             )
-          }
-        </List>
-      </Paper>
-    );
-  }
+          )
+        }
+      </List>
+    </Paper>
+  );
+};
+
+ItemsGroup.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  items: PropTypes.arrayOf(PropTypes.string).isRequired,
+  ordered: PropTypes.bool,
+  title: PropTypes.string,
+};
+
+ItemsGroup.defaultProps = {
+  ordered: false,
+  title: '',
 };
 
 export default withStyles(styles)(ItemsGroup);

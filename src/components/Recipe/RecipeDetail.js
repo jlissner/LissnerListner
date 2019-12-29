@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { Redirect, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
   Hidden,
   Grid,
-  Typography,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
@@ -13,16 +14,14 @@ import _kebabCase from 'lodash/kebabCase';
 import graphql from '../../lib/graphql';
 import Comments from '../Comments/Comments';
 import ItemizedList from '../ItemizedList/ItemizedList';
-import Favorite from '../Favorite/FavoriteContainer';
-import FormattedText from '../utils/FormattedText';
 import Spacing from '../utils/Spacing';
+import RecipeDetailHeader from './RecipeDetailHeader';
 import RecipeSummary from './RecipeSummary';
 import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
+import { getRecipes } from './RecipeActions';
+import { setForm } from './RecipeForm/RecipeFormActions';
 
 const styles = (theme) => ({
-  description: {
-    color: theme.palette.grey[700],
-  },
   ingredients: {
     marginBottom: theme.spacing(5),
   },
@@ -35,58 +34,15 @@ const styles = (theme) => ({
     textAlign: 'center',
     marginTop: theme.spacing(4),
   },
-  title: {
-    marginRight: theme.spacing(1.5),
-  },
-  subtitle: {
-    color: '#808080',
-    fontSize: '1.5em',
-    lineHeight: '1.5em',
-  },
 })
-
-function RecipeDetailHeader({ classes, recipe }) {
-  return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <Grid container spacing={1} wrap="nowrap">
-          <Grid item>
-            <Favorite recipe={recipe.idPk} />
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <Typography className={classes.title} variant="h4">{recipe.name}</Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.subtitle} variant="subtitle1">{recipe.additionalAttributes.author}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        {
-          recipe.additionalAttributes.description
-          ? <Typography variant="h6" className={classes.description}>
-              <FormattedText text={recipe.additionalAttributes.description} />
-            </Typography>
-          : null
-        }
-      </Grid>
-    </Grid>
-  )
-}
 
 function RecipeDetail({
   classes,
-  recipes,
   match,
-  getRecipes,
-  setForm,
-  resetForm,
-  user,
 }) {
+  const dispatch = useDispatch();
+  const recipes = useSelector(state => state.recipes);
+  const { activeUser } = useSelector(state => state.user);
   const recipe = useMemo(() => _find(recipes, ({ name }) => (
     _kebabCase(name) === match.params.recipe
   )), [recipes, match]);
@@ -110,7 +66,7 @@ function RecipeDetail({
 
     await graphql(body);
 
-    getRecipes();
+    dispatch(getRecipes());
   }
 
   function deleteComment({ idPk }) {
@@ -127,7 +83,7 @@ function RecipeDetail({
 
       await graphql(body);
 
-      getRecipes();
+      dispatch(getRecipes());
     }
   }
 
@@ -144,7 +100,7 @@ function RecipeDetail({
 
     await graphql(body);
 
-    getRecipes();
+    dispatch(getRecipes());
   }
 
   if (recipes.length === 0) {
@@ -159,7 +115,7 @@ function RecipeDetail({
     <>
       <Grid container spacing={3} alignContent="stretch">
         <Grid item xs={12}>
-          <RecipeDetailHeader classes={classes} recipe={recipe} />
+          <RecipeDetailHeader recipe={recipe} />
         </Grid>
         <Hidden smUp>
           <Grid item xs={12}>
@@ -175,7 +131,7 @@ function RecipeDetail({
           </Grid>
         </Hidden>
         <Grid item xs={12}>
-          <ItemizedList title="Directions" groups={recipe.directions} items="steps" />
+          <ItemizedList title="Directions" groups={recipe.directions} items="steps" ordered />
         </Grid>
         <Grid item xs={12}>
           <Spacing space={5} />
@@ -188,13 +144,13 @@ function RecipeDetail({
         </Grid>
       </Grid>
 
-      { recipe.authorFk === user.activeUser.idPk || user.activeUser.isAdmin
+      { recipe.authorFk === activeUser.idPk || activeUser.isAdmin
         ? <RecipeFormButton
             text={<EditIcon />}
             className={classes.editButton}
             color="primary"
             onClick={() => {
-              setForm(recipe)
+              dispatch(setForm(recipe))
             }}
           />
         : null
@@ -203,4 +159,9 @@ function RecipeDetail({
   )
 }
 
-export default withStyles(styles)(RecipeDetail);
+RecipeDetail.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  match: PropTypes.shape().isRequired,
+};
+
+export default withRouter(withStyles(styles)(RecipeDetail));
