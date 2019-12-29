@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
@@ -17,7 +17,7 @@ import ItemizedList from '../ItemizedList/ItemizedList';
 import Spacing from '../utils/Spacing';
 import RecipeDetailHeader from './RecipeDetailHeader';
 import RecipeSummary from './RecipeSummary';
-import RecipeFormButton from './RecipeForm/RecipeFormButtonContainer';
+import RecipeFormButton from './RecipeForm/RecipeFormButton';
 import { getRecipes } from './RecipeActions';
 import { setForm } from './RecipeForm/RecipeFormActions';
 
@@ -43,9 +43,16 @@ function RecipeDetail({
   const dispatch = useDispatch();
   const recipes = useSelector(state => state.recipes);
   const { activeUser } = useSelector(state => state.user);
+  const [initialLoad, setInitialLoad] = useState(true);
   const recipe = useMemo(() => _find(recipes, ({ name }) => (
     _kebabCase(name) === match.params.recipe
   )), [recipes, match]);
+
+  useEffect(() => {
+    if (recipe) {
+      setInitialLoad(false);
+    }
+  }, [initialLoad, recipe])
 
   useEffect(() => {
     const wrapper = document.getElementById('content-wrapper');
@@ -104,11 +111,15 @@ function RecipeDetail({
   }
 
   if (recipes.length === 0) {
-    return <div className={classes.progress}><CircularProgress /></div>
+    return <div className={classes.progress}><CircularProgress /></div>;
   }
 
   if (!recipe) {
-    return <Redirect to={`/404?missingPage=${match.url}`} />
+    if (initialLoad) {
+      return <Redirect to={`/404?missingPage=${match.url}`} />;
+    }
+
+    return <Redirect to="/cookbook" />;
   }
 
   return (

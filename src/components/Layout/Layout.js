@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 import { withStyles } from '@material-ui/core/styles';
@@ -38,17 +40,12 @@ const styles = (theme) => ({
     height: '100%',
     overflow: 'auto',
     marginRight: 0,
-    transition: `margin-right ${theme.transitions.duration.leavingScreen}ms ${theme.transitions.easing.easeInOut}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
   footerContainer: {
     width: '100%',
-  },
-  contentContainerOpen: {
-    marginRight: 319,
-    transition: `margin-right ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeInOut}`,
   },
   content: {
     width: '100%',
@@ -72,10 +69,15 @@ const styles = (theme) => ({
   },
 })
 
-class Layout extends React.Component {
-  renderApp = () => {
-    const { classes } = this.props;
+function Layout({
+  classes,
+  isLoading,
+  isAuthenticating,
+}) {
+  const { activeUser } = useSelector(state => state.user);
+  const { idPk } = activeUser;
 
+  function renderApp() {
     return (
       <div className={classes.content}>
         <Switch>
@@ -95,9 +97,7 @@ class Layout extends React.Component {
     );
   }
 
-  renderLander = () => {
-    const { classes } = this.props;
-
+  function renderLander() {
     return (
       <div className={classes.content}>
         <Paper elevation={1} className={classes.lander}>
@@ -111,9 +111,8 @@ class Layout extends React.Component {
     )
   }
 
-  renderContent = () => {
-    const { classes, isLoading, user, isAuthenticating } = this.props
-    const showLoader = user
+  function renderContent() {
+    const showLoader = idPk
       ? isLoading
       : isAuthenticating;
 
@@ -126,31 +125,32 @@ class Layout extends React.Component {
       )
     }
 
-    return user
-      ? this.renderApp()
-      : this.renderLander()
+    return idPk
+      ? renderApp()
+      : renderLander()
   }
 
-  render() {
-    const { activeUser, classes, drawer, user, logout, resetForm } = this.props
+  return (
+    <div className={classes.app}>
+      <NavBar />
 
-    return (
-      <div className={classes.app}>
-        <NavBar user={user} activeUser={activeUser} logout={logout} resetForm={resetForm} />
+      <div id="content-wrapper" className={classes.contentContainer}>
+        {renderContent()}
 
-        <div id="content-wrapper" className={`${classes.contentContainer} ${drawer ? classes.contentContainerOpen : ''}`}>
-          {this.renderContent()}
-
-          <div className={classes.footerContainer}>
-            <Footer />
-          </div>
+        <div className={classes.footerContainer}>
+          <Footer />
         </div>
-
-        <ToastContainer autoClose={3000} />
-
       </div>
-    )
-  }
+
+      <ToastContainer autoClose={3000} />
+    </div>
+  )
+}
+
+Layout.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isAuthenticating: PropTypes.bool.isRequired,
 }
 
 export default withStyles(styles)(Layout);

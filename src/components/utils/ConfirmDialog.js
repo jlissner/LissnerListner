@@ -17,6 +17,7 @@ function ConfirmDialog({
   dialogTitle,
   dialogText,
   onConfirm,
+  WrapperComponent,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -40,7 +41,7 @@ function ConfirmDialog({
   }
 
   return (
-    <div>
+    <WrapperComponent>
       <Button
           color={buttonColor}
           onClick={handleOpen}
@@ -78,7 +79,7 @@ function ConfirmDialog({
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </WrapperComponent>
   );
 }
 
@@ -87,6 +88,7 @@ ConfirmDialog.defaultProps = {
   dialogText: '',
   confirmText: 'Confirm',
   cancelText: 'Cancel',
+  WrapperComponent: 'div',
 }
 
 export default ConfirmDialog;

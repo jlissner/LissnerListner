@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import appReducer from '../components/App/AppActions';
 import recipesReducer from '../components/Recipe/RecipeActions';
 import recipeFormReducer from '../components/Recipe/RecipeForm/RecipeFormActions';
 import filtersReducer from '../components/Filter/FilterActions';
@@ -9,7 +8,6 @@ import tagsReducer from '../components/Tags/TagsActions';
 import userReducer from '../components/User/UserActions';
 
 const reducers = (asyncReducers) => combineReducers({
-  app: appReducer,
   recipes: recipesReducer,
   recipeForm: recipeFormReducer,
   filters: filtersReducer,

@@ -55,7 +55,7 @@ async function graphql(body) {
   const hasError = _get(res, 'data.errors.length');
 
   if (hasError) {
-    return res.data;
+    throw new Error(_get(res, 'data.errors[0].message', 'Something went wrong'))
   }
 
   return _get(res, 'data.data');

@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import store from '../../redux/store';
-import SecuredApp from './SecuredAppContainer';
+import SecuredApp from './SecuredApp';
 
 const theme = createMuiTheme({
   palette: {

@@ -8,8 +8,7 @@ import {
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
 import RecipeList from '../Recipe/RecipeList';
-import RecipeForm from '../Recipe/RecipeForm/RecipeFormContainer'
-import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButtonContainer'
+import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButton'
 
 function UserRecipes() {
   const { activeUser } = useSelector(state => state.user);
@@ -29,7 +28,6 @@ function UserRecipes() {
           <RecipeFormButton Component={Button} variant="contained" color="primary" />
         </Grid>
       </Grid>
-      <RecipeForm />
     </Box>
   );
 

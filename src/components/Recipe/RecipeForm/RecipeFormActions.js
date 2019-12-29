@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
@@ -25,6 +26,9 @@ export const RESET_FORM = 'RECIPE_FORM::RESET_FORM';
 export const SET_VALUE = 'RECIPE_FORM::SET_VALUE';
 export const SAVE_FORM = 'RECIPE_FORM::SAVE_FORM';
 export const SAVE_FORM_SUCCESSFUL = 'RECIPE_FORM::SAVE_FORM_SUCCESSFUL';
+export const DELETE = 'RECIPE_FORM::DELETE';
+export const DELETE_SUCCESS = 'RECIPE_FORM::DELETE_SUCCESS';
+export const DELETE_FAILURE = 'RECIPE_FORM::DELETE_FAILURE';
 
 export function openForm() {
   return { type: OPEN_FORM };
@@ -39,12 +43,12 @@ export function setForm(_recipeForm) {
   recipeForm.open = recipeForm.open || false;
   recipeForm.directions = recipeForm.directions || [{ title: '', steps: []}]
   recipeForm.ingredients = recipeForm.ingredients || [{ title: '', ingredients: []}]
-  recipeForm.author = recipeForm.author || _get(recipeForm, 'additionalAttributes.author', '');
-  recipeForm.cookTime = recipeForm.cookTime || _get(recipeForm, 'additionalAttributes.cookTime', '');
-  recipeForm.description = recipeForm.description || _get(recipeForm, 'additionalAttributes.description', '');
-  recipeForm.image = recipeForm.image || _get(recipeForm, 'additionalAttributes.image', '');
-  recipeForm.note = recipeForm.note || _get(recipeForm, 'additionalAttributes.note', '');
-  recipeForm.serves = recipeForm.serves || _get(recipeForm, 'additionalAttributes.serves', '');
+  recipeForm.author = recipeForm.author || _get(recipeForm, 'additionalAttributes.author') || '';
+  recipeForm.cookTime = recipeForm.cookTime || _get(recipeForm, 'additionalAttributes.cookTime') || '';
+  recipeForm.description = recipeForm.description || _get(recipeForm, 'additionalAttributes.description') || '';
+  recipeForm.image = recipeForm.image || _get(recipeForm, 'additionalAttributes.image') || '';
+  recipeForm.note = recipeForm.note || _get(recipeForm, 'additionalAttributes.note') || '';
+  recipeForm.serves = recipeForm.serves || _get(recipeForm, 'additionalAttributes.serves') || '';
   recipeForm.tags = recipeForm.tags || [];
 
   _forEach(recipeForm.directions, (direction) => direction.title = direction.title || '');
@@ -142,6 +146,34 @@ export function saveForm(){
   }
 }
 
+export function deleteRecipe(idPk) {
+  return async (dispatch) => {
+    dispatch({ type: DELETE });
+
+    try {
+      const body = {
+        query: `
+          mutation {
+            deleteRecipeByIdPk(input: {idPk: "${idPk}"}) {
+              clientMutationId
+            }
+          }
+        `
+      };
+
+      await graphql(body);
+      toast.success('Successfully Deleted Recipe');
+
+      dispatch({ type: DELETE_SUCCESS });
+      dispatch(getRecipes());
+    } catch (err) {
+      toast.error(err.message);
+
+      dispatch({ type: DELETE_FAILURE, payload: err });
+    }
+  }
+}
+
 export const actions = {
   openForm,
   closeForm,
@@ -156,6 +188,9 @@ const ACTION_HANDLERS = {
     return { ...state, open: true };
   },
   [CLOSE_FORM]: (state) => {
+    return { ...state, open: false };
+  },
+  [DELETE_SUCCESS]: (state) => {
     return { ...state, open: false };
   },
   [SET_FORM]: (state, action) => {

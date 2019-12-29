@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -16,6 +18,13 @@ import LoaderButton from '../../LoaderButton/LoaderButton';
 import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
 import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
 import * as tags from  '../../../data/recipeTagOptions';
+import ConfirmDialog from '../../utils/ConfirmDialog';
+import {
+  closeForm,
+  deleteRecipe,
+  saveForm,
+  setValue,
+} from './RecipeFormActions';
 
 const styles = (theme) => ({
   form: {
@@ -27,7 +36,10 @@ const styles = (theme) => ({
   },
 });
 
-function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setValue }) {
+function RecipeForm ({ classes }) {
+  const dispatch = useDispatch();
+  const recipes = useSelector(state => state.recipes);
+  const recipeForm = useSelector(state => state.recipeForm);
   const {
     idPk,
     author,
@@ -43,27 +55,45 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     tags: recipeTags,
   } = recipeForm;
   const currentRecipe = _find(recipes, { idPk });
-  const hasError = Boolean((_find(recipes, { name }) && _get(currentRecipe, 'name') !== name));
+  const hasError = Boolean((
+    _find(recipes, { name }) && _get(currentRecipe, 'name') !== name // recipe title must be uniq
+  ));
   const disabled = Boolean(
     hasError
     || !name // recipe must have a title
     || !_find(recipeTags, { category: 'Section' }) // recipe must have a Section tag
   );
-  const handleFieldChange = (evt) => {
-    setValue({
+  const deleteButton = currentRecipe && (
+    <ConfirmDialog
+      buttonText="Delete Recipe"
+      buttonColor="secondary"
+      confirmText="Delete"
+      cancelText="Cancel"
+      dialogTitle={`Delete "${name}"`}
+      dialogText="This action is permanent and cannot be reversed."
+      onConfirm={() => dispatch(deleteRecipe(idPk))}
+      color="secondary"
+      variant="contained"
+      style={{ marginRight: 'auto' }}
+      WrapperComponent={React.Fragment}
+    />
+  )
+
+  function handleFieldChange(evt) {
+    dispatch(setValue({
       key: evt.target.name,
       value: evt.target.value,
-    })
+    }));
   }
 
   useEffect(() => {
     if (!saving) {
-      closeForm();
+      dispatch(closeForm());
     }
-  }, [ saving, closeForm ]);
+  }, [ dispatch, saving ]);
 
   return (
-    <Dialog onClose={closeForm} open={open} maxWidth="lg">
+    <Dialog onClose={() => dispatch(closeForm())} open={open} maxWidth="lg">
       <DialogTitle>{idPk ? 'Edit' : 'New'} Recipe</DialogTitle>
       <DialogContent className={classes.form}>
         <Grid container spacing={3}>
@@ -192,11 +222,12 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeForm}>Close</Button>
+        {deleteButton}
+        <Button onClick={() => dispatch(closeForm())}>Close</Button>
         <LoaderButton
           variant="contained"
           color="primary"
-          onClick={saveForm}
+          onClick={() => dispatch(saveForm())}
           disabled={disabled}
           text="Save"
           loadingText="Saving..."
@@ -206,5 +237,9 @@ function RecipeForm ({ classes, recipes, recipeForm, closeForm, saveForm, setVal
     </Dialog>
   )
 };
+
+RecipeForm.propTypes = {
+  classes: PropTypes.shape().isRequired,
+}
 
 export default withStyles(styles)(RecipeForm);

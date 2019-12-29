@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
-import Layout from '../Layout/LayoutContainer';
+import Layout from '../Layout/Layout';
+import { getTags } from '../Tags/TagsActions';
+import { getRecipes } from '../Recipe/RecipeActions';
+import { getCurrentUser } from '../User/UserActions';
 
-function SecuredApp({ getCurrentUser, logout, user, recipes, getRecipes, getTags }) {
+function SecuredApp() {
+  const dispatch = useDispatch();
+  const recipes = useSelector(state => state.recipes);
+  const user = useSelector(state => state.user);
   const [ authenticated, setAuthenticated ] = useState(false);
   const [ hasFetched, setHasFetched ] = useState(false);
   const { activeUser = {}, authenticating } = user;
@@ -11,35 +17,26 @@ function SecuredApp({ getCurrentUser, logout, user, recipes, getRecipes, getTags
 
   useEffect(() => {
     if (!authenticated && authenticating) {
-      getCurrentUser();
+      dispatch(getCurrentUser());
     } else if (!authenticated && idPk) {
       setAuthenticated(true);
     }
-  }, [authenticated, authenticating, getCurrentUser, idPk]);
+  }, [authenticated, authenticating, idPk, dispatch]);
 
   useEffect(() => {
     if (authenticated && !hasFetched) {
-      getRecipes();
-      getTags();
+      dispatch(getRecipes());
+      dispatch(getTags());
       setHasFetched(true);
     }
-  }, [authenticated, hasFetched, getRecipes, getTags])
+  }, [authenticated, hasFetched, dispatch])
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Layout user={idPk} logout={logout} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
+      <Layout user={idPk} isAuthenticating={authenticating} isLoading={Boolean(!recipes.length)} />
     </React.Fragment>
   )
-}
-
-SecuredApp.propTypes = {
-  login: PropTypes.func.isRequired,
-  logout: PropTypes.func.isRequired,
-  getTags: PropTypes.func.isRequired,
-  getRecipes: PropTypes.func.isRequired,
-  recipes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  user: PropTypes.shape().isRequired,
 }
 
 export default SecuredApp;

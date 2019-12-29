@@ -235,7 +235,7 @@ export function updateUserPassword({ idPk, currentPassword, newPassword }) {
       const bigInt = _get(res, 'updateUserPassword.bigInt');
 
       if (!bigInt) {
-        throw new Error(_get(res, 'errors[0].message', 'Something went wrong'));
+        throw new Error('Something went wrong');
       }
 
       toast.success('Password Successfully changed');
@@ -313,8 +313,6 @@ export function createUser(user) {
         }
       `
     };
-
-    console.log({ body })
 
     try {
       await graphql(body);
@@ -409,9 +407,6 @@ const ACTION_HANDLERS = {
 const initialState = {
   authenticating: true,
   activeUser: {
-    id: '',
-    attributes: [],
-    favoriteRecipes: [],
   },
   users: []
 }
