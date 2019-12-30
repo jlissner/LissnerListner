@@ -5,28 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import createStore from './redux/store';
 import defaultInitialState from '../__mocks__/defaultInitialState'
 
-const defaultInitissalState = {
-	user: {
-		authenticating: false,
-		activeUser: {
-			Id: 3,
-			favoriteRecipes: [1, 2]
-		}
-	},
-	filters: {
-		recipes: [{ category: 'Section', label: 'Appitizers'}],
-	},
-	recipes: [{
-		author: 'Connie',
-		title: 'Test 1',
-		tags: [{ category: 'Section', label: 'Appitizers'}]
-	}, {
-		author: 'Connie',
-		title: 'Test 2',
-		tags: [{ category: 'Section', label: 'Bread'}]
-	}]
-}
-
 export function renderWithRedux(
 	ui,
 	{

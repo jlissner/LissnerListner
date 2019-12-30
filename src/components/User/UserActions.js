@@ -104,11 +104,10 @@ export function getCurrentUser() {
       `,
     };
 
-
     try {
       const res = await graphql(body);
       const user = _get(res, 'getCurrentUser', {});
-      const favorites = _get(res, 'getCurrentUser.favorites.nodes', {}).map(({ recipeFk }) => recipeFk);
+      const favorites = _get(res, 'getCurrentUser.favorites.nodes', []).map(({ recipeFk }) => recipeFk);
 
       setLastOnline();
 
@@ -287,6 +286,7 @@ export function toggleFavorite(recipeFk) {
   return async (dispatch, getState) => {
     const { favorites } = getState().user.activeUser;
     const isFavorite = favorites.indexOf(recipeFk) > -1;
+
 
     if (isFavorite) {
       await removeFavorite(recipeFk);

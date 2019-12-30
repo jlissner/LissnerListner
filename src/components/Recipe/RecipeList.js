@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -22,8 +21,7 @@ import _groupBy from 'lodash/groupBy';
 import _kebabCase from 'lodash/kebabCase';
 import _map from 'lodash/map';
 import _sortBy from 'lodash/sortBy';
-import { sections } from '../../data/recipeSections';
-import Favorite from '../Favorite/FavoriteContainer';
+import Favorite from '../Favorite/Favorite';
 
 const sectionItemStyles = {
   listItem: {
@@ -115,31 +113,20 @@ const StyledSection = withStyles(sectionStyles)(Section)
 
 function RecipeList({ noRecipesContent, recipeList }) {
   const recipes = useSelector(state => state.recipes);
+  const sections = useSelector(state => state.sections);
   const sortedRecipes = useMemo(() => _sortBy(recipeList, [sortRecipesBySection, 'name']), [ recipeList ]);
   const [numOfRecipesToLoad, setNumOfRecipesToLoad] = useState(1);
   const [, setLoadRecipesTimeout] = useState(0);
-  const groupedRecipes = useMemo(() => (
-      _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label)
-    ), [numOfRecipesToLoad, sortedRecipes]);
-  const MemoizedSections = useCallback(
-    _map(sections, ({ label, value }) => (
-      <StyledSection
-        key={value}
-        recipes={groupedRecipes[value]}
-        section={label}
-      />
-    )),
-    [groupedRecipes]
-  )
+  const groupedRecipes = _groupBy(sortedRecipes.slice(0, numOfRecipesToLoad), (r) => _find(r.tags, {category: 'Section'}).label);
 
   useEffect(() => {
     if (numOfRecipesToLoad < recipeList.length) {
-      const incrementBy = numOfRecipesToLoad < 10 ? 1 : 20
+      const incrementBy = numOfRecipesToLoad < 10 ? 1 : 20;
       const loadedTimeout = setTimeout(() => {
         setNumOfRecipesToLoad(numOfRecipesToLoad + incrementBy)
-      }, 100)
+      }, 100);
 
-      setLoadRecipesTimeout(loadedTimeout)
+      setLoadRecipesTimeout(loadedTimeout);
 
       return () => clearTimeout(loadedTimeout);
     }
@@ -147,8 +134,9 @@ function RecipeList({ noRecipesContent, recipeList }) {
 
   useEffect(() => {
     setLoadRecipesTimeout(prevLoadRecipedTimeout => clearTimeout(prevLoadRecipedTimeout));
-    setNumOfRecipesToLoad(prevNumOfRecipesToLoad => prevNumOfRecipesToLoad > 10 ? 10 : prevNumOfRecipesToLoad + 1)
+    setNumOfRecipesToLoad(prevNumOfRecipesToLoad => prevNumOfRecipesToLoad > 10 ? 10 : prevNumOfRecipesToLoad + 1);
   }, [sortedRecipes])
+
 
   if (recipes.length === 0) {
     return <CircularProgress />
@@ -157,8 +145,13 @@ function RecipeList({ noRecipesContent, recipeList }) {
   if (recipeList.length === 0) {
     return noRecipesContent;
   }
-
-  return MemoizedSections;
+  return _map(sections, ({ name }) => (
+    <StyledSection
+      key={name}
+      recipes={groupedRecipes[name]}
+      section={name}
+    />
+  ));
 }
 
 RecipeList.propTypes = {

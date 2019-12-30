@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -10,8 +11,6 @@ import {
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import _map from 'lodash/map';
 import Search from '../components/Search/SearchContainer';
-import { sections } from '../data/recipeSections';
-
 
 const styles = (theme) => ({
   btn: {
@@ -62,6 +61,7 @@ const styles = (theme) => ({
 
 function Home({ classes, location, history }) {
   const searchPageUrl = `search${location.search}`;
+  const sections = useSelector(state => state.sections);
 
   function submitSearch(evt) {
     evt.preventDefault();
@@ -103,18 +103,18 @@ function Home({ classes, location, history }) {
         <Divider />
       </Grid>
       {
-        _map(sections, ({label, value}) => (
-          <Grid key={value} item xs={12} sm={6} md={4}>
+        _map(sections, ({ name }) => (
+          <Grid key={name} item xs={12} sm={6} md={4}>
             <Button
               fullWidth
               size="large"
               variant="contained"
               className={classes.btn}
               component={Link}
-              to={`/cookbook/search?filters=[{"category": "Section", "label": "${encodeURIComponent(value)}"}]`}
-              title={label}
+              to={`/cookbook/search?filters=[{"category": "Section", "label": "${encodeURIComponent(name)}"}]`}
+              title={name}
             >
-              {label}
+              {name}
             </Button>
           </Grid>
         ))

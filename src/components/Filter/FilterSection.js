@@ -12,7 +12,7 @@ import FilterItem from './FilterItemContainer';
 const styles = (theme) => ({
   root: {
     '& + $root': {
-      paddingTop: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
   },
   list: {

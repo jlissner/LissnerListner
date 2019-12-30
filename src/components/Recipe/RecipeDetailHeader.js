@@ -5,7 +5,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import Favorite from '../Favorite/FavoriteContainer';
+import Favorite from '../Favorite/Favorite';
 import FormattedText from '../utils/FormattedText';
 
 const styles = (theme) => ({

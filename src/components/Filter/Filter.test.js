@@ -2,7 +2,7 @@ import React from 'react';
 import Filter from './FilterContainer';
 import { renderWithReduxAndRounter } from '../../testUtils';
 
-jest.mock('../../lib/awsLib');
+jest.mock('../../lib/graphql');
 
 describe('Filter', () => {
 	const props = {

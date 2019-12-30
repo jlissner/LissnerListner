@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 import {
   List,
   ListSubheader,
+  Paper,
 } from '@material-ui/core';
 import qs from 'query-string';
 import { getIsFavorite } from '../Favorite/getFavoriteRecipes';
@@ -13,9 +14,7 @@ import FilterItem from './FilterItem';
 const styles = (theme) => ({
   root: {
     background: '#fff',
-    '& + $root': {
-      paddingTop: theme.spacing(2),
-    },
+    marginBottom: theme.spacing(2),
   },
   list: {
       width: '100%',
@@ -38,7 +37,7 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
   }
 
 	return (
-		<div className={classes.root}>
+		<Paper className={classes.root}>
 			<List
         className={classes.list}
         subheader={<ListSubheader disableSticky>Favorites</ListSubheader>}
@@ -50,7 +49,7 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 					label="My Favorites"
 				/>
 			</List>
-		</div>
+		</Paper>
 	);
 }
 

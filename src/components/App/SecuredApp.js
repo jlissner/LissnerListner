@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import Layout from '../Layout/Layout';
 import { getTags } from '../Tags/TagsActions';
+import { getSections } from '../../globalState/sections';
 import { getRecipes } from '../Recipe/RecipeActions';
 import { getCurrentUser } from '../User/UserActions';
 
@@ -27,6 +28,7 @@ function SecuredApp() {
     if (authenticated && !hasFetched) {
       dispatch(getRecipes());
       dispatch(getTags());
+      dispatch(getSections());
       setHasFetched(true);
     }
   }, [authenticated, hasFetched, dispatch])
