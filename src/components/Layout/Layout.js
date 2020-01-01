@@ -64,7 +64,7 @@ const styles = (theme) => ({
   },
   '@global': {
     'html, body, #root': {
-      height: '100%',
+      minHeight: '100%',
     }
   },
 })
