@@ -10,9 +10,9 @@ import getFavoriteRecipes from '../Favorite/getFavoriteRecipes';
 import { filterRecipes } from './getFilteredRecipes';
 
 const getAvailableFilters = createSelector(
-  (state, props) => state.filters[props.category],
+  state => state.filters,
   state => state.tags,
-  (state, props) => state[props.category],
+  state => state.recipes,
   getSearchedRecipes,
   getFavoriteRecipes,
   (filters, tags, allRecipes, searchedRecipes, favoriteRecipes) => {

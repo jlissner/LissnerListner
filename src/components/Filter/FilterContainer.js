@@ -6,9 +6,9 @@ import getNumberOfFavoriteRecipes from '../Favorite/getNumberOfFavoriteRecipes';
 import Filter from './Filter';
 
 const mapStateTopProps = (state, props) => ({
-  filters: getAvailableFilters(state, props),
+  availableFilters: getAvailableFilters(state, props),
   numberOfFavoriteRecipes: getNumberOfFavoriteRecipes(state, props),
-  appliedFilters: state.filters,
+  filters: state.filters,
   tags: state.tags,
 });
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   ListItem,
@@ -7,6 +8,7 @@ import {
 } from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import { toggleFilter } from './FilterActions';
 
 const styles = (theme) => ({
   checked: {
@@ -14,7 +16,19 @@ const styles = (theme) => ({
   },
 });
 
-function FilterItem({ classes, checked, numberOfRecipes, handleClick, label }) {
+function FilterItem({
+  classes,
+  checked,
+  label,
+  numberOfRecipes,
+  subCategory,
+}) {
+  const dispatch = useDispatch();
+
+  function handleClick() {
+    dispatch(toggleFilter({ label, category: subCategory}))
+  }
+
   return (
     <ListItem button onClick={handleClick}>
       <ListItemIcon>

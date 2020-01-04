@@ -10,9 +10,7 @@ export const ADD_FILTER = 'FILTERS::ADD_FILTER';
 export const REMOVE_FILTER = 'FILTERS::REMOVE_FILTER';
 export const TOGGLE_FILTER = 'FILTERS::TOGGLE_FILTER';
 
-const initialState = {
-  recipes: []
-}
+const initialState = []
 
 export function setFilters(filters) {
   return {
@@ -41,17 +39,17 @@ export function removeFilter(filter) {
   };
 }
 
-export function toggleFilter({category, value}) {
+export function toggleFilter(value) {
   return (dispatch, getState) => {
-    dispatch({ type: TOGGLE_FILTER, payload: { category, value } });
+    dispatch({ type: TOGGLE_FILTER, payload: value });
 
-    const filters = getState().filters[category];
+    const filters = getState().filters;
     const alreadyExists = _find(filters, value);
 
     if (alreadyExists) {
-      dispatch(removeFilter({category, value}))
+      dispatch(removeFilter(value))
     } else {
-      dispatch(addFilter({category, value}))
+      dispatch(addFilter(value))
     }
   }
 }
@@ -66,22 +64,13 @@ export const actions = {
 
 const ACTION_HANDLERS = {
   [ADD_FILTER]: (state, action) => {
-    return {
-      ...state,
-      [action.payload.category]: _uniq(_concat(state[action.payload.category], action.payload.value))
-    }
+    return _uniq(_concat(state, action.payload));
   },
   [REMOVE_FILTER]: (state, action) => {
-    return {
-      ...state,
-      [action.payload.category]: _filter(state[action.payload.category], (filter) => !_isEqual(filter, action.payload.value))
-    }
+    return _filter(state, (filter) => !_isEqual(filter, action.payload));
   },
   [SET_FILTERS]: (state, action) => {
-    return {
-      ...state,
-      [action.payload.category]: action.payload.value,
-    }
+    return action.payload;
   },
   [RESET_FILTERS]: (state, action) => {
     return initialState

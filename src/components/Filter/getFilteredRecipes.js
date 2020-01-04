@@ -20,7 +20,7 @@ export function filterRecipes(recipes, filters) {
 
 const getFilteredRecipes = createSelector(
   state => state.recipes,
-  state => state.filters.recipes,
+  state => state.filters,
   filterRecipes
 );
 

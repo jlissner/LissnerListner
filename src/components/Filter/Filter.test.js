@@ -1,15 +1,11 @@
 import React from 'react';
-import Filter from './FilterContainer';
+import Filter from './Filter';
 import { renderWithReduxAndRounter } from '../../testUtils';
 
 jest.mock('../../lib/graphql');
 
 describe('Filter', () => {
-	const props = {
-		category: 'recipes'
-	};
-
 	it('renders', () => {
-		renderWithReduxAndRounter(<Filter {...props} />)
+		renderWithReduxAndRounter(<Filter />)
 	})
 })

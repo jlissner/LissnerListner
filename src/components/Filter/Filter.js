@@ -1,47 +1,60 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 import { CircularProgress } from '@material-ui/core';
 import _get from 'lodash/get';
-import _debounce from 'lodash/debounce';
+import _isEqual from 'lodash/isEqual';
 import FilterSection from './FilterSection';
 import FavoriteFilter from './FavoriteFilter';
-
-function updateHistory(history, search) {
-  history.push({ search })
-}
+import { setFilters } from './FilterActions';
+import getAvailableFilters from './getAvailableFilters'
+import getNumberOfFavoriteRecipes from '../Favorite/getNumberOfFavoriteRecipes'
 
 function Filter({
-  appliedFilters,
-  category,
-  filters,
   history,
   location,
-  numberOfFavoriteRecipes,
-  setFilters,
-  tags,
 }) {
-  const updateHistoryDebounced = useMemo(() => _debounce(updateHistory, 100), []);
+  const dispatch = useDispatch();
+  const availableFilters = useSelector(state => getAvailableFilters(state, { location }));
+  const numberOfFavoriteRecipes = useSelector(state => getNumberOfFavoriteRecipes(state, { location }));
+  const filters = useSelector(state => state.filters);
+  const tags = useSelector(state => state.tags);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const curSearch = qs.parse(location.search);
+  const qsFilters = _get(curSearch, 'filters', JSON.stringify([]));
 
   useEffect(() => {
-    const parsedQueryString = qs.parse(location.search);
-    const filtersString = _get(parsedQueryString, 'filters');
-    const filterValue = filtersString
-      ? JSON.parse(filtersString)
+    setInitialLoad(false);
+  }, []);
+
+  useEffect(() => {
+    if (!initialLoad) {
+      return;
+    }
+
+    const filterValue = qsFilters
+      ? JSON.parse(qsFilters)
       : [];
 
-    setFilters({ category: 'recipes', value: filterValue})
-  }, [location.search, setFilters]);
+    if (!_isEqual(filterValue, filters)) {
+      dispatch(setFilters(filterValue));
+    }
+  }, [location.search, dispatch, qsFilters, filters, initialLoad]);
 
   useEffect(() => {
-    const curSearch = qs.parse(location.search);
+    if (initialLoad || _isEqual(JSON.parse(qsFilters), filters)) {
+      return;
+    }
 
-    curSearch.filters = _get(appliedFilters, `${category}.length`)
-      ? JSON.stringify(appliedFilters[category])
+    curSearch.filters = filters.length
+      ? JSON.stringify(filters)
       : undefined;
+    
 
-    updateHistoryDebounced(history, qs.stringify(curSearch))
-  }, [appliedFilters, location.search, category, history, updateHistoryDebounced])
+    history.push({ search: qs.stringify(curSearch) })
+  }, [filters, curSearch, history, initialLoad, qsFilters])
 
   if (tags.length === 0) {
     return (
@@ -50,52 +63,42 @@ function Filter({
   }
 
   return (
-      <React.Fragment>
+      <>
         <FavoriteFilter
           numberOfRecipes={numberOfFavoriteRecipes}
         />
 
         <FilterSection
-          filters={filters.Section}
-          category={category}
+          filters={availableFilters.Section}
           subCategory={'Section'}
         />
 
         <FilterSection
-          filters={filters.Difficulty}
-          category={category}
+          filters={availableFilters.Difficulty}
           subCategory={'Difficulty'}
         />
 
         <FilterSection
-          filters={filters['Dietary Preference']}
-          category={category}
+          filters={availableFilters['Dietary Preference']}
           subCategory={'Dietary Preference'}
         />
 
         <FilterSection
-          filters={filters['Cooking Style']}
-          category={category}
+          filters={availableFilters['Cooking Style']}
           subCategory={'Cooking Style'}
         />
 
         <FilterSection
-          filters={filters.Ethnicity}
-          category={category}
+          filters={availableFilters.Ethnicity}
           subCategory={'Ethnicity'}
         />
-      </React.Fragment>
+      </>
   );
 };
 
 Filter.propTypes = {
-  filters: PropTypes.shape().isRequired,
-  tags: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  category: PropTypes.string.isRequired,
   history: PropTypes.shape().isRequired,
   location: PropTypes.shape().isRequired,
-  setFilters: PropTypes.func.isRequired,
-  appliedFilters: PropTypes.shape().isRequired,
 }
 
-export default Filter;
+export default withRouter(Filter);

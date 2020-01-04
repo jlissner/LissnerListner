@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import _filter from 'lodash/filter';
 import _map from 'lodash/map';
-import FilterItem from './FilterItemContainer';
+import FilterItem from './FilterItem';
 
 const styles = (theme) => ({
   root: {
@@ -20,38 +20,38 @@ const styles = (theme) => ({
   }
 });
 
-class FilterSection extends React.Component {
-  render() {
-    const { classes, filters, category, subCategory } = this.props;
-    const filtersToShow = _filter(filters, ({ checked, numberOfRecipes }) => numberOfRecipes || checked)
+function FilterSection({
+  classes,
+  filters,
+  subCategory,
+}) {
+  const filtersToShow = _filter(filters, ({ checked, numberOfRecipes }) => numberOfRecipes || checked)
 
-    if (filtersToShow.length === 0) {
-      return false;
-    } 
+  if (filtersToShow.length === 0) {
+    return false;
+  } 
 
-    return (
-      <Paper className={classes.root}>
-        <List
-          className={classes.list}
-          subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
-        >
-          {
-            _map(filtersToShow, ({label, checked, numberOfRecipes}) => (
-                <FilterItem
-                  key={label}
-                  label={label}
-                  checked={checked}
-                  numberOfRecipes={numberOfRecipes}
-                  subCategory={subCategory}
-                  category={category}
-                />
-              )
+  return (
+    <Paper className={classes.root}>
+      <List
+        className={classes.list}
+        subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
+      >
+        {
+          _map(filtersToShow, ({label, checked, numberOfRecipes}) => (
+              <FilterItem
+                key={label}
+                label={label}
+                checked={checked}
+                numberOfRecipes={numberOfRecipes}
+                subCategory={subCategory}
+              />
             )
-          }
-        </List>
-      </Paper>
-    );
-  }
+          )
+        }
+      </List>
+    </Paper>
+  );
 };
 
 export default withStyles(styles)(FilterSection);
