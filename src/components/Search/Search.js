@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import {
   InputAdornment,
@@ -8,6 +10,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import _debounce from 'lodash/debounce';
 import qs from 'query-string';
+import { setSearch } from './SearchActions';
 
 const styles = theme => ({
   search: {
@@ -16,39 +19,52 @@ const styles = theme => ({
       borderColor: 'inherit !important',
     }
   },
-})
+});
 
-function Search({ classes, setSearch, category, search, variant, history, location }) {
+function Search({ classes, variant, history, location }) {
+  const search = useSelector(state => state.search);
+  const dispatch = useDispatch();
   const [ val, setVal ] = useState('');
   const [ initialLoad, setInitialLoad ] = useState(true);
-  const debouncedSetSearch = useMemo(() => _debounce(setSearch, 500), [setSearch])
+  const debouncedSetSearch = useCallback(_debounce((val) => dispatch(setSearch(val)), 500), [dispatch]);
+  const qsSearch = getSeachFromParam();
 
   useEffect(() => {
-    setInitialLoad(false)
-  }, [])
+    setInitialLoad(false);
+  }, []);
+
+  function getSeachFromParam() {
+    const urlParams = new URLSearchParams(location.search);
+    const encodedParam = urlParams.get('search');
+    
+    return encodedParam ? decodeURIComponent(encodedParam) : '';
+  }
 
   useEffect(() => {
     if (!initialLoad) {
-      return
+      return;
     }
 
-    const urlParams = new URLSearchParams(location.search);
-    const encodedParam = urlParams.get('search');
-    const decodedParam = encodedParam ? decodeURIComponent(encodedParam) : '';
+    setVal(qsSearch);
 
-    setVal(decodedParam)
-    setSearch({ category, value: decodedParam })
-  }, [category, setSearch, setVal, location.search, initialLoad])
+    if (search !== qsSearch) {
+      dispatch(setSearch(qsSearch));
+    }
+  }, [dispatch, qsSearch, initialLoad, search])
 
   useEffect(() => {
-    const parsedQueryString = qs.parse(location.search);
+    if (initialLoad) {
+      return;
+    }
 
-    parsedQueryString.search = val || undefined;
+    if (qsSearch !== val) {
+      history.push({search: qs.stringify({search: val})})
+    }
 
-    history.push({search: qs.stringify(parsedQueryString)})
-
-    debouncedSetSearch({ category, value: val })
-  }, [debouncedSetSearch, val, category, history, location.search])
+    if (search !== val) {
+      debouncedSetSearch(val)
+    }
+  }, [debouncedSetSearch, initialLoad, val, history, qsSearch, search])
 
   return (
     <Paper>
@@ -76,8 +92,4 @@ function Search({ classes, setSearch, category, search, variant, history, locati
   )
 }
 
-Search.defaultProps = {
-  category: 'recipes',
-}
-
-export default withStyles(styles)(Search);
+export default withRouter(withStyles(styles)(Search));

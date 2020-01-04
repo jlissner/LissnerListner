@@ -1,9 +1,7 @@
 export const SET_SEARCH = 'SEARCH::SET_SEARCH';
 export const RESET_SEARCH = 'SEARCH::RESET_SEARCH';
 
-const initialState = {
-  recipes: '',
-}
+const initialState = '';
 
 export function setSearch(search) {
   return {
@@ -25,10 +23,7 @@ export const actions = {
 
 const ACTION_HANDLERS = {
   [SET_SEARCH]: (state, action) => {
-    return {
-      ...state,
-      [action.payload.category]: action.payload.value
-    }
+    return action.payload;
   },
   [RESET_SEARCH]: (state, action) => {
     return initialState

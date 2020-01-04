@@ -9,7 +9,7 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FilterIcon from '@material-ui/icons/FilterList';
-import SearchBar from '../components/Search/SearchContainer';
+import SearchBar from '../components/Search/Search';
 import Filter from '../components/Filter/FilterContainer';
 import Quotes from '../components/Quotes/QuotesContainer';
 import RecipeList from '../components/Recipe/RecipeList';

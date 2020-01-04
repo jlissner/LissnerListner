@@ -4,7 +4,7 @@ import _lowerCase from 'lodash/lowerCase';
 
 const getSearchedRecipes = createSelector(
   state => state.recipes,
-  state => state.search.recipes,
+  state => state.search,
   (recipes, search) => {
     if (search.length === 0) {
       return recipes;
