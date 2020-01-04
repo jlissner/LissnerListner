@@ -63,8 +63,12 @@ const styles = (theme) => ({
     marginRight: 'auto',
   },
   '@global': {
-    'html, body, #root': {
+    'html, body': {
       minHeight: '100%',
+      display: 'flex',
+    },
+    'body, #root': {
+      flex: 1,
     }
   },
 })
