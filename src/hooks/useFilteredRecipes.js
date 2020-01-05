@@ -1,7 +1,8 @@
-import { createSelector } from 'reselect';
+import { useSelector } from 'react-redux';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import _uniqBy from 'lodash/uniqBy';
+import useQueryString from './useQueryString';
 
 export function filterRecipes(recipes, filters) {
   if (filters.length === 0) {
@@ -18,10 +19,12 @@ export function filterRecipes(recipes, filters) {
   });
 }
 
-const getFilteredRecipes = createSelector(
-  state => state.recipes,
-  state => state.filters,
-  filterRecipes
-);
+function useFilteredRecipes() {
+ const [getQueryValue] = useQueryString();
+ const recipes = useSelector(state => state.recipes);
+ const filters = getQueryValue({ key: 'filters', defaultValue: '[]' });
 
-export default getFilteredRecipes;
+ return filterRecipes(recipes, JSON.parse(filters));
+}
+
+export default useFilteredRecipes;

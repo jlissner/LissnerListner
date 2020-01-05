@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   ListItem,
@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import { toggleFilter } from './FilterActions';
 
 const styles = (theme) => ({
   checked: {
@@ -17,16 +16,15 @@ const styles = (theme) => ({
 });
 
 function FilterItem({
-  classes,
+  category,
   checked,
+  classes,
   label,
   numberOfRecipes,
-  subCategory,
+  toggleFilter,
 }) {
-  const dispatch = useDispatch();
-
   function handleClick() {
-    dispatch(toggleFilter({ label, category: subCategory}))
+    toggleFilter({ label, category });
   }
 
   return (
@@ -42,5 +40,18 @@ function FilterItem({
     </ListItem>
   );
 };
+
+FilterItem.propTypes = {
+  category: PropTypes.string,
+  checked: PropTypes.bool.isRequired,
+  classes: PropTypes.shape().isRequired,
+  label: PropTypes.string.isRequired,
+  numberOfRecipes: PropTypes.number.isRequired,
+  toggleFilter: PropTypes.func.isRequired,
+}
+
+FilterItem.defaultProps = {
+  category: null,
+}
 
 export default withStyles(styles)(FilterItem);

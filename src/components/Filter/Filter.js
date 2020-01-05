@@ -1,60 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import qs from 'query-string';
 import { CircularProgress } from '@material-ui/core';
-import _get from 'lodash/get';
+import _concat from 'lodash/concat';
+import _find from 'lodash/find';
+import _filter from 'lodash/filter';
 import _isEqual from 'lodash/isEqual';
+import _map from 'lodash/map';
+import _sortBy from 'lodash/sortBy';
+import _uniq from 'lodash/uniq';
 import FilterSection from './FilterSection';
 import FavoriteFilter from './FavoriteFilter';
-import { setFilters } from './FilterActions';
-import getAvailableFilters from './getAvailableFilters'
-import getNumberOfFavoriteRecipes from '../Favorite/getNumberOfFavoriteRecipes'
+import useAvailableFilters from '../../hooks/useAvailableFilters'
+import useQueryString from '../../hooks/useQueryString';
+
+function sortSections({ category }) {
+  switch (category) {
+    case 'Section': return 0;
+    case 'Difficulty': return 1;
+    case 'Dietary Preference': return 1;
+    case 'Cooking Style': return 3;
+    case 'Ethnicity': return 4;
+    default: return 5;
+  }
+}
 
 function Filter({
   history,
   location,
 }) {
-  const dispatch = useDispatch();
-  const availableFilters = useSelector(state => getAvailableFilters(state, { location }));
-  const numberOfFavoriteRecipes = useSelector(state => getNumberOfFavoriteRecipes(state, { location }));
-  const filters = useSelector(state => state.filters);
+  const [getQueryValue, setQueryValue] = useQueryString();
+  const filtersString = getQueryValue({ location, key: 'filters', defaultValue: '[]' });
+  const filters = JSON.parse(filtersString);
+  const availableFilters = useAvailableFilters();
   const tags = useSelector(state => state.tags);
-  const [initialLoad, setInitialLoad] = useState(true);
-  const curSearch = qs.parse(location.search);
-  const qsFilters = _get(curSearch, 'filters', JSON.stringify([]));
 
-  useEffect(() => {
-    setInitialLoad(false);
-  }, []);
+  function toggleFilter(filter) {
+    const alreadyExists = _find(filters, filter);
+    const newValue = alreadyExists
+      ? _filter(filters, (f) => !_isEqual(f, filter))
+      : _uniq(_concat(filters, filter));
 
-  useEffect(() => {
-    if (!initialLoad) {
-      return;
-    }
-
-    const filterValue = qsFilters
-      ? JSON.parse(qsFilters)
-      : [];
-
-    if (!_isEqual(filterValue, filters)) {
-      dispatch(setFilters(filterValue));
-    }
-  }, [location.search, dispatch, qsFilters, filters, initialLoad]);
-
-  useEffect(() => {
-    if (initialLoad || _isEqual(JSON.parse(qsFilters), filters)) {
-      return;
-    }
-
-    curSearch.filters = filters.length
-      ? JSON.stringify(filters)
-      : undefined;
-    
-
-    history.push({ search: qs.stringify(curSearch) })
-  }, [filters, curSearch, history, initialLoad, qsFilters])
+    setQueryValue({
+      value: newValue.length ? JSON.stringify(newValue) : '',
+      key: 'filters',
+      location,
+      history,
+    });
+  }
 
   if (tags.length === 0) {
     return (
@@ -64,34 +58,16 @@ function Filter({
 
   return (
       <>
-        <FavoriteFilter
-          numberOfRecipes={numberOfFavoriteRecipes}
-        />
-
-        <FilterSection
-          filters={availableFilters.Section}
-          subCategory={'Section'}
-        />
-
-        <FilterSection
-          filters={availableFilters.Difficulty}
-          subCategory={'Difficulty'}
-        />
-
-        <FilterSection
-          filters={availableFilters['Dietary Preference']}
-          subCategory={'Dietary Preference'}
-        />
-
-        <FilterSection
-          filters={availableFilters['Cooking Style']}
-          subCategory={'Cooking Style'}
-        />
-
-        <FilterSection
-          filters={availableFilters.Ethnicity}
-          subCategory={'Ethnicity'}
-        />
+        <FavoriteFilter />
+        
+        {_map(_sortBy(availableFilters, sortSections), ({ category, filters }) => (
+          <FilterSection
+            key={category}
+            category={category}
+            filters={filters}
+            toggleFilter={toggleFilter}
+          />
+        ))}
       </>
   );
 };

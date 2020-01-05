@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -23,7 +24,8 @@ const styles = (theme) => ({
 function FilterSection({
   classes,
   filters,
-  subCategory,
+  category,
+  toggleFilter,
 }) {
   const filtersToShow = _filter(filters, ({ checked, numberOfRecipes }) => numberOfRecipes || checked)
 
@@ -35,16 +37,17 @@ function FilterSection({
     <Paper className={classes.root}>
       <List
         className={classes.list}
-        subheader={<ListSubheader disableSticky>{subCategory}</ListSubheader>}
+        subheader={<ListSubheader disableSticky>{category}</ListSubheader>}
       >
         {
           _map(filtersToShow, ({label, checked, numberOfRecipes}) => (
               <FilterItem
                 key={label}
-                label={label}
+                category={category}
                 checked={checked}
+                label={label}
                 numberOfRecipes={numberOfRecipes}
-                subCategory={subCategory}
+                toggleFilter={toggleFilter}
               />
             )
           )
@@ -52,6 +55,13 @@ function FilterSection({
       </List>
     </Paper>
   );
+};
+
+FilterSection.propTypes = {
+  classes: PropTypes.shape().isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  category: PropTypes.string.isRequired,
+  toggleFilter: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(FilterSection);

@@ -74,17 +74,12 @@ const defaultInitialState = {
     directions: [{title: '', steps:[]}],
     tags: [],
   },
-  filters:[
-    { category:  'Section',  label: ' Lunch & Brunch' },
-    {  label:  'Medium', category:  'Difficulty' },
-  ],
   quotes:[
     {author: 'English Proverb', quote: 'Don\'t put all your eggs in one basket.' },
     {author: 'Mae West', quote: 'I never worry about diets. The only carrots that interest me are the number you get in a diamond.' },
     {author: 'Old Wives Tale', quote: 'Feed a cold; starve a fever.' },
     {author: 'Julia Child', quote: 'Buy olive oil for its taste, not its virginity.' },
   ],
-  search: '',
   tags:[
     {category: 'Cooking Style','listOrder':1, label: 'BBQ & Grilling','checked':false, numberOfRecipes: 0 },
     {category: 'Cooking Style','listOrder':2, label: 'Casserole','checked':false, numberOfRecipes: 0 },

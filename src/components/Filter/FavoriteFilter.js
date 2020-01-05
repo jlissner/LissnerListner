@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles';
 import {
   List,
   ListSubheader,
   Paper,
 } from '@material-ui/core';
-import qs from 'query-string';
-import { getIsFavorite } from '../Favorite/getFavoriteRecipes';
+import useNumberOfFavoriteRecipes from '../../hooks/useNumberOfFavoriteRecipes';
+import useQueryString from '../../hooks/useQueryString';
 import FilterItem from './FilterItem';
 
 const styles = (theme) => ({
@@ -21,15 +21,14 @@ const styles = (theme) => ({
   },
 });
 
-function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
-	const parsedQueryString = qs.parse(location.search)
-	const checked = getIsFavorite(location);
+function FavoriteFilter({ classes, location, history }) {
+  const [getQueryValue, setQueryValue] = useQueryString();
+  const numberOfRecipes = useNumberOfFavoriteRecipes();
+	const checked = getQueryValue({ key: 'favorite' }) === 'true';
   const hide = !checked && !numberOfRecipes
 
 	function handleClick() {
-		parsedQueryString.favorite = !checked;
-
-		history.push({search: qs.stringify(parsedQueryString)})
+    setQueryValue({ key: 'favorite', value: !checked });
 	}
 
   if (hide) {
@@ -45,7 +44,7 @@ function FavoriteFilter({ classes, location, history, numberOfRecipes }) {
 				<FilterItem
 					checked={checked}
 					numberOfRecipes={numberOfRecipes}
-					handleClick={handleClick}
+					toggleFilter={handleClick}
 					label="My Favorites"
 				/>
 			</List>
@@ -57,7 +56,6 @@ FavoriteFilter.propTypes = {
 	classes: PropTypes.shape().isRequired,
 	location: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
-  numberOfRecipes: PropTypes.number.isRequired,
 }
 
 export default withRouter(withStyles(styles)(FavoriteFilter));

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import withWidth from '@material-ui/core/withWidth';
@@ -10,15 +9,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SearchBar from '../components/Search/Search';
-import Filter from '../components/Filter/FilterContainer';
+import Filter from '../components/Filter/Filter';
 import Quotes from '../components/Quotes/QuotesContainer';
 import RecipeList from '../components/Recipe/RecipeList';
-import getRecipeList from '../components/Recipe/getRecipeList';
+import useRecipeList from '../hooks/useRecipeList';
 
 function Search(props) {
 	const matches = useMediaQuery('(min-width:600px)');
 	const [ showFilter, setShowFilters ] = useState(false);
-  const recipeList = useSelector(state => getRecipeList(state, props));
+  const recipeList = useRecipeList();
   const noRecipesContent = <Typography>No recipes found.</Typography>;
 
 	return (
