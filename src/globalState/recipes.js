@@ -1,5 +1,5 @@
 import _get from 'lodash/get';
-import graphql from '../../lib/graphql';
+import graphql from '../lib/graphql';
 
 export const GET_RECIPES = 'RECIPES::GET_RECIPES';
 export const SET_RECIPES = 'RECIPES::SET_RECIPES';
@@ -41,10 +41,6 @@ export function setRecipes(recipes) {
     type: SET_RECIPES,
     payload: recipes,
   }
-}
-
-export const actions = {
-  getRecipes,
 }
 
 const ACTION_HANDLERS = {

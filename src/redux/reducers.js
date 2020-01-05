@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import recipes from '../components/Recipe/RecipeActions';
-import recipeForm from '../components/Recipe/RecipeForm/RecipeFormActions';
-import quotes from '../components/Quotes/QuotesActions';
-import tags from '../components/Tags/TagsActions';
-import user from '../components/User/UserActions';
+import recipes from '../globalState/recipes';
+import recipeForm from '../globalState/recipeForm';
+import quotes from '../globalState/quotes';
+import tags from '../globalState/tags';
+import user from '../globalState/user';
 import sections from '../globalState/sections';
 
 const reducers = (asyncReducers) => combineReducers({

@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import LoaderButton from '../LoaderButton/LoaderButton';
 import makeName from '../utils/makeName';
-import { updateUser } from './UserActions';
+import { updateUser } from '../../globalState/user';
 
 function UserDetails() {
   const { activeUser } = useSelector(state => state.user);

@@ -2,8 +2,8 @@ import { toast } from 'react-toastify'
 import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
-import graphql, { objToGraphqlStr } from '../../../lib/graphql';
-import { getRecipes } from '../RecipeActions';
+import graphql, { objToGraphqlStr } from '../lib/graphql';
+import { getRecipes } from './recipes';
 
 const initialState = {
   open: false,
@@ -172,15 +172,6 @@ export function deleteRecipe(idPk) {
       dispatch({ type: DELETE_FAILURE, payload: err });
     }
   }
-}
-
-export const actions = {
-  openForm,
-  closeForm,
-  setForm,
-  setValue,
-  saveForm,
-  resetForm,
 }
 
 const ACTION_HANDLERS = {

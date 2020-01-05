@@ -15,8 +15,8 @@ import {
 import _find from 'lodash/find';
 import _get from 'lodash/get';
 import LoaderButton from '../../LoaderButton/LoaderButton';
-import SectionListsForm from '../../SectionListsForm/SectionListsFormContainer';
-import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsFormContainer';
+import SectionListsForm from '../../SectionListsForm/SectionListsForm';
+import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsForm';
 import * as tags from  '../../../data/recipeTagOptions';
 import ConfirmDialog from '../../utils/ConfirmDialog';
 import {
@@ -24,7 +24,7 @@ import {
   deleteRecipe,
   saveForm,
   setValue,
-} from './RecipeFormActions';
+} from '../../../globalState/recipeForm';
 
 const styles = (theme) => ({
   form: {

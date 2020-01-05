@@ -1,116 +1,113 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
 import _map from 'lodash/map';
 import _without from 'lodash/without';
+import { setValue } from '../../globalState/recipeForm';
 import ListSection from './ListSection';
 
 const styles = (theme) => ({
 });
 
-class SectionListsForm extends React.Component {
-  removeSection = (indexOfSection) => {
-    return () => {
-      const { category, data } = this.props;
+function SectionListsForm({
+  category,
+  data,
+  newSubItemTitle,
+  subSection,
+  title,
+}) {
+  const dispatch = useDispatch();
 
+  function removeSection(indexOfSection) {
+    return () => {
       data.splice(indexOfSection, 1);
 
-      this.props.setValue({
+      dispatch(setValue({
         key: category,
         value: data,
-      });
+      }));
     }
   }
 
-  removeItem = (indexOfSection) => (item) => {
-    const { category, data, subSection } = this.props;
+  function removeItem(indexOfSection) {
+    return (item) => {
+      data[indexOfSection][subSection] = _without(data[indexOfSection][subSection], item);
 
-    data[indexOfSection][subSection] = _without(data[indexOfSection][subSection], item);
-
-    this.props.setValue({
-      key: category,
-      value: data,
-    });
+      dispatch(setValue({
+        key: category,
+        value: data,
+      }));
+    }
   }
 
-  addSection = () => {
-    const { data, category, setValue, subSection } = this.props;
-
-    setValue({
+  function addSection() {
+    dispatch(setValue({
       key: category,
       value: [...data, { title: '', [subSection]: [] }],
-    });
+    }));
   }
 
-  addItem = (indexOfSection) => (item) => {
-    const { category, data, subSection } = this.props;
+  function addItem(indexOfSection) {
+    return (item) => {
+      data[indexOfSection][subSection].push(item);
 
-    data[indexOfSection][subSection].push(item);
-
-    this.props.setValue({
-      key: category,
-      value: data,
-    });
+      dispatch(setValue({
+        key: category,
+        value: data,
+      }));
+    }
   }
 
-  updateItem = (indexOfSection) => (indexOfItem) => (evt) => {
-    const { category, data, subSection } = this.props;
+  function updateItem(indexOfSection) {
+    return (indexOfItem) => (evt) => {
+      data[indexOfSection][subSection][indexOfItem] = evt.target.value;
 
-    data[indexOfSection][subSection][indexOfItem] = evt.target.value;
-
-    this.props.setValue({
-      key: category,
-      value: data,
-    });
+      dispatch(setValue({
+        key: category,
+        value: data,
+      }));
+    }
   }
 
-  updateSectionTitle = (indexOfSection) => (title) => {
-    const { data, category } = this.props;
+  function updateSectionTitle(indexOfSection) {
+    return (newTitle) => {    
+      data[indexOfSection].title = newTitle;
 
-    data[indexOfSection].title = title;
-
-    this.props.setValue({
-      key: category,
-      value: data,
-    });
+      dispatch(setValue({
+        key: category,
+        value: data,
+      }));
+    }
   }
 
-  render() {
-    const {
-      data,
-      newSubItemTitle,
-      title,
-      subSection,
-    } = this.props;
-
-    return (
-      <React.Fragment>
-        <Typography paragraph variant="h6">{title}</Typography>
-        {
-          _map(data, (listSection, indexOfSection) => (
-            <ListSection
-              key={indexOfSection}
-              addItem={this.addItem(indexOfSection)}
-              newSubItemTitle={newSubItemTitle}
-              subSection={subSection}
-              listSection={listSection}
-              removeSection={this.removeSection(indexOfSection)}
-              removeItem={this.removeItem(indexOfSection)}
-              updateItem={this.updateItem(indexOfSection)}
-              updateSectionTitle={this.updateSectionTitle(indexOfSection)}
-            />
-          ))
-        }
-        <Button
-          color="secondary"
-          onClick={this.addSection}
-          variant="contained"
-        >
-          Add New Section
-        </Button>
-      </React.Fragment>
-    )
-  }
+  return (
+    <>
+      <Typography paragraph variant="h6">{title}</Typography>
+      {
+        _map(data, (listSection, indexOfSection) => (
+          <ListSection
+            key={indexOfSection}
+            addItem={addItem(indexOfSection)}
+            newSubItemTitle={newSubItemTitle}
+            subSection={subSection}
+            listSection={listSection}
+            removeSection={removeSection(indexOfSection)}
+            removeItem={removeItem(indexOfSection)}
+            updateItem={updateItem(indexOfSection)}
+            updateSectionTitle={updateSectionTitle(indexOfSection)}
+          />
+        ))
+      }
+      <Button
+        color="secondary"
+        onClick={addSection}
+        variant="contained"
+      >
+        Add New Section
+      </Button>
+    </>
+  )
 };
 
 export default withStyles(styles)(SectionListsForm);

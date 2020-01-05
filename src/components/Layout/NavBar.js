@@ -25,8 +25,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import LoginButton from '../Login/LoginButton';
 import RecipeForm from '../Recipe/RecipeForm/RecipeForm';
 import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButton';
-import { logout } from '../User/UserActions';
-import { resetForm } from '../Recipe/RecipeForm/RecipeFormActions';
+import { logout } from '../../globalState/user';
+import { resetForm } from '../../globalState/recipeForm';
 
 const styles = (theme) => ({
   root: {

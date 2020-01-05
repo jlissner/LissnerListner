@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
@@ -16,6 +17,7 @@ import _find from 'lodash/find';
 import _differenceBy from 'lodash/differenceBy';
 import _conact from 'lodash/concat';
 import _filter from 'lodash/filter';
+import { setValue } from '../../../globalState/recipeForm';
 
 const styles = (theme) => ({
   checked: {},
@@ -29,47 +31,41 @@ const styles = (theme) => ({
   },
 })
 
-class RecipeTagsForm extends Component {
-  constructor(props) {
-    super(props);
+function RecipeTagsForm({
+  classes,
+  options,
+  title,
+  radio,
+}) {
+  const dispatch = useDispatch();
+  const tags = useSelector(state => state.recipeForm.tags);
 
-    this.toggleCheckbox = this.toggleCheckbox.bind(this);
-  }
-
-  toggleCheckbox(tag, isActive) {
+  function toggleCheckbox(tag, isActive) {
     return () => {
-      const { setValue, tags } = this.props;
+      const value = isActive
+        ? _differenceBy(tags, [tag], 'label')
+        : _conact(tags, tag);
 
-      if (isActive) {
-        return setValue({
-          key: 'tags',
-          value: _differenceBy(tags, [tag], 'label'),
-        })
-      }
-
-      return setValue({
+      dispatch(setValue({
         key: 'tags',
-        value: _conact(tags, tag),
-      })
+        value,
+      }));
     }
   }
 
-  selectRadio(tag) {
+  function selectRadio(tag) {
     return () => {
-      const { setValue, tags } = this.props;
       const category = tag.category;
       const newTags = _filter(tags, (_tag) => _tag.category !== category);
 
-      return setValue({
+      dispatch(setValue({
         key: 'tags',
         value: _conact(newTags, tag)
-      })
+      }));
     }
   }
 
-  renderCheckboxList() {
-    const { classes, options, tags } = this.props;
-
+  function renderCheckboxList() {
     return (
       _map(options, (option) => {
         const isActive = Boolean(_find(tags, option));
@@ -81,7 +77,7 @@ class RecipeTagsForm extends Component {
             control={
               <Checkbox
                 checked={isActive}
-                onChange={this.toggleCheckbox(option, isActive)}
+                onChange={toggleCheckbox(option, isActive)}
                 classes={{
                   root: classes.checkbox,
                   checked: classes.checked,
@@ -94,9 +90,8 @@ class RecipeTagsForm extends Component {
     )
   }
 
-  renderRadioList() {
-    const { classes, options, tags, title } = this.props;
-    const activeRadioTag = _find(tags, {category: title});
+  function renderRadioList() {
+    const activeRadioTag = _find(tags, { category: title });
     const value = _get(activeRadioTag, 'label', '');
 
     return (
@@ -114,7 +109,7 @@ class RecipeTagsForm extends Component {
                 value={option.label}
                 control={
                   <Radio
-                    onClick={this.selectRadio(option)}
+                    onClick={selectRadio(option)}
                     classes={{
                       root: classes.checkbox,
                       checked: classes.checked,
@@ -129,22 +124,18 @@ class RecipeTagsForm extends Component {
     )
   }
 
-  render() {
-    const { classes, radio, title } = this.props;
-
-    return (
-      <React.Fragment>
-        <Typography variant="h6">{title}</Typography>
-        <FormGroup className={classes.formGroup}>
-          {
-            radio
-            ? this.renderRadioList()
-            : this.renderCheckboxList()
-          }
-        </FormGroup>
-      </React.Fragment>
-    );
-  }
+  return (
+    <>
+      <Typography variant="h6">{title}</Typography>
+      <FormGroup className={classes.formGroup}>
+        {
+          radio
+          ? renderRadioList()
+          : renderCheckboxList()
+        }
+      </FormGroup>
+    </>
+  );
 }
 
 RecipeTagsForm.defaultProps = {}
@@ -152,8 +143,6 @@ RecipeTagsForm.defaultProps = {}
 RecipeTagsForm.propTypes = {
   title: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  tags: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  setValue: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(RecipeTagsForm);

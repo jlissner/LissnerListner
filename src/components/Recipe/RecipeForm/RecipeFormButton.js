@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Fab } from '@material-ui/core';
-import { openForm } from './RecipeFormActions';
+import { openForm } from '../../../globalState/recipeForm';
 
 function RecipeFormButton({ onClick, text, Component, ...props }) {
   const dispatch = useDispatch();

@@ -18,8 +18,8 @@ import Spacing from '../utils/Spacing';
 import RecipeDetailHeader from './RecipeDetailHeader';
 import RecipeSummary from './RecipeSummary';
 import RecipeFormButton from './RecipeForm/RecipeFormButton';
-import { getRecipes } from './RecipeActions';
-import { setForm } from './RecipeForm/RecipeFormActions';
+import { getRecipes } from '../../globalState/recipes';
+import { setForm } from '../../globalState/recipeForm';
 
 const styles = (theme) => ({
   ingredients: {

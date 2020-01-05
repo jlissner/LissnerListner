@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import _random from 'lodash/random';
+import { getQuotes } from '../../globalState/quotes';
 
 const styles = theme => ({
 	quote: {
@@ -22,16 +24,18 @@ function getNewRandomNumber(max, current) {
 		: num;
 }
 
-function Quotes({ classes, quotes, getQuotes }) {
+function Quotes({ classes }) {
+	const dispatch = useDispatch();
+	const quotes = useSelector(state => state.quotes);
 	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(0)
 	const getQuoteIndex = useCallback(() => getNewRandomNumber(quotes.length - 1, activeQuoteIndex), [ quotes, activeQuoteIndex ]);
 	const quote = useMemo(() => quotes[activeQuoteIndex], [activeQuoteIndex, quotes])
 
 	useEffect(() => {
 		if (quotes.length === 0) {
-			getQuotes();
+			dispatch(getQuotes());
 		}
-	}, [getQuotes, quotes.length]);
+	}, [dispatch, quotes.length]);
 
 	useEffect(() => {
 		if (quotes.length < 2 || activeQuoteIndex) {
@@ -61,8 +65,6 @@ function Quotes({ classes, quotes, getQuotes }) {
 
 Quotes.propTypes = {
 	classes: PropTypes.shape().isRequired,
-	quotes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-	getQuotes: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Quotes);

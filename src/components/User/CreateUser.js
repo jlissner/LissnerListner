@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { createUser } from './UserActions';
+import { createUser } from '../../globalState/user';
 
 function CreateUser() {
   const { users } = useSelector(state => state.user);

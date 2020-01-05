@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SearchBar from '../components/Search/Search';
 import Filter from '../components/Filter/Filter';
-import Quotes from '../components/Quotes/QuotesContainer';
+import Quotes from '../components/Quotes/Quotes';
 import RecipeList from '../components/Recipe/RecipeList';
 import useRecipeList from '../hooks/useRecipeList';
 

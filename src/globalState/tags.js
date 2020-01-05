@@ -1,5 +1,5 @@
 import _get from 'lodash/get';
-import graphql from '../../lib/graphql';
+import graphql from '../lib/graphql';
 
 export const GET_TAGS = 'TAGS::GET_TAGS';
 export const SET_TAGS = 'TAGS::SET_TAGS';
@@ -36,10 +36,6 @@ export function setTags(tags) {
     type: SET_TAGS,
     payload: tags,
   }
-}
-
-export const actions = {
-  getTags,
 }
 
 const ACTION_HANDLERS = {

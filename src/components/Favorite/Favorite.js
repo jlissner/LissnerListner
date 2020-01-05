@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { toggleFavorite } from '../User/UserActions';
+import { toggleFavorite } from '../../globalState/user';
 
 const styles = (theme) => ({
   isFavorite: {

@@ -11,7 +11,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import LoaderButton from '../LoaderButton/LoaderButton'
-import { login } from '../User/UserActions';
+import { login } from '../../globalState/user';
 import ForgotPassword from './ForgotPassword';
 
 const styles = theme => ({

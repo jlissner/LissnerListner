@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import Layout from '../Layout/Layout';
-import { getTags } from '../Tags/TagsActions';
 import { getSections } from '../../globalState/sections';
-import { getRecipes } from '../Recipe/RecipeActions';
-import { getCurrentUser } from '../User/UserActions';
+import { getTags } from '../../globalState/tags';
+import { getRecipes } from '../../globalState/recipes';
+import { getCurrentUser } from '../../globalState/user';
 
 function SecuredApp() {
   const dispatch = useDispatch();

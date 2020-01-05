@@ -10,7 +10,7 @@ import {
   CardActions,
   TextField,
 } from '@material-ui/core';
-import { updateUserPassword } from './UserActions';
+import { updateUserPassword } from '../../globalState/user';
 
 const styles = (theme) => ({
 

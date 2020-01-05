@@ -1,16 +1,16 @@
 import _get from 'lodash/get';
-import graphql from '../../lib/graphql';
+import graphql from '../lib/graphql';
 
 export const GET_QUOTES = 'QUOTES::GET';
 export const GET_QUOTES_SUCCESS = 'QUOTES::GET_SUCCESS';
 export const GET_QUOTES_FAILURE = 'QUOTES::GET_FAILURE';
 
-function getQuotes() {
-	return async (dispatch) => {
-		dispatch({ type: GET_QUOTES });
+export function getQuotes() {
+  return async (dispatch) => {
+    dispatch({ type: GET_QUOTES });
 
-		try {
-    	const res = await graphql({
+    try {
+      const res = await graphql({
         query: `
           query {
             cookbookByIdPk(idPk: "1") {
@@ -26,32 +26,28 @@ function getQuotes() {
       });
       const payload = _get(res, 'cookbookByIdPk.cookbookQuotesByCookbookFk.nodes');
 
-    	dispatch({
-    		type: GET_QUOTES_SUCCESS,
-    		payload,
-    	})
-		} catch (err) {
-			console.error(err);
+      dispatch({
+        type: GET_QUOTES_SUCCESS,
+        payload,
+      })
+    } catch (err) {
+      console.error(err);
 
-			dispatch({ type: GET_QUOTES_FAILURE });
-		}
-	}
-}
-
-export const actions = {
-	getQuotes,
+      dispatch({ type: GET_QUOTES_FAILURE });
+    }
+  }
 }
 
 const ACTION_HANDLERS = {
-	[GET_QUOTES_SUCCESS]: (state, { payload }) => payload,
+  [GET_QUOTES_SUCCESS]: (state, { payload }) => payload,
 }
 
 const initialState = []
 
 function reducer(state = initialState, action) {
-	const handler = ACTION_HANDLERS[action.type];
+  const handler = ACTION_HANDLERS[action.type];
 
-	return handler ? handler(state, action) : state;
+  return handler ? handler(state, action) : state;
 }
 
 export default reducer;

@@ -1,8 +1,8 @@
 import { toast } from 'react-toastify'
 import _get from 'lodash/get';
 import _omitBy from 'lodash/omitBy';
-import { setCookie, deleteCookie } from '../../lib/cookies';
-import graphql, { objToGraphqlStr } from '../../lib/graphql';
+import { setCookie, deleteCookie } from '../lib/cookies';
+import graphql, { objToGraphqlStr } from '../lib/graphql';
 
 export const LOGIN = 'USER::LOGIN';
 export const LOGIN_SUCCESS = 'USER::LOGIN_SUCCESS';
@@ -325,15 +325,6 @@ export function createUser(user) {
       dispatch({ type: CREATE_FAILURE, payload: err });
     }
   }
-}
-
-export const actions = {
-  login,
-  updateUser,
-  logout,
-  getCurrentUser,
-  getUsers,
-  toggleFavorite,
 }
 
 const ACTION_HANDLERS = {
