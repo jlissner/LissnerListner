@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
@@ -17,7 +17,7 @@ import _find from 'lodash/find';
 import _differenceBy from 'lodash/differenceBy';
 import _conact from 'lodash/concat';
 import _filter from 'lodash/filter';
-import { setValue } from '../../../globalState/recipeForm';
+import useActions from '../../../hooks/useActions';
 
 const styles = (theme) => ({
   checked: {},
@@ -37,7 +37,7 @@ function RecipeTagsForm({
   title,
   radio,
 }) {
-  const dispatch = useDispatch();
+  const { setValue } = useActions();
   const tags = useSelector(state => state.recipeForm.tags);
 
   function toggleCheckbox(tag, isActive) {
@@ -46,10 +46,10 @@ function RecipeTagsForm({
         ? _differenceBy(tags, [tag], 'label')
         : _conact(tags, tag);
 
-      dispatch(setValue({
+      setValue({
         key: 'tags',
         value,
-      }));
+      });
     }
   }
 
@@ -58,10 +58,10 @@ function RecipeTagsForm({
       const category = tag.category;
       const newTags = _filter(tags, (_tag) => _tag.category !== category);
 
-      dispatch(setValue({
+      setValue({
         key: 'tags',
         value: _conact(newTags, tag)
-      }));
+      });
     }
   }
 

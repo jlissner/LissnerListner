@@ -1,10 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
 import _map from 'lodash/map';
 import _without from 'lodash/without';
-import { setValue } from '../../globalState/recipeForm';
+import useActions from '../../hooks/useActions';
 import ListSection from './ListSection';
 
 const styles = (theme) => ({
@@ -17,16 +16,16 @@ function SectionListsForm({
   subSection,
   title,
 }) {
-  const dispatch = useDispatch();
+  const { setValue } = useActions();
 
   function removeSection(indexOfSection) {
     return () => {
       data.splice(indexOfSection, 1);
 
-      dispatch(setValue({
+      setValue({
         key: category,
         value: data,
-      }));
+      });
     }
   }
 
@@ -34,28 +33,28 @@ function SectionListsForm({
     return (item) => {
       data[indexOfSection][subSection] = _without(data[indexOfSection][subSection], item);
 
-      dispatch(setValue({
+      setValue({
         key: category,
         value: data,
-      }));
+      });
     }
   }
 
   function addSection() {
-    dispatch(setValue({
+    setValue({
       key: category,
       value: [...data, { title: '', [subSection]: [] }],
-    }));
+    });
   }
 
   function addItem(indexOfSection) {
     return (item) => {
       data[indexOfSection][subSection].push(item);
 
-      dispatch(setValue({
+      setValue({
         key: category,
         value: data,
-      }));
+      });
     }
   }
 
@@ -63,10 +62,10 @@ function SectionListsForm({
     return (indexOfItem) => (evt) => {
       data[indexOfSection][subSection][indexOfItem] = evt.target.value;
 
-      dispatch(setValue({
+      setValue({
         key: category,
         value: data,
-      }));
+      });
     }
   }
 
@@ -74,10 +73,10 @@ function SectionListsForm({
     return (newTitle) => {    
       data[indexOfSection].title = newTitle;
 
-      dispatch(setValue({
+      setValue({
         key: category,
         value: data,
-      }));
+      });
     }
   }
 

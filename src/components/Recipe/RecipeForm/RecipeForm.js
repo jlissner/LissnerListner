@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -19,12 +19,7 @@ import SectionListsForm from '../../SectionListsForm/SectionListsForm';
 import RecipeTagsForm from '../RecipeTagsForm/RecipeTagsForm';
 import * as tags from  '../../../data/recipeTagOptions';
 import ConfirmDialog from '../../utils/ConfirmDialog';
-import {
-  closeForm,
-  deleteRecipe,
-  saveForm,
-  setValue,
-} from '../../../globalState/recipeForm';
+import useActions from '../../../hooks/useActions';
 
 const styles = (theme) => ({
   form: {
@@ -37,7 +32,12 @@ const styles = (theme) => ({
 });
 
 function RecipeForm ({ classes }) {
-  const dispatch = useDispatch();
+  const {
+    closeForm,
+    deleteRecipe,
+    saveForm,
+    setValue,
+  } = useActions();
   const recipes = useSelector(state => state.recipes);
   const recipeForm = useSelector(state => state.recipeForm);
   const {
@@ -71,7 +71,7 @@ function RecipeForm ({ classes }) {
       cancelText="Cancel"
       dialogTitle={`Delete "${name}"`}
       dialogText="This action is permanent and cannot be reversed."
-      onConfirm={() => dispatch(deleteRecipe(idPk))}
+      onConfirm={() => deleteRecipe(idPk)}
       color="secondary"
       variant="contained"
       style={{ marginRight: 'auto' }}
@@ -80,20 +80,20 @@ function RecipeForm ({ classes }) {
   )
 
   function handleFieldChange(evt) {
-    dispatch(setValue({
+    setValue({
       key: evt.target.name,
       value: evt.target.value,
-    }));
+    });
   }
 
   useEffect(() => {
     if (!saving) {
-      dispatch(closeForm());
+      closeForm();
     }
-  }, [ dispatch, saving ]);
+  }, [closeForm, saving]);
 
   return (
-    <Dialog onClose={() => dispatch(closeForm())} open={open} maxWidth="lg">
+    <Dialog onClose={() => closeForm()} open={open} maxWidth="lg">
       <DialogTitle>{idPk ? 'Edit' : 'New'} Recipe</DialogTitle>
       <DialogContent className={classes.form}>
         <Grid container spacing={3}>
@@ -223,11 +223,11 @@ function RecipeForm ({ classes }) {
       </DialogContent>
       <DialogActions>
         {deleteButton}
-        <Button onClick={() => dispatch(closeForm())}>Close</Button>
+        <Button onClick={() => closeForm()}>Close</Button>
         <LoaderButton
           variant="contained"
           color="primary"
-          onClick={() => dispatch(saveForm())}
+          onClick={() => saveForm()}
           disabled={disabled}
           text="Save"
           loadingText="Saving..."

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -12,14 +12,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import _find from 'lodash/find';
 import _kebabCase from 'lodash/kebabCase';
 import graphql from '../../lib/graphql';
+import Spacing from '../utils/Spacing';
+import useActions from '../../hooks/useActions';
 import Comments from '../Comments/Comments';
 import ItemizedList from '../ItemizedList/ItemizedList';
-import Spacing from '../utils/Spacing';
 import RecipeDetailHeader from './RecipeDetailHeader';
 import RecipeSummary from './RecipeSummary';
 import RecipeFormButton from './RecipeForm/RecipeFormButton';
-import { getRecipes } from '../../globalState/recipes';
-import { setForm } from '../../globalState/recipeForm';
 
 const styles = (theme) => ({
   ingredients: {
@@ -40,9 +39,9 @@ function RecipeDetail({
   classes,
   match,
 }) {
-  const dispatch = useDispatch();
   const recipes = useSelector(state => state.recipes);
   const { activeUser } = useSelector(state => state.user);
+  const { fetchRecipes, setForm } = useActions();
   const [initialLoad, setInitialLoad] = useState(true);
   const recipe = useMemo(() => _find(recipes, ({ name }) => (
     _kebabCase(name) === match.params.recipe
@@ -73,7 +72,7 @@ function RecipeDetail({
 
     await graphql(body);
 
-    dispatch(getRecipes());
+    fetchRecipes();
   }
 
   function deleteComment({ idPk }) {
@@ -90,7 +89,7 @@ function RecipeDetail({
 
       await graphql(body);
 
-      dispatch(getRecipes());
+      fetchRecipes();
     }
   }
 
@@ -107,7 +106,7 @@ function RecipeDetail({
 
     await graphql(body);
 
-    dispatch(getRecipes());
+    fetchRecipes();
   }
 
   if (recipes.length === 0) {
@@ -161,7 +160,7 @@ function RecipeDetail({
             className={classes.editButton}
             color="primary"
             onClick={() => {
-              dispatch(setForm(recipe))
+              setForm(recipe);
             }}
           />
         : null

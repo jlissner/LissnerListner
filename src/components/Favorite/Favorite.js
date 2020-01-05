@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { toggleFavorite } from '../../globalState/user';
+import useActions from '../../hooks/useActions';
 
 const styles = (theme) => ({
   isFavorite: {
@@ -22,7 +22,7 @@ function Favorite({
   disabled,
   recipe,
 }) {
-  const dispatch = useDispatch();
+  const { toggleFavorite } = useActions();
   const { activeUser } = useSelector(state => state.user);
   const isFavorite = activeUser.favorites.indexOf(recipe) > -1;
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ function Favorite({
   async function clickHandler() {
     setLoading(true);
 
-    dispatch(toggleFavorite(recipe));
+    toggleFavorite(recipe);
   }
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import _random from 'lodash/random';
-import { getQuotes } from '../../globalState/quotes';
+import useActions from '../../hooks/useActions';
 
 const styles = theme => ({
 	quote: {
@@ -25,7 +25,7 @@ function getNewRandomNumber(max, current) {
 }
 
 function Quotes({ classes }) {
-	const dispatch = useDispatch();
+	const { fetchQuotes } = useActions();
 	const quotes = useSelector(state => state.quotes);
 	const [ activeQuoteIndex, setActiveQuoteIndex ] = useState(0)
 	const getQuoteIndex = useCallback(() => getNewRandomNumber(quotes.length - 1, activeQuoteIndex), [ quotes, activeQuoteIndex ]);
@@ -33,9 +33,9 @@ function Quotes({ classes }) {
 
 	useEffect(() => {
 		if (quotes.length === 0) {
-			dispatch(getQuotes());
+			fetchQuotes();
 		}
-	}, [dispatch, quotes.length]);
+	}, [fetchQuotes, quotes.length]);
 
 	useEffect(() => {
 		if (quotes.length < 2 || activeQuoteIndex) {

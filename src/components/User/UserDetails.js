@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Box,
   Button,
@@ -11,11 +11,11 @@ import {
 } from '@material-ui/core';
 import LoaderButton from '../LoaderButton/LoaderButton';
 import makeName from '../utils/makeName';
-import { updateUser } from '../../globalState/user';
+import useActions from '../../hooks/useActions';
 
 function UserDetails() {
   const { activeUser } = useSelector(state => state.user);
-  const dispatch = useDispatch();
+  const { updateUser } = useActions();
   const [attributes, setAttributes] = useState(activeUser);
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +37,7 @@ function UserDetails() {
   async function saveAttribtues() {
     setLoading(true);
 
-    dispatch(updateUser(attributes));
+    updateUser(attributes);
   }
 
   return (

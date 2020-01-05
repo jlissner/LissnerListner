@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify'
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -10,7 +10,7 @@ import {
   CardActions,
   TextField,
 } from '@material-ui/core';
-import { updateUserPassword } from '../../globalState/user';
+import useActions from '../../hooks/useActions';
 
 const styles = (theme) => ({
 
@@ -20,7 +20,7 @@ function UserChangePassword({
   classes,
 }) {
   const { activeUser } = useSelector(state => state.user);
-  const dispatch = useDispatch();
+  const { updateUserPassword } = useActions();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -45,7 +45,7 @@ function UserChangePassword({
 
     setLoading(true);
 
-    dispatch(updateUserPassword({ idPk: activeUser.idPk, currentPassword, newPassword }));
+    updateUserPassword({ idPk: activeUser.idPk, currentPassword, newPassword });
   }
 
   function handleEnter(evt) {

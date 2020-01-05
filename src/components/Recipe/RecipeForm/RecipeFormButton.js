@@ -1,14 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Fab } from '@material-ui/core';
-import { openForm } from '../../../globalState/recipeForm';
+import useActions from '../../../hooks/useActions';
 
 function RecipeFormButton({ onClick, text, Component, ...props }) {
-  const dispatch = useDispatch();
+  const { openForm } = useActions();
 
   function handleClick() {
     onClick();
-    setTimeout(dispatch, 50, openForm());
+    setTimeout(openForm, 50);
   }
   
   return <Component onClick={handleClick} {...props}>{text}</Component>

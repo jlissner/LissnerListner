@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 import {
   Box,
@@ -10,11 +10,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { createUser } from '../../globalState/user';
+import useActions from '../../hooks/useActions';
 
 function CreateUser() {
   const { users } = useSelector(state => state.user);
-  const dispatch = useDispatch();
+  const { createUser } = useActions();
   const [password, setPassword] = useState(v4());
   const [resetPassword, setResetPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -47,13 +47,13 @@ function CreateUser() {
 
     setLoading(true);
 
-    dispatch(createUser({
+    createUser({
       email: email,
       legalFirstName: firstName,
       legalLastName: lastName,
       preferredName: preferredName,
       passwordHash: password,
-    }))
+    });
   }
 
   function valid() {

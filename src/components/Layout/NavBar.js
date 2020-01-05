@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -25,8 +25,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import LoginButton from '../Login/LoginButton';
 import RecipeForm from '../Recipe/RecipeForm/RecipeForm';
 import RecipeFormButton from '../Recipe/RecipeForm/RecipeFormButton';
-import { logout } from '../../globalState/user';
-import { resetForm } from '../../globalState/recipeForm';
+import useActions from '../../hooks/useActions';
 
 const styles = (theme) => ({
   root: {
@@ -50,7 +49,7 @@ const styles = (theme) => ({
 function NavBar({
   classes,
 }) {
-  const dispatch = useDispatch();
+  const { logout, resetForm } = useActions();
   const { activeUser } = useSelector(state => state.user);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [nav, setNav] = useState(false);
@@ -74,7 +73,7 @@ function NavBar({
 
   function handleLogout() {
     closeMenu();
-    dispatch(logout());
+    logout();
   }
 
   function renderLogin() {
@@ -98,7 +97,7 @@ function NavBar({
             text="Add Recipe"
             onClick={() => {
               closeMenu();
-              dispatch(resetForm());
+              resetForm();
             }}
             Component={MenuItem}
           />

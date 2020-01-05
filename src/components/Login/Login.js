@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import LoaderButton from '../LoaderButton/LoaderButton'
-import { login } from '../../globalState/user';
+import useActions from '../../hooks/useActions';
 import ForgotPassword from './ForgotPassword';
 
 const styles = theme => ({
@@ -55,18 +55,18 @@ const styles = theme => ({
 
 function Login({ classes }) {
   const user = useSelector(state => state.user);
-  const { loggingIn } = user;
-  const dispatch = useDispatch();
+  const { login } = useActions();
+  const { activeUser } = user;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (isLoading && !loggingIn) {
+    if (isLoading && activeUser.idPk) {
       setIsLoading(false);
     }
-  }, [isLoading, loggingIn]);
+  }, [isLoading, activeUser]);
 
   function validateForm() {
     return email.length > 0 && password.length > 0
@@ -81,11 +81,11 @@ function Login({ classes }) {
   }
 
    async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     setIsLoading(true);
 
-    dispatch(login(email, password));
+    login(email, password);
   }
 
   return (
