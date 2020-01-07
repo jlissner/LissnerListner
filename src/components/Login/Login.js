@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -56,17 +56,10 @@ const styles = theme => ({
 function Login({ classes }) {
   const user = useSelector(state => state.user);
   const { login } = useActions();
-  const { activeUser } = user;
+  const { loggingIn } = user;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (isLoading && activeUser.idPk) {
-      setIsLoading(false);
-    }
-  }, [isLoading, activeUser]);
 
   function validateForm() {
     return email.length > 0 && password.length > 0
@@ -82,8 +75,6 @@ function Login({ classes }) {
 
    async function handleSubmit(e) {
     e.preventDefault();
-
-    setIsLoading(true);
 
     login(email, password);
   }
@@ -124,7 +115,7 @@ function Login({ classes }) {
             className={classes.submitButton}
             disabled={!validateForm()}
             type="submit"
-            isLoading={isLoading}
+            isLoading={loggingIn}
             text="Login"
             loadingText="Logging in…"
           />
